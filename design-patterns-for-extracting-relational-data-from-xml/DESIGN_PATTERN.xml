@@ -1,0 +1,32 @@
+<elem-0-body>
+	<elem-1-global attr-1-global="id_1_global">
+		<field-1-global>val_global</field-1-global>
+	</elem-1-global>
+	<list-1-master>
+		<elem-1-master>
+			<field-1-master>val_master_m1</field-1-master>
+			<list-2-detail>
+		              <elem-2-detail>
+				       <field-2-detail>val_detail_m1_d1</field-2-detail>
+		              </elem-2-detail>
+		              <elem-2-detail>
+				       <field-2-detail>val_detail_m1_d2</field-2-detail>
+		              </elem-2-detail>
+			</list-2-detail>
+		</elem-1-master>
+		<elem-1-master>
+			<field-1-master>val_master_m2</field-1-master>
+			<list-2-detail>
+		              <elem-2-detail>
+				       <field-2-detail>val_detail_m2_d1</field-2-detail>
+		              </elem-2-detail>
+		              <elem-2-detail>
+				       <field-2-detail>val_detail_m2_d2</field-2-detail>
+		              </elem-2-detail>
+			</list-2-detail>
+		</elem-1-master>
+		<elem-1-master>
+			<field-1-master>val_master_m3</field-1-master>
+		</elem-1-master>
+	</list-1-master>
+</elem-0-body>

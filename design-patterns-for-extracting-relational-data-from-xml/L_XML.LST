@@ -1,0 +1,283 @@
+
+PL/SQL procedure successfully completed.
+
+
+Table dropped.
+
+Elapsed: 00:00:00.02
+
+Table created.
+
+Elapsed: 00:00:00.01
+Load test XML data...
+
+0 rows deleted.
+
+Elapsed: 00:00:00.00
+
+1 row created.
+
+Elapsed: 00:00:00.00
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.03
+XML data...
+
+XML_FIELD
+------------------------------------------------------------
+<elem-0-body>
+  <elem-1-global attr-1-global="id_1_global">
+    <field-1-global>val_global</field-1-global>
+  </elem-1-global>
+  <list-1-master>
+    <elem-1-master>
+      <field-1-master>val_master_m1</field-1-master>
+      <list-2-detail>
+        <elem-2-detail>
+          <field-2-detail>val_detail_m1_d1</field-2-detail>
+        </elem-2-detail>
+        <elem-2-detail>
+          <field-2-detail>val_detail_m1_d2</field-2-detail>
+        </elem-2-detail>
+      </list-2-detail>
+    </elem-1-master>
+    <elem-1-master>
+      <field-1-master>val_master_m2</field-1-master>
+      <list-2-detail>
+        <elem-2-detail>
+          <field-2-detail>val_detail_m2_d1</field-2-detail>
+        </elem-2-detail>
+        <elem-2-detail>
+          <field-2-detail>val_detail_m2_d2</field-2-detail>
+        </elem-2-detail>
+      </list-2-detail>
+    </elem-1-master>
+    <elem-1-master>
+      <field-1-master>val_master_m3</field-1-master>
+    </elem-1-master>
+  </list-1-master>
+</elem-0-body>
+
+
+Elapsed: 00:00:00.03
+Unfiltered, Inner Joins...
+
+GLOBAL_ID       GLOBAL_VAL      MASTER          DETAIL
+--------------- --------------- --------------- --------------------
+id_1_global     val_global      val_master_m1   val_detail_m1_d1
+id_1_global     val_global      val_master_m1   val_detail_m1_d2
+id_1_global     val_global      val_master_m2   val_detail_m2_d1
+id_1_global     val_global      val_master_m2   val_detail_m2_d2
+
+Elapsed: 00:00:00.04
+Unfiltered, Outer Joins on all...
+
+GLOBAL_ID       GLOBAL_VAL      MASTER          DETAIL
+--------------- --------------- --------------- --------------------
+id_1_global     val_global      val_master_m1   val_detail_m1_d1
+id_1_global     val_global      val_master_m1   val_detail_m1_d2
+id_1_global     val_global      val_master_m2   val_detail_m2_d1
+id_1_global     val_global      val_master_m2   val_detail_m2_d2
+id_1_global     val_global      val_master_m3
+
+Elapsed: 00:00:00.05
+Filtered, Inner Joins...
+
+GLOBAL_ID       GLOBAL_VAL      MASTER          DETAIL
+--------------- --------------- --------------- --------------------
+id_1_global     val_global      val_master_m1   val_detail_m1_d1
+id_1_global     val_global      val_master_m1   val_detail_m1_d2
+id_1_global     val_global      val_master_m2   val_detail_m2_d2
+
+Elapsed: 00:00:00.09
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.06
+Filtered, Outer Joins on all...
+
+GLOBAL_ID       GLOBAL_VAL      MASTER          DETAIL
+--------------- --------------- --------------- --------------------
+id_1_global     val_global      val_master_m1   val_detail_m1_d1
+id_1_global     val_global      val_master_m1   val_detail_m1_d2
+id_1_global     val_global      val_master_m2   val_detail_m2_d2
+id_1_global     val_global      val_master_m3
+
+Elapsed: 00:00:00.10
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.09
+Filtered, ANSI Outer Joins on all...
+
+GLOBAL_ID       GLOBAL_VAL      MASTER          DETAIL
+--------------- --------------- --------------- --------------------
+id_1_global     val_global      val_master_m1   val_detail_m1_d1
+id_1_global     val_global      val_master_m1   val_detail_m1_d2
+id_1_global     val_global      val_master_m2   val_detail_m2_d2
+id_1_global     val_global      val_master_m3
+
+Elapsed: 00:00:00.09
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.08
+Unfiltered, Outer Joins on detail only...
+
+GLOBAL_ID       GLOBAL_VAL      MASTER          DETAIL
+--------------- --------------- --------------- --------------------
+id_1_global     val_global      val_master_m1
+id_1_global     val_global      val_master_m2
+id_1_global     val_global      val_master_m3
+
+Elapsed: 00:00:00.04
+Filtered, Outer Joins on detail only...
+
+no rows selected
+
+Elapsed: 00:00:00.09
+
+TEXT
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL_ID  dh7431y328tw3, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS XMLIJ */        x1.global_id,
+x1.global_val, x2.master, x3.detail   FROM xml_design_pattern t,
+XMLTable ('/elem-0-body'                    PASSING t.xml_field
+           COLUMNS global_id           VARCHAR2(100) PATH
+'elem-1-global/@attr-1-global',                            global_val
+       VARCHAR2(100) PATH 'elem-1-global/field-1-global',
+             l2_xml              XMLTYPE       PATH 'list-1-master')
+x1,      XMLTable ('/list-1-master/elem-1-master'
+PASSING x1.l2_xml                    COLUMNS master
+VARCHAR2(100) PATH 'field-1-master',                            l3_xml
+            XMLTYPE       PATH 'list-2-detail') x2,      XMLTable
+('/list-2-detail/elem-2-detail[field-2-detail != "val_detail_m2_d1"]'
+                 PASSING x2.l3_xml                    COLUMNS detail
+          VARCHAR2(100) PATH 'field-2-detail') x3 ORDER BY 1, 2, 3, 4
+
+Plan hash value: 4146228260
+
+----------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation              | Name               | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT       |                    |      1 |        |      3 |00:00:00.01 |       6 |       |       |          |
+|   1 |  SORT ORDER BY         |                    |      1 |    106M|      3 |00:00:00.01 |       6 |  2048 |  2048 | 2048  (0)|
+|*  2 |   FILTER               |                    |      1 |        |      3 |00:00:00.01 |       6 |       |       |          |
+|   3 |    NESTED LOOPS        |                    |      1 |     27G|      4 |00:00:00.01 |       6 |       |       |          |
+|   4 |     NESTED LOOPS       |                    |      1 |   3335K|      3 |00:00:00.01 |       6 |       |       |          |
+|   5 |      NESTED LOOPS      |                    |      1 |    408 |      1 |00:00:00.01 |       6 |       |       |          |
+|   6 |       TABLE ACCESS FULL| XML_DESIGN_PATTERN |      1 |      1 |      1 |00:00:00.01 |       6 |       |       |          |
+|   7 |       XPATH EVALUATION |                    |      1 |        |      1 |00:00:00.01 |       0 |       |       |          |
+|   8 |      XPATH EVALUATION  |                    |      1 |        |      3 |00:00:00.01 |       0 |       |       |          |
+|   9 |     XPATH EVALUATION   |                    |      3 |        |      4 |00:00:00.01 |       0 |       |       |          |
+|  10 |    XPATH EVALUATION    |                    |      4 |        |      3 |00:00:00.01 |       0 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - filter( IS NOT NULL)
+
+SQL_ID  dgj68233rmzrx, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS XMLOJ */        x1.global_id,
+x1.global_val, x2.master, x3.detail   FROM xml_design_pattern t,
+XMLTable ('/elem-0-body'                    PASSING t.xml_field
+           COLUMNS global_id           VARCHAR2(100) PATH
+'elem-1-global/@attr-1-global',                            global_val
+       VARCHAR2(100) PATH 'elem-1-global/field-1-global',
+             l2_xml              XMLTYPE       PATH 'list-1-master')
+(+) x1,      XMLTable ('/list-1-master/elem-1-master'
+ PASSING x1.l2_xml                    COLUMNS master
+VARCHAR2(100) PATH 'field-1-master',                            l3_xml
+            XMLTYPE       PATH 'list-2-detail') (+) x2,      XMLTable
+('/list-2-detail/elem-2-detail[field-2-detail != "val_detail_m2_d1"]'
+                 PASSING x2.l3_xml                    COLUMNS detail
+          VARCHAR2(100) PATH 'field-2-detail') (+) x3 ORDER BY 1, 2, 3,
+4
+
+Plan hash value: 3516733980
+
+----------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation              | Name               | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT       |                    |      1 |        |      4 |00:00:00.01 |       6 |       |       |          |
+|   1 |  SORT ORDER BY         |                    |      1 |   2134M|      4 |00:00:00.01 |       6 |  2048 |  2048 | 2048  (0)|
+|   2 |   NESTED LOOPS OUTER   |                    |      1 |   2134M|      4 |00:00:00.01 |       6 |       |       |          |
+|   3 |    NESTED LOOPS OUTER  |                    |      1 |     66M|      3 |00:00:00.01 |       6 |       |       |          |
+|   4 |     NESTED LOOPS OUTER |                    |      1 |   8168 |      1 |00:00:00.01 |       6 |       |       |          |
+|   5 |      NESTED LOOPS      |                    |      1 |   8168 |      1 |00:00:00.01 |       6 |       |       |          |
+|   6 |       TABLE ACCESS FULL| XML_DESIGN_PATTERN |      1 |      1 |      1 |00:00:00.01 |       6 |       |       |          |
+|   7 |       XPATH EVALUATION |                    |      1 |        |      1 |00:00:00.01 |       0 |       |       |          |
+|   8 |      VIEW              |                    |      1 |      1 |      1 |00:00:00.01 |       0 |       |       |          |
+|*  9 |       FILTER           |                    |      1 |        |      1 |00:00:00.01 |       0 |       |       |          |
+|  10 |        FAST DUAL       |                    |      1 |      1 |      1 |00:00:00.01 |       0 |       |       |          |
+|  11 |     VIEW               |                    |      1 |   8168 |      3 |00:00:00.01 |       0 |       |       |          |
+|  12 |      XPATH EVALUATION  |                    |      1 |        |      3 |00:00:00.01 |       0 |       |       |          |
+|  13 |    VIEW                |                    |      3 |     32 |      3 |00:00:00.01 |       0 |       |       |          |
+|* 14 |     FILTER             |                    |      3 |        |      3 |00:00:00.01 |       0 |       |       |          |
+|  15 |      XPATH EVALUATION  |                    |      3 |        |      4 |00:00:00.01 |       0 |       |       |          |
+|  16 |      XPATH EVALUATION  |                    |      4 |        |      3 |00:00:00.01 |       0 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   9 - filter(<not feasible>)
+  14 - filter( IS NOT NULL)
+
+SQL_ID  6xmnj2mxczbb9, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS XMLOJA */        x1.global_id,
+x1.global_val, x2.master, x3.detail   FROM xml_design_pattern t
+LEFT JOIN      XMLTable ('/elem-0-body'                    PASSING
+t.xml_field                    COLUMNS global_id
+VARCHAR2(100) PATH 'elem-1-global/@attr-1-global',
+      global_val          VARCHAR2(100) PATH
+'elem-1-global/field-1-global',                            l2_xml
+       XMLTYPE       PATH 'list-1-master') x1 ON 1=1     LEFT JOIN
+XMLTable ('/list-1-master/elem-1-master'                    PASSING
+x1.l2_xml                    COLUMNS master              VARCHAR2(100)
+PATH 'field-1-master',                            l3_xml
+XMLTYPE       PATH 'list-2-detail') x2 ON 1=1     LEFT JOIN
+XMLTable ('/list-2-detail/elem-2-detail[field-2-detail !=
+"val_detail_m2_d1"]'                    PASSING x2.l3_xml
+     COLUMNS detail              VARCHAR2(100) PATH 'field-2-detail')
+x3 ON
+
+Plan hash value: 3516733980
+
+----------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation              | Name               | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT       |                    |      1 |        |      4 |00:00:00.01 |       6 |       |       |          |
+|   1 |  SORT ORDER BY         |                    |      1 |   2134M|      4 |00:00:00.01 |       6 |  2048 |  2048 | 2048  (0)|
+|   2 |   NESTED LOOPS OUTER   |                    |      1 |   2134M|      4 |00:00:00.01 |       6 |       |       |          |
+|   3 |    NESTED LOOPS OUTER  |                    |      1 |     66M|      3 |00:00:00.01 |       6 |       |       |          |
+|   4 |     NESTED LOOPS OUTER |                    |      1 |   8168 |      1 |00:00:00.01 |       6 |       |       |          |
+|   5 |      NESTED LOOPS      |                    |      1 |   8168 |      1 |00:00:00.01 |       6 |       |       |          |
+|   6 |       TABLE ACCESS FULL| XML_DESIGN_PATTERN |      1 |      1 |      1 |00:00:00.01 |       6 |       |       |          |
+|   7 |       XPATH EVALUATION |                    |      1 |        |      1 |00:00:00.01 |       0 |       |       |          |
+|   8 |      VIEW              |                    |      1 |      1 |      1 |00:00:00.01 |       0 |       |       |          |
+|*  9 |       FILTER           |                    |      1 |        |      1 |00:00:00.01 |       0 |       |       |          |
+|  10 |        FAST DUAL       |                    |      1 |      1 |      1 |00:00:00.01 |       0 |       |       |          |
+|  11 |     VIEW               |                    |      1 |   8168 |      3 |00:00:00.01 |       0 |       |       |          |
+|  12 |      XPATH EVALUATION  |                    |      1 |        |      3 |00:00:00.01 |       0 |       |       |          |
+|  13 |    VIEW                |                    |      3 |     32 |      3 |00:00:00.01 |       0 |       |       |          |
+|* 14 |     FILTER             |                    |      3 |        |      3 |00:00:00.01 |       0 |       |       |          |
+|  15 |      XPATH EVALUATION  |                    |      3 |        |      4 |00:00:00.01 |       0 |       |       |          |
+|  16 |      XPATH EVALUATION  |                    |      4 |        |      3 |00:00:00.01 |       0 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   9 - filter(<not feasible>)
+  14 - filter( IS NOT NULL)
+
+
+137 rows selected.
+
+Elapsed: 00:00:00.09
