@@ -1,0 +1,76 @@
+SQL> DELETE distances
+  2  /
+
+20 rows deleted.
+
+SQL> DELETE xy
+  2  /
+
+0 rows deleted.
+
+SQL> DELETE towns
+  2  /
+
+5 rows deleted.
+
+SQL> DROP SEQUENCE towns_s
+  2  /
+
+Sequence dropped.
+
+SQL> CREATE SEQUENCE towns_s START WITH 1
+  2  /
+
+Sequence created.
+
+SQL> INSERT INTO towns
+  2  SELECT towns_s.NEXTVAL, name, NULL, NULL FROM towns_ext
+  3  /
+
+312 rows created.
+
+SQL> DROP SEQUENCE towns_s
+  2  /
+
+Sequence dropped.
+
+SQL> CREATE SEQUENCE towns_s START WITH 1
+  2  /
+
+Sequence created.
+
+SQL> INSERT INTO xy
+  2  SELECT towns_s.NEXTVAL, x, y FROM xy_ext
+  3  /
+
+312 rows created.
+
+SQL> UPDATE towns t SET (t.x, t.y) = (SELECT xy.x, xy.y FROM xy WHERE xy.id = t.id)
+  2  /
+
+312 rows updated.
+
+SQL> INSERT INTO distances
+  2  WITH dist AS (
+  3  SELECT a.id a, b.id b,
+  4         SQRT ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) dst
+  5    FROM xy a
+  6    JOIN xy b
+  7      ON b.id > a.id
+  8  ), uni AS (
+  9  SELECT a, b, dst
+ 10    FROM dist
+ 11   UNION ALL
+ 12  SELECT b, a, dst
+ 13    FROM dist
+ 14  ), pks AS (
+ 15  SELECT a, b, dst, Row_Number() OVER (ORDER BY a, b) id
+ 16    FROM uni
+ 17  )
+ 18  SELECT id, a, b, dst
+ 19    FROM pks
+ 20  /
+
+97032 rows created.
+
+SQL> SPOOL OFF

@@ -1,0 +1,191 @@
+SQL> SELECT 'Start: ' || To_Char(SYSDATE,'DD-MON-YYYY HH24:MI:SS') FROM DUAL;
+
+'START:'||TO_CHAR(SYSDATE,'DD-MON-YY
+------------------------------------
+Start: 13-JUL-2013 14:38:49
+
+SQL> BEGIN
+  2    Utils.Clear_Log;
+  3  END;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+SQL> BREAK ON tot_dist
+SQL> PROMPT Ordered solution
+Ordered solution
+SQL> WITH legs AS (
+  2  SELECT twn.id town_id,
+  3         Lag (twn.id) OVER (ORDER BY twn.id) town_id_prior
+  4    FROM towns twn
+  5  )
+  6  SELECT Round (Sum (d.dst) OVER ()) tot_dist,
+  7         t.id,
+  8         t.name,
+  9         Round (d.dst) leg_dist
+ 10    FROM towns t
+ 11    JOIN legs l
+ 12      ON l.town_id = t.id
+ 13    LEFT JOIN distances d
+ 14      ON d.a = l.town_id_prior
+ 15     AND d.b = l.town_id
+ 16  ORDER BY t.id
+ 17  /
+
+  TOT_DIST         ID NAME                             LEG_DIST
+---------- ---------- ------------------------------ ----------
+         7          1 Origin
+                    2 Left Peak                               2
+                    3 Midfield                                1
+                    4 Right Peak                              1
+                    5 Destination                             2
+
+SQL> SET TIMING ON
+SQL> @..\sql\Town_Round_SQL 2 2
+old   2:   :KEEP_NUM_ROOT := &1;
+new   2:   :KEEP_NUM_ROOT := 2;
+old   3:   :KEEP_NUM := &2;
+new   3:   :KEEP_NUM := 2;
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.00
+Running for keep value of...
+
+  KEEP_NUM
+----------
+         2
+
+Top n solutions
+
+      ROOT FIRST_TOWN   PATH_RNK   TOT_DIST    TOWN_ID NAME                             LEG_DIST   CUM_DIST
+---------- ---------- ---------- ---------- ---------- ------------------------------ ---------- ----------
+         2          3          1       11.3          2 Left Peak
+                                                     3 Midfield                             1.41       1.41
+                                                     4 Right Peak                           1.41       2.83
+                                                     5 Destination                          2.24       5.06
+                                                     1 Origin                                  4       9.06
+                                                     2 Left Peak                            2.24       11.3
+                               2      11.73          2 Left Peak
+                                                     3 Midfield                             1.41       1.41
+                                                     5 Destination                          2.24       3.65
+                                                     4 Right Peak                           2.24       5.89
+                                                     1 Origin                               3.61       9.49
+                                                     2 Left Peak                            2.24      11.73
+         3          4          1      11.89          3 Midfield
+                                                     4 Right Peak                           1.41       1.41
+                                                     2 Left Peak                               2       3.41
+                                                     1 Origin                               2.24       5.65
+                                                     5 Destination                             4       9.65
+                                                     3 Midfield                             2.24      11.89
+                               2      13.26          3 Midfield
+                                                     4 Right Peak                           1.41       1.41
+                                                     2 Left Peak                               2       3.41
+                                                     5 Destination                          3.61       7.02
+                                                     1 Origin                                  4      11.02
+                                                     3 Midfield                             2.24      13.26
+
+24 rows selected.
+
+Elapsed: 00:00:00.04
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.09
+SQL> 
+SQL> @..\..\Brendan\sql\L_Log_Default
+
+TEXT
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL_ID  fzzk0d0a69af9, child number 0
+-------------------------------------
+WITH count_towns AS (/* XTSP  */ SELECT Count(*) n_towns FROM towns ),
+dist_from_root AS ( SELECT a, b, dst, Row_Number () OVER (ORDER BY dst)
+rnk_by_dst, Count(DISTINCT a) OVER () + 1 n_towns   FROM distances ),
+rsf (root, first_town, path_rnk, nxt_id, lev, tot_price, path, n_towns)
+AS ( SELECT d.a, d.b, 0, d.b, 2, d.dst,        CAST ('|' || LPad (d.a,
+3, '0') || '|' || LPad (d.b, 3, '0') AS VARCHAR2(4000)) path,
+d.n_towns   FROM dist_from_root d  WHERE d.rnk_by_dst <= :KEEP_NUM_ROOT
+ UNION ALL SELECT r.root,        r.first_town,        Row_Number() OVER
+(PARTITION BY r.root, r.first_town ORDER BY r.tot_price + d.dst),
+ d.b,        r.lev + 1,        r.tot_price + d.dst,        r.path ||
+'|' || LPad (d.b, 3, '0'),        r.n_towns   FROM rsf r   JOIN
+distances d     ON d.a = r.nxt_id    AND r.path NOT LIKE '%' || '|' ||
+LPad (d.b, 3, '0') || '%'  WHERE r.path_rnk <= :KEEP_NUM ), circuits AS
+( SELECT r.root, r.first_town,        Row_Number() OVER (PARTITION BY
+r.root, r.fi
+
+Plan hash value: 3999598049
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                             | Name        | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                                      |             |      1 |        |     24 |00:00:00.01 |      41 |       |       |          |
+|   1 |  WINDOW SORT                                          |             |      1 |     19 |     24 |00:00:00.01 |      41 |  4096 |  4096 | 4096  (0)|
+|*  2 |   HASH JOIN OUTER                                     |             |      1 |     19 |     24 |00:00:00.01 |      41 |   731K|   731K| 1215K (0)|
+|   3 |    MERGE JOIN                                         |             |      1 |     19 |     24 |00:00:00.01 |      35 |       |       |          |
+|   4 |     TABLE ACCESS BY INDEX ROWID                       | TOWNS       |      1 |      5 |      5 |00:00:00.01 |       2 |       |       |          |
+|   5 |      INDEX FULL SCAN                                  | SYS_C008004 |      1 |      5 |      5 |00:00:00.01 |       1 |       |       |          |
+|*  6 |     SORT JOIN                                         |             |      5 |     19 |     24 |00:00:00.01 |      33 |  2048 |  2048 | 2048  (0)|
+|   7 |      VIEW                                             |             |      1 |     19 |     24 |00:00:00.01 |      33 |       |       |          |
+|   8 |       WINDOW SORT                                     |             |      1 |     19 |     24 |00:00:00.01 |      33 |  4096 |  4096 | 4096  (0)|
+|   9 |        MERGE JOIN CARTESIAN                           |             |      1 |     19 |     24 |00:00:00.01 |      33 |       |       |          |
+|  10 |         VIEW                                          |             |      1 |      1 |      6 |00:00:00.01 |       1 |       |       |          |
+|  11 |          CONNECT BY WITHOUT FILTERING                 |             |      1 |        |      6 |00:00:00.01 |       1 |       |       |          |
+|  12 |           VIEW                                        |             |      1 |      1 |      1 |00:00:00.01 |       1 |       |       |          |
+|  13 |            SORT AGGREGATE                             |             |      1 |      1 |      1 |00:00:00.01 |       1 |       |       |          |
+|  14 |             INDEX FULL SCAN                           | SYS_C008004 |      1 |      5 |      5 |00:00:00.01 |       1 |       |       |          |
+|  15 |         BUFFER SORT                                   |             |      6 |     19 |     24 |00:00:00.01 |      32 |  2048 |  2048 | 2048  (0)|
+|* 16 |          VIEW                                         |             |      1 |     19 |      4 |00:00:00.01 |      32 |       |       |          |
+|* 17 |           WINDOW SORT PUSHED RANK                     |             |      1 |     19 |      4 |00:00:00.01 |      32 |  2048 |  2048 | 2048  (0)|
+|  18 |            MERGE JOIN                                 |             |      1 |     19 |      4 |00:00:00.01 |      32 |       |       |          |
+|  19 |             TABLE ACCESS BY INDEX ROWID               | DISTANCES   |      1 |     20 |     20 |00:00:00.01 |       2 |       |       |          |
+|  20 |              INDEX FULL SCAN                          | DISTANCE_PK |      1 |     20 |     20 |00:00:00.01 |       1 |       |       |          |
+|* 21 |             SORT JOIN                                 |             |     20 |     24 |      4 |00:00:00.01 |      30 |  2048 |  2048 | 2048  (0)|
+|* 22 |              VIEW                                     |             |      1 |     24 |      4 |00:00:00.01 |      30 |       |       |          |
+|  23 |               UNION ALL (RECURSIVE WITH) BREADTH FIRST|             |      1 |        |     20 |00:00:00.01 |      30 |       |       |          |
+|* 24 |                VIEW                                   |             |      1 |     20 |      2 |00:00:00.01 |       6 |       |       |          |
+|* 25 |                 WINDOW SORT PUSHED RANK               |             |      1 |     20 |      3 |00:00:00.01 |       6 |  2048 |  2048 | 2048  (0)|
+|  26 |                  WINDOW SORT                          |             |      1 |     20 |     20 |00:00:00.01 |       6 |  2048 |  2048 | 2048  (0)|
+|  27 |                   TABLE ACCESS FULL                   | DISTANCES   |      1 |     20 |     20 |00:00:00.01 |       6 |       |       |          |
+|  28 |                WINDOW SORT                            |             |      4 |      4 |     18 |00:00:00.01 |      24 |  2048 |  2048 | 2048  (0)|
+|* 29 |                 HASH JOIN                             |             |      4 |      4 |     18 |00:00:00.01 |      24 |   804K|   804K|  715K (0)|
+|  30 |                  TABLE ACCESS FULL                    | DISTANCES   |      4 |     20 |     80 |00:00:00.01 |      24 |       |       |          |
+|  31 |                  RECURSIVE WITH PUMP                  |             |      4 |        |     14 |00:00:00.01 |       0 |       |       |          |
+|  32 |    TABLE ACCESS FULL                                  | DISTANCES   |      1 |     20 |     20 |00:00:00.01 |       6 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("DST"."B"="TOP"."TOWN_ID" AND "DST"."A"="TOP"."TOWN_ID_PRIOR")
+   6 - access("TWN"."ID"="TOP"."TOWN_ID")
+       filter("TWN"."ID"="TOP"."TOWN_ID")
+  16 - filter("CIRCUITS"."PATH_RNK"<=:KEEP_NUM)
+  17 - filter(ROW_NUMBER() OVER ( PARTITION BY "R"."ROOT","R"."FIRST_TOWN" ORDER BY "R"."TOT_PRICE"+"D"."DST")<=:KEEP_NUM)
+  21 - access("D"."A"="R"."NXT_ID" AND "D"."B"="R"."ROOT")
+       filter(("D"."B"="R"."ROOT" AND "D"."A"="R"."NXT_ID"))
+  22 - filter(("R"."LEV"="R"."N_TOWNS"-1 AND "R"."PATH_RNK"<=:KEEP_NUM))
+  24 - filter("D"."RNK_BY_DST"<=:KEEP_NUM_ROOT)
+  25 - filter(ROW_NUMBER() OVER ( ORDER BY "DST")<=:KEEP_NUM_ROOT)
+  29 - access("D"."A"="R"."NXT_ID")
+       filter("R"."PATH" NOT LIKE '%|'||LPAD(TO_CHAR("D"."B"),3,'0')||'%')
+
+
+74 rows selected.
+
+Elapsed: 00:00:00.08
+SQL> COMMIT
+  2  /
+
+Commit complete.
+
+Elapsed: 00:00:00.00
+SQL> SELECT 'End: ' || To_Char(SYSDATE,'DD-MON-YYYY HH24:MI:SS') FROM DUAL;
+
+'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
+----------------------------------
+End: 13-JUL-2013 14:38:49
+
+Elapsed: 00:00:00.00
+SQL> SPOOL OFF

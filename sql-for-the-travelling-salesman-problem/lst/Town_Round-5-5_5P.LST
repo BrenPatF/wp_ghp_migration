@@ -1,0 +1,319 @@
+SQL> SELECT 'Start: ' || To_Char(SYSDATE,'DD-MON-YYYY HH24:MI:SS') FROM DUAL;
+
+'START:'||TO_CHAR(SYSDATE,'DD-MON-YY
+------------------------------------
+Start: 13-JUL-2013 15:48:51
+
+SQL> BEGIN
+  2    Utils.Clear_Log;
+  3  END;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+SQL> BREAK ON tot_dist
+SQL> PROMPT Ordered solution
+Ordered solution
+SQL> WITH legs AS (
+  2  SELECT twn.id town_id,
+  3         Lag (twn.id) OVER (ORDER BY twn.id) town_id_prior
+  4    FROM towns twn
+  5  )
+  6  SELECT Round (Sum (d.dst) OVER ()) tot_dist,
+  7         t.id,
+  8         t.name,
+  9         Round (d.dst) leg_dist
+ 10    FROM towns t
+ 11    JOIN legs l
+ 12      ON l.town_id = t.id
+ 13    LEFT JOIN distances d
+ 14      ON d.a = l.town_id_prior
+ 15     AND d.b = l.town_id
+ 16  ORDER BY t.id
+ 17  /
+
+  TOT_DIST         ID NAME                             LEG_DIST
+---------- ---------- ------------------------------ ----------
+         7          1 Left Floor
+                    2 Left Peak                               2
+                    3 Midfield                                1
+                    4 Right Peak                              1
+                    5 Right Floor                             2
+
+SQL> SET TIMING ON
+SQL> @..\sql\Town_Round_SQL 5 5
+old   2:   :KEEP_NUM_ROOT := &1;
+new   2:   :KEEP_NUM_ROOT := 5;
+old   3:   :KEEP_NUM := &2;
+new   3:   :KEEP_NUM := 5;
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.00
+Running for keep value of...
+
+  KEEP_NUM
+----------
+         5
+
+Top n solutions
+
+ROOT_LEG       PATH_RNK   TOT_DIST    TOWN_ID NAME                             LEG_DIST   CUM_DIST
+------------ ---------- ---------- ---------- ------------------------------ ---------- ----------
+1 -> 2                1      10.94          1 Left Floor
+                                            2 Left Peak                            2.24       2.24
+                                            4 Right Peak                              2       4.24
+                                            5 Right Floor                          2.24       6.47
+                                            3 Midfield                             2.24       8.71
+                                            1 Left Floor                           2.24      10.94
+                      2       11.3          1 Left Floor
+                                            2 Left Peak                            2.24       2.24
+                                            3 Midfield                             1.41       3.65
+                                            4 Right Peak                           1.41       5.06
+                                            5 Right Floor                          2.24        7.3
+                                            1 Left Floor                              4       11.3
+                      3      11.73          1 Left Floor
+                                            2 Left Peak                            2.24       2.24
+                                            5 Right Floor                          3.61       5.84
+                                            4 Right Peak                           2.24       8.08
+                                            3 Midfield                             1.41       9.49
+                                            1 Left Floor                           2.24      11.73
+                      4      11.73          1 Left Floor
+                                            2 Left Peak                            2.24       2.24
+                                            3 Midfield                             1.41       3.65
+                                            5 Right Floor                          2.24       5.89
+                                            4 Right Peak                           2.24       8.12
+                                            1 Left Floor                           3.61      11.73
+                      5      11.89          1 Left Floor
+                                            2 Left Peak                            2.24       2.24
+                                            4 Right Peak                              2       4.24
+                                            3 Midfield                             1.41       5.65
+                                            5 Right Floor                          2.24       7.89
+                                            1 Left Floor                              4      11.89
+2 -> 3                1       11.3          2 Left Peak
+                                            3 Midfield                             1.41       1.41
+                                            4 Right Peak                           1.41       2.83
+                                            5 Right Floor                          2.24       5.06
+                                            1 Left Floor                              4       9.06
+                                            2 Left Peak                            2.24       11.3
+                      2      11.73          2 Left Peak
+                                            3 Midfield                             1.41       1.41
+                                            5 Right Floor                          2.24       3.65
+                                            4 Right Peak                           2.24       5.89
+                                            1 Left Floor                           3.61       9.49
+                                            2 Left Peak                            2.24      11.73
+                      3       13.1          2 Left Peak
+                                            3 Midfield                             1.41       1.41
+                                            1 Left Floor                           2.24       3.65
+                                            4 Right Peak                           3.61       7.26
+                                            5 Right Floor                          2.24       9.49
+                                            2 Left Peak                            3.61       13.1
+                      4      13.26          2 Left Peak
+                                            3 Midfield                             1.41       1.41
+                                            5 Right Floor                          2.24       3.65
+                                            1 Left Floor                              4       7.65
+                                            4 Right Peak                           3.61      11.26
+                                            2 Left Peak                               2      13.26
+                      5      14.04          2 Left Peak
+                                            3 Midfield                             1.41       1.41
+                                            4 Right Peak                           1.41       2.83
+                                            1 Left Floor                           3.61       6.43
+                                            5 Right Floor                             4      10.43
+                                            2 Left Peak                            3.61      14.04
+2 -> 4                1      10.94          2 Left Peak
+                                            4 Right Peak                              2          2
+                                            5 Right Floor                          2.24       4.24
+                                            3 Midfield                             2.24       6.47
+                                            1 Left Floor                           2.24       8.71
+                                            2 Left Peak                            2.24      10.94
+                      2      11.89          2 Left Peak
+                                            4 Right Peak                              2          2
+                                            3 Midfield                             1.41       3.41
+                                            5 Right Floor                          2.24       5.65
+                                            1 Left Floor                              4       9.65
+                                            2 Left Peak                            2.24      11.89
+                      3      11.89          2 Left Peak
+                                            4 Right Peak                              2          2
+                                            5 Right Floor                          2.24       4.24
+                                            1 Left Floor                              4       8.24
+                                            3 Midfield                             2.24      10.47
+                                            2 Left Peak                            1.41      11.89
+                      4      13.26          2 Left Peak
+                                            4 Right Peak                              2          2
+                                            3 Midfield                             1.41       3.41
+                                            1 Left Floor                           2.24       5.65
+                                            5 Right Floor                             4       9.65
+                                            2 Left Peak                            3.61      13.26
+                      5      13.68          2 Left Peak
+                                            4 Right Peak                              2          2
+                                            1 Left Floor                           3.61       5.61
+                                            3 Midfield                             2.24       7.84
+                                            5 Right Floor                          2.24      10.08
+                                            2 Left Peak                            3.61      13.68
+3 -> 4                1       11.3          3 Midfield
+                                            4 Right Peak                           1.41       1.41
+                                            5 Right Floor                          2.24       3.65
+                                            1 Left Floor                              4       7.65
+                                            2 Left Peak                            2.24       9.89
+                                            3 Midfield                             1.41       11.3
+                      2      11.73          3 Midfield
+                                            4 Right Peak                           1.41       1.41
+                                            5 Right Floor                          2.24       3.65
+                                            2 Left Peak                            3.61       7.26
+                                            1 Left Floor                           2.24       9.49
+                                            3 Midfield                             2.24      11.73
+                      3      11.89          3 Midfield
+                                            4 Right Peak                           1.41       1.41
+                                            2 Left Peak                               2       3.41
+                                            1 Left Floor                           2.24       5.65
+                                            5 Right Floor                             4       9.65
+                                            3 Midfield                             2.24      11.89
+                      4       13.1          3 Midfield
+                                            4 Right Peak                           1.41       1.41
+                                            1 Left Floor                           3.61       5.02
+                                            2 Left Peak                            2.24       7.26
+                                            5 Right Floor                          3.61      10.86
+                                            3 Midfield                             2.24       13.1
+                      5      13.26          3 Midfield
+                                            4 Right Peak                           1.41       1.41
+                                            2 Left Peak                               2       3.41
+                                            5 Right Floor                          3.61       7.02
+                                            1 Left Floor                              4      11.02
+                                            3 Midfield                             2.24      13.26
+3 -> 5                1      10.94          3 Midfield
+                                            5 Right Floor                          2.24       2.24
+                                            4 Right Peak                           2.24       4.47
+                                            2 Left Peak                               2       6.47
+                                            1 Left Floor                           2.24       8.71
+                                            3 Midfield                             2.24      10.94
+                      2      11.73          3 Midfield
+                                            5 Right Floor                          2.24       2.24
+                                            4 Right Peak                           2.24       4.47
+                                            1 Left Floor                           3.61       8.08
+                                            2 Left Peak                            2.24      10.31
+                                            3 Midfield                             1.41      11.73
+                      3      11.89          3 Midfield
+                                            5 Right Floor                          2.24       2.24
+                                            1 Left Floor                              4       6.24
+                                            2 Left Peak                            2.24       8.47
+                                            4 Right Peak                              2      10.47
+                                            3 Midfield                             1.41      11.89
+                      4       13.1          3 Midfield
+                                            5 Right Floor                          2.24       2.24
+                                            2 Left Peak                            3.61       5.84
+                                            1 Left Floor                           2.24       8.08
+                                            4 Right Peak                           3.61      11.68
+                                            3 Midfield                             1.41       13.1
+                      5      13.68          3 Midfield
+                                            5 Right Floor                          2.24       2.24
+                                            2 Left Peak                            3.61       5.84
+                                            4 Right Peak                              2       7.84
+                                            1 Left Floor                           3.61      11.45
+                                            3 Midfield                             2.24      13.68
+
+150 rows selected.
+
+Elapsed: 00:00:00.14
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.06
+SQL> 
+SQL> @..\..\Brendan\sql\L_Log_Default
+
+TEXT
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL_ID  d6a2hsuwhrxcv, child number 0
+-------------------------------------
+WITH count_towns AS (/* XTSP  */ SELECT Count(*) n_towns FROM towns ),
+dist_from_root AS ( SELECT a, b, dst, Row_Number () OVER (ORDER BY dst)
+rnk_by_dst, Count(DISTINCT a) OVER () + 1 n_towns   FROM distances
+WHERE b > a ),  rsf (root, root_leg, path_rnk, nxt_id, lev, tot_price,
+path, n_towns) AS ( SELECT a, a || ' -> ' || b, 0, d.b, 2, d.dst,
+ CAST ('|' || LPad (d.a, 3, '0') || '|' || LPad (d.b, 3, '0') AS
+VARCHAR2(4000)) path,        d.n_towns   FROM dist_from_root d  WHERE
+d.rnk_by_dst <= :KEEP_NUM_ROOT  UNION ALL SELECT r.root,
+r.root_leg,        Row_Number() OVER (PARTITION BY r.root_leg ORDER BY
+r.tot_price + d.dst),        d.b,        r.lev + 1,        r.tot_price
++ d.dst,        r.path || '|' || LPad (d.b, 3, '0'),        r.n_towns
+FROM rsf r   JOIN distances d     ON d.a = r.nxt_id    AND r.path NOT
+LIKE '%' || '|' || LPad (d.b, 3, '0') || '%'  WHERE r.path_rnk <=
+:KEEP_NUM ), circuits AS ( SELECT r.root_leg,        Row_Number() OVER
+(PARTITION BY r.root_leg O
+
+Plan hash value: 43336824
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                             | Name        | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                                      |             |      1 |        |    150 |00:00:00.01 |    3126 |       |       |          |
+|   1 |  WINDOW SORT                                          |             |      1 |     10 |    150 |00:00:00.01 |    3126 | 24576 | 24576 |22528  (0)|
+|*  2 |   HASH JOIN OUTER                                     |             |      1 |     10 |    150 |00:00:00.01 |    3126 |   730K|   730K| 1216K (0)|
+|   3 |    MERGE JOIN                                         |             |      1 |     10 |    150 |00:00:00.01 |    2545 |       |       |          |
+|   4 |     TABLE ACCESS BY INDEX ROWID                       | TOWNS       |      1 |      5 |      5 |00:00:00.01 |       2 |       |       |          |
+|   5 |      INDEX FULL SCAN                                  | SYS_C008004 |      1 |      5 |      5 |00:00:00.01 |       1 |       |       |          |
+|*  6 |     SORT JOIN                                         |             |      5 |     10 |    150 |00:00:00.01 |    2543 | 15360 | 15360 |14336  (0)|
+|   7 |      VIEW                                             |             |      1 |     10 |    150 |00:00:00.01 |    2543 |       |       |          |
+|   8 |       WINDOW SORT                                     |             |      1 |     10 |    150 |00:00:00.01 |    2543 | 18432 | 18432 |16384  (0)|
+|   9 |        MERGE JOIN CARTESIAN                           |             |      1 |     10 |    150 |00:00:00.01 |    2543 |       |       |          |
+|  10 |         VIEW                                          |             |      1 |      1 |      6 |00:00:00.01 |       1 |       |       |          |
+|  11 |          CONNECT BY WITHOUT FILTERING                 |             |      1 |        |      6 |00:00:00.01 |       1 |       |       |          |
+|  12 |           VIEW                                        |             |      1 |      1 |      1 |00:00:00.01 |       1 |       |       |          |
+|  13 |            SORT AGGREGATE                             |             |      1 |      1 |      1 |00:00:00.01 |       1 |       |       |          |
+|  14 |             INDEX FULL SCAN                           | SYS_C008004 |      1 |      5 |      5 |00:00:00.01 |       1 |       |       |          |
+|  15 |         BUFFER SORT                                   |             |      6 |     10 |    150 |00:00:00.01 |    2542 |  2048 |  2048 | 2048  (0)|
+|* 16 |          VIEW                                         |             |      1 |     10 |     25 |00:00:00.01 |    2542 |       |       |          |
+|* 17 |           WINDOW SORT PUSHED RANK                     |             |      1 |     10 |     25 |00:00:00.01 |    2542 |  4096 |  4096 | 4096  (0)|
+|  18 |            MERGE JOIN                                 |             |      1 |     10 |     25 |00:00:00.01 |    2542 |       |       |          |
+|  19 |             TABLE ACCESS BY INDEX ROWID               | DISTANCES   |      1 |     20 |     20 |00:00:00.01 |       5 |       |       |          |
+|  20 |              INDEX FULL SCAN                          | DISTANCE_PK |      1 |     20 |     20 |00:00:00.01 |       4 |       |       |          |
+|* 21 |             SORT JOIN                                 |             |     20 |     12 |     25 |00:00:00.01 |    2537 |  4096 |  4096 | 4096  (0)|
+|* 22 |              VIEW                                     |             |      1 |     12 |     25 |00:00:00.01 |    2537 |       |       |          |
+|  23 |               UNION ALL (RECURSIVE WITH) BREADTH FIRST|             |      1 |        |     75 |00:00:00.01 |    2537 |       |       |          |
+|* 24 |                VIEW                                   |             |      1 |     10 |      5 |00:00:00.01 |     213 |       |       |          |
+|* 25 |                 WINDOW SORT PUSHED RANK               |             |      1 |     10 |      6 |00:00:00.01 |     213 |  2048 |  2048 | 2048  (0)|
+|  26 |                  WINDOW BUFFER                        |             |      1 |     10 |     10 |00:00:00.01 |     213 |  2048 |  2048 | 2048  (0)|
+|  27 |                   TABLE ACCESS BY INDEX ROWID         | DISTANCES   |      1 |     10 |     10 |00:00:00.01 |     213 |       |       |          |
+|* 28 |                    INDEX FULL SCAN                    | DISTANCE_PK |      1 |     10 |     10 |00:00:00.01 |     212 |       |       |          |
+|  29 |                WINDOW SORT                            |             |      4 |      2 |     70 |00:00:00.01 |    2324 |  6144 |  6144 | 6144  (0)|
+|* 30 |                 HASH JOIN                             |             |      4 |      2 |     70 |00:00:00.01 |    2324 |   804K|   804K|  750K (0)|
+|  31 |                  TABLE ACCESS FULL                    | DISTANCES   |      4 |     20 |     80 |00:00:00.01 |    2324 |       |       |          |
+|  32 |                  RECURSIVE WITH PUMP                  |             |      4 |        |     70 |00:00:00.01 |       0 |       |       |          |
+|  33 |    TABLE ACCESS FULL                                  | DISTANCES   |      1 |     20 |     20 |00:00:00.01 |     581 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("DST"."B"="TOP"."TOWN_ID" AND "DST"."A"="TOP"."TOWN_ID_PRIOR")
+   6 - access("TWN"."ID"="TOP"."TOWN_ID")
+       filter("TWN"."ID"="TOP"."TOWN_ID")
+  16 - filter("CIRCUITS"."PATH_RNK"<=:KEEP_NUM)
+  17 - filter(ROW_NUMBER() OVER ( PARTITION BY "R"."ROOT_LEG" ORDER BY "R"."TOT_PRICE"+"D"."DST")<=:KEEP_NUM)
+  21 - access("D"."A"="R"."NXT_ID" AND "D"."B"="R"."ROOT")
+       filter(("D"."B"="R"."ROOT" AND "D"."A"="R"."NXT_ID"))
+  22 - filter(("R"."LEV"="R"."N_TOWNS" AND "R"."PATH_RNK"<=:KEEP_NUM))
+  24 - filter("D"."RNK_BY_DST"<=:KEEP_NUM_ROOT)
+  25 - filter(ROW_NUMBER() OVER ( ORDER BY "DST")<=:KEEP_NUM_ROOT)
+  28 - filter("B">"A")
+  30 - access("D"."A"="R"."NXT_ID")
+       filter("R"."PATH" NOT LIKE '%|'||LPAD(TO_CHAR("D"."B"),3,'0')||'%')
+
+
+76 rows selected.
+
+Elapsed: 00:00:00.03
+SQL> COMMIT
+  2  /
+
+Commit complete.
+
+Elapsed: 00:00:00.00
+SQL> SELECT 'End: ' || To_Char(SYSDATE,'DD-MON-YYYY HH24:MI:SS') FROM DUAL;
+
+'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
+----------------------------------
+End: 13-JUL-2013 15:48:51
+
+Elapsed: 00:00:00.00
+SQL> SPOOL OFF

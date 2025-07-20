@@ -1,0 +1,390 @@
+
+'START:'||TO_CHAR(SYSDATE,'
+---------------------------
+Start: 08-SEP-2013 13:42:44
+
+Elapsed: 00:00:00.00
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.01
+Inline views: Employees with name, job, prior job; ditto for manager; # subordinates
+
+NAME                                            JOB_TITLE                           JOB_TITLE_PRIOR                     NAME_MGR                                        JOB_TITLE_MGR                       JOB_TITLE_MGR_PRIOR                      N_SUB
+----------------------------------------------- ----------------------------------- ----------------------------------- ----------------------------------------------- ----------------------------------- ----------------------------------- ----------
+Baida, Shelli                                   Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager                  Stock Clerk
+Colmenares, Karen                               Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager                  Stock Clerk
+Himuro, Guy                                     Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager                  Stock Clerk
+Khoo, Alexander                                 Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager                  Stock Clerk
+Raphaely, Den                                   Purchasing Manager                  Stock Clerk                         King, Steven                                    President                                                                        5
+Tobias, Sigal                                   Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager                  Stock Clerk
+
+6 rows selected.
+
+Elapsed: 00:00:00.00
+  1  SELECT emp.last_name || ', ' || emp.first_name name,
+  2         job.job_title,
+  3         job_p.job_title             job_title_prior,
+  4         emp_m.last_name || ', ' || emp_m.first_name name_mgr,
+  5         job_m.job_title             job_title_mgr,
+  6         job_pm.job_title            job_title_mgr_prior,
+  7         sub.n_sub
+  8    FROM hr.employees                emp
+  9    JOIN hr.jobs                     job
+ 10      ON job.job_id                  = emp.job_id
+ 11    LEFT JOIN (SELECT employee_id,
+ 12                      Max (job_id) KEEP (DENSE_RANK LAST ORDER BY end_date) job_id
+ 13                 FROM hr.job_history
+ 14                GROUP BY employee_id
+ 15              )                      jhs
+ 16      ON jhs.employee_id             = emp.employee_id
+ 17    LEFT JOIN hr.jobs                job_p
+ 18      ON job_p.job_id                = jhs.job_id
+ 19    LEFT JOIN hr.employees           emp_m
+ 20      ON emp_m.employee_id           = emp.manager_id
+ 21    LEFT JOIN hr.jobs                job_m
+ 22      ON job_m.job_id                = emp_m.job_id
+ 23    LEFT JOIN (SELECT employee_id,
+ 24                      Max (job_id) KEEP (DENSE_RANK LAST ORDER BY end_date) job_id
+ 25                 FROM hr.job_history
+ 26                GROUP BY employee_id
+ 27              )                      jhs_m
+ 28      ON jhs_m.employee_id           = emp.manager_id
+ 29    LEFT JOIN hr.jobs                job_pm
+ 30      ON job_pm.job_id               = jhs_m.job_id
+ 31    LEFT JOIN (SELECT manager_id,
+ 32                      Count(*)       n_sub
+ 33                 FROM hr.employees
+ 34                GROUP BY manager_id
+ 35              )                      sub
+ 36      ON sub.manager_id              = emp.employee_id
+ 37   WHERE emp.department_id           = 30
+ 38*  ORDER BY 1
+Subquery factors: Employees with name, job, prior job; ditto for manager; # subordinates
+
+NAME                                            JOB_TITLE                           JOB_TITLE_PRIOR                     NAME_MGR                                        JOB_TITLE_MGR                       JOB_TITLE_MGR_PRIOR                      N_SUB
+----------------------------------------------- ----------------------------------- ----------------------------------- ----------------------------------------------- ----------------------------------- ----------------------------------- ----------
+Baida, Shelli                                   Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager
+Colmenares, Karen                               Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager
+Himuro, Guy                                     Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager
+Khoo, Alexander                                 Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager
+Raphaely, Den                                   Purchasing Manager                  Stock Clerk                         King, Steven                                    President                           Stock Clerk                                  5
+Tobias, Sigal                                   Purchasing Clerk                                                        Raphaely, Den                                   Purchasing Manager
+
+6 rows selected.
+
+Elapsed: 00:00:00.00
+  1  WITH jhs_f AS (
+  2  SELECT employee_id,
+  3         Max (job_id) KEEP (DENSE_RANK LAST ORDER BY end_date) job_id
+  4    FROM hr.job_history
+  5   GROUP BY employee_id
+  6  ), sub_f AS (
+  7  SELECT manager_id,
+  8         Count(*)                    n_sub
+  9    FROM hr.employees
+ 10   GROUP BY manager_id
+ 11  )
+ 12  SELECT emp.last_name || ', ' || emp.first_name name,
+ 13         job.job_title,
+ 14         job_p.job_title             job_title_prior,
+ 15         emp_m.last_name || ', ' || emp_m.first_name name_mgr,
+ 16         job_m.job_title             job_title_mgr,
+ 17         job_pm.job_title            job_title_mgr_prior,
+ 18         sub.n_sub
+ 19    FROM hr.employees                emp
+ 20    JOIN hr.jobs                     job
+ 21      ON job.job_id                  = emp.job_id
+ 22    LEFT JOIN jhs_f                  jhs
+ 23      ON jhs.employee_id             = emp.employee_id
+ 24    LEFT JOIN hr.jobs                job_p
+ 25      ON job_p.job_id                = jhs.job_id
+ 26    LEFT JOIN hr.employees           emp_m
+ 27      ON emp_m.employee_id           = emp.manager_id
+ 28    LEFT JOIN hr.jobs                job_m
+ 29      ON job_m.job_id                = emp_m.job_id
+ 30    LEFT JOIN jhs_f                  jhs_m
+ 31      ON jhs_m.employee_id           = emp.employee_id
+ 32    LEFT JOIN hr.jobs                job_pm
+ 33      ON job_pm.job_id               = jhs_m.job_id
+ 34    LEFT JOIN sub_f                  sub
+ 35      ON sub.manager_id              = emp.employee_id
+ 36   WHERE emp.department_id           = 30
+ 37*  ORDER BY 1
+Output for Employees for department id 30 via Kitchen Sink...
+Baida, Shelli                           Raphaely, Den
+Colmenares, Karen                       Raphaely, Den
+Himuro, Guy                             Raphaely, Den
+Khoo, Alexander                         Raphaely, Den
+Raphaely, Den                           King, Steven                            Baida, Shelli
+Raphaely, Den                           King, Steven                            Colmenares, Karen
+Raphaely, Den                           King, Steven                            Himuro, Guy
+Raphaely, Den                           King, Steven                            Khoo, Alexander
+Raphaely, Den                           King, Steven                            Tobias, Sigal
+Tobias, Sigal                           Raphaely, Den
+10 rows written for Employees for department id 30 via Kitchen Sink
+Output for Employees for department id 30 via plain SQL...
+Baida, Shelli                           Raphaely, Den
+Colmenares, Karen                       Raphaely, Den
+Himuro, Guy                             Raphaely, Den
+Khoo, Alexander                         Raphaely, Den
+Raphaely, Den                           King, Steven                            Baida, Shelli
+Raphaely, Den                           King, Steven                            Colmenares, Karen
+Raphaely, Den                           King, Steven                            Himuro, Guy
+Raphaely, Den                           King, Steven                            Khoo, Alexander
+Raphaely, Den                           King, Steven                            Tobias, Sigal
+Tobias, Sigal                           Raphaely, Den
+10 rows written for Employees for department id 30 via plain SQL
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.13
+Employees for department id 30 via Kitchen Sink view
+
+NAME                                            NAME_MGR                                        NAME_SUB
+----------------------------------------------- ----------------------------------------------- -----------------------------------------------
+Baida, Shelli                                   Raphaely, Den
+Colmenares, Karen                               Raphaely, Den
+Himuro, Guy                                     Raphaely, Den
+Khoo, Alexander                                 Raphaely, Den
+Raphaely, Den                                   King, Steven                                    Baida, Shelli
+Raphaely, Den                                   King, Steven                                    Colmenares, Karen
+Raphaely, Den                                   King, Steven                                    Himuro, Guy
+Raphaely, Den                                   King, Steven                                    Khoo, Alexander
+Raphaely, Den                                   King, Steven                                    Tobias, Sigal
+Tobias, Sigal                                   Raphaely, Den
+
+10 rows selected.
+
+Elapsed: 00:00:00.02
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.04
+
+TEXT
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL_ID  9kya6b2a3x2sz, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS XCLIKS */ T.NAME, T.NAME_MGR,
+E.LAST_NAME || ', ' || E.FIRST_NAME FROM TABLE (KSINK_EMP.EMP_INFO_LIST
+(:B1 )) T LEFT JOIN HR.EMPLOYEES E ON E.MANAGER_ID = T.EMPLOYEE_ID
+ORDER BY 1, 2, 3
+
+Plan hash value: 3002282134
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                           | Name             | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  | Writes |  OMem |  1Mem | Used-Mem |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                    |                  |      1 |        |     10 |00:00:00.14 |    1195 |     41 |      1 |       |       |          |
+|   1 |  SORT ORDER BY                      |                  |      1 |  48554 |     10 |00:00:00.14 |    1195 |     41 |      1 |  2048 |  2048 | 2048  (0)|
+|*  2 |   HASH JOIN RIGHT OUTER             |                  |      1 |  48554 |     10 |00:00:00.14 |    1195 |     41 |      1 |  1368K|  1368K| 1322K (0)|
+|   3 |    VIEW                             | index$_join$_002 |      1 |    107 |    106 |00:00:00.02 |       8 |     12 |      0 |       |       |          |
+|*  4 |     HASH JOIN                       |                  |      1 |        |    106 |00:00:00.02 |       8 |     12 |      0 |  1519K|  1519K| 1575K (0)|
+|   5 |      INDEX FAST FULL SCAN           | EMP_MANAGER_IX   |      1 |    107 |    106 |00:00:00.01 |       4 |      6 |      0 |       |       |          |
+|   6 |      INDEX FAST FULL SCAN           | EMP_NAME_IX      |      1 |    107 |    107 |00:00:00.01 |       4 |      6 |      0 |       |       |          |
+|   7 |    COLLECTION ITERATOR PICKLER FETCH| EMP_INFO_LIST    |      1 |   8168 |      6 |00:00:00.13 |    1187 |     29 |      1 |       |       |          |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("E"."MANAGER_ID"=SYS_OP_ATG(VALUE(KOKBF$),1,2,2))
+   4 - access(ROWID=ROWID)
+
+SQL_ID  fs4k81jdjkrx6, child number 0
+-------------------------------------
+WITH JHS_F AS ( SELECT EMPLOYEE_ID, MAX (JOB_ID) KEEP (DENSE_RANK LAST
+ORDER BY END_DATE) JOB_ID FROM HR.JOB_HISTORY GROUP BY EMPLOYEE_ID ),
+SUB AS ( SELECT MANAGER_ID, COUNT(*) N_SUB FROM HR.EMPLOYEES GROUP BY
+MANAGER_ID ) SELECT /*+ GATHER_PLAN_STATISTICS XKSINK */ EMP_INFO_TYPE
+( EMP.EMPLOYEE_ID, EMP.LAST_NAME || ', ' || EMP.FIRST_NAME,
+JOB.JOB_TITLE, JOB_P.JOB_TITLE, EMP_M.LAST_NAME || ', ' ||
+EMP_M.FIRST_NAME, JOB_M.JOB_TITLE, JOB_MP.JOB_TITLE, SUB.N_SUB,
+DEP.DEPARTMENT_NAME, EMP_DM.LAST_NAME || ', ' || EMP_DM.FIRST_NAME,
+LOC.STREET_ADDRESS, COU.COUNTRY_NAME, REG.REGION_NAME ) FROM TABLE (:B1
+) LIS_E JOIN HR.EMPLOYEES EMP ON EMP.EMPLOYEE_ID = LIS_E.COLUMN_VALUE
+JOIN HR.JOBS JOB ON JOB.JOB_ID = EMP.JOB_ID LEFT JOIN JHS_F JHS ON
+JHS.EMPLOYEE_ID = EMP.EMPLOYEE_ID LEFT JOIN HR.JOBS JOB_P ON
+JOB_P.JOB_ID = JHS.JOB_ID LEFT JOIN HR.EMPLOYEES EMP_M ON
+EMP_M.EMPLOYEE_ID = EMP.MANAGER_ID LEFT JOIN HR.JOBS JOB_M ON
+JOB_M.JOB_ID = EMP_M.JOB_ID LEFT JOIN JHS_F JHS_M ON JHS_M.EMPLOYEE_ID
+= EMP.
+
+Plan hash value: 54594413
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                       | Name                      | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  | Writes |  OMem |  1Mem | Used-Mem |
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                                |                           |      1 |        |      6 |00:00:00.01 |      94 |      1 |      1 |       |       |          |
+|   1 |  TEMP TABLE TRANSFORMATION                      |                           |      1 |        |      6 |00:00:00.01 |      94 |      1 |      1 |       |       |          |
+|   2 |   LOAD AS SELECT                                |                           |      1 |        |      0 |00:00:00.01 |       6 |      0 |      1 |  1036K|  1036K|          |
+|   3 |    SORT GROUP BY NOSORT                         |                           |      1 |      7 |      7 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|   4 |     TABLE ACCESS BY INDEX ROWID                 | JOB_HISTORY               |      1 |     10 |     10 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|   5 |      INDEX FULL SCAN                            | JHIST_EMP_ID_ST_DATE_PK   |      1 |     10 |     10 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|*  6 |   HASH JOIN OUTER                               |                           |      1 |      6 |      6 |00:00:00.01 |      85 |      1 |      0 |   735K|   735K|  506K (0)|
+|*  7 |    HASH JOIN OUTER                              |                           |      1 |      6 |      6 |00:00:00.01 |      78 |      1 |      0 |   736K|   736K|  891K (0)|
+|*  8 |     HASH JOIN OUTER                             |                           |      1 |      6 |      6 |00:00:00.01 |      75 |      1 |      0 |   737K|   737K|  550K (0)|
+|*  9 |      HASH JOIN OUTER                            |                           |      1 |      6 |      6 |00:00:00.01 |      68 |      1 |      0 |   739K|   739K|  883K (0)|
+|* 10 |       HASH JOIN OUTER                           |                           |      1 |      6 |      6 |00:00:00.01 |      62 |      0 |      0 |   740K|   740K|  903K (0)|
+|* 11 |        HASH JOIN OUTER                          |                           |      1 |      6 |      6 |00:00:00.01 |      55 |      0 |      0 |   746K|   746K|  541K (0)|
+|* 12 |         HASH JOIN OUTER                         |                           |      1 |      6 |      6 |00:00:00.01 |      48 |      0 |      0 |   754K|   754K|  534K (0)|
+|* 13 |          HASH JOIN OUTER                        |                           |      1 |      6 |      6 |00:00:00.01 |      41 |      0 |      0 |   766K|   766K|  418K (0)|
+|* 14 |           HASH JOIN OUTER                       |                           |      1 |      6 |      6 |00:00:00.01 |      33 |      0 |      0 |   773K|   773K|  414K (0)|
+|  15 |            NESTED LOOPS OUTER                   |                           |      1 |      6 |      6 |00:00:00.01 |      26 |      0 |      0 |       |       |          |
+|* 16 |             HASH JOIN OUTER                     |                           |      1 |      6 |      6 |00:00:00.01 |      23 |      0 |      0 |   833K|   833K|  414K (0)|
+|* 17 |              HASH JOIN OUTER                    |                           |      1 |      6 |      6 |00:00:00.01 |      16 |      0 |      0 |   876K|   876K|  415K (0)|
+|* 18 |               HASH JOIN                         |                           |      1 |      6 |      6 |00:00:00.01 |       9 |      0 |      0 |   905K|   905K| 1259K (0)|
+|  19 |                MERGE JOIN                       |                           |      1 |    107 |    107 |00:00:00.01 |       9 |      0 |      0 |       |       |          |
+|  20 |                 TABLE ACCESS BY INDEX ROWID     | JOBS                      |      1 |     19 |     19 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|  21 |                  INDEX FULL SCAN                | JOB_ID_PK                 |      1 |     19 |     19 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|* 22 |                 SORT JOIN                       |                           |     19 |    107 |    107 |00:00:00.01 |       7 |      0 |      0 | 18432 | 18432 |16384  (0)|
+|  23 |                  TABLE ACCESS FULL              | EMPLOYEES                 |      1 |    107 |    107 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  24 |                COLLECTION ITERATOR PICKLER FETCH|                           |      1 |      6 |      6 |00:00:00.01 |       0 |      0 |      0 |       |       |          |
+|  25 |               TABLE ACCESS FULL                 | DEPARTMENTS               |      1 |     27 |     27 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  26 |              TABLE ACCESS FULL                  | LOCATIONS                 |      1 |     23 |     23 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|* 27 |             INDEX UNIQUE SCAN                   | COUNTRY_C_ID_PK           |      6 |      1 |      6 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+|  28 |            TABLE ACCESS FULL                    | REGIONS                   |      1 |      4 |      4 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  29 |           VIEW                                  | index$_join$_024          |      1 |    107 |    107 |00:00:00.01 |       8 |      0 |      0 |       |       |          |
+|* 30 |            HASH JOIN                            |                           |      1 |        |    107 |00:00:00.01 |       8 |      0 |      0 |  1245K|  1245K| 1550K (0)|
+|  31 |             INDEX FAST FULL SCAN                | EMP_NAME_IX               |      1 |    107 |    107 |00:00:00.01 |       4 |      0 |      0 |       |       |          |
+|  32 |             INDEX FAST FULL SCAN                | EMP_EMP_ID_PK             |      1 |    107 |    107 |00:00:00.01 |       4 |      0 |      0 |       |       |          |
+|  33 |          TABLE ACCESS FULL                      | EMPLOYEES                 |      1 |    107 |    107 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  34 |         TABLE ACCESS FULL                       | JOBS                      |      1 |     19 |     19 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  35 |        VIEW                                     |                           |      1 |     18 |     19 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  36 |         HASH GROUP BY                           |                           |      1 |     18 |     19 |00:00:00.01 |       7 |      0 |      0 |  1558K|  1558K| 1185K (0)|
+|  37 |          TABLE ACCESS FULL                      | EMPLOYEES                 |      1 |    107 |    107 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  38 |       VIEW                                      |                           |      1 |      7 |      7 |00:00:00.01 |       6 |      1 |      0 |       |       |          |
+|  39 |        TABLE ACCESS FULL                        | SYS_TEMP_0FD9D6604_5813E5 |      1 |      7 |      7 |00:00:00.01 |       6 |      1 |      0 |       |       |          |
+|  40 |      TABLE ACCESS FULL                          | JOBS                      |      1 |     19 |     19 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  41 |     VIEW                                        |                           |      1 |      7 |      7 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+|  42 |      TABLE ACCESS FULL                          | SYS_TEMP_0FD9D6604_5813E5 |      1 |      7 |      7 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+|  43 |    TABLE ACCESS FULL                            | JOBS                      |      1 |     19 |     19 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   6 - access("JOB_P"."JOB_ID"="JHS"."JOB_ID")
+   7 - access("JHS"."EMPLOYEE_ID"="EMP"."EMPLOYEE_ID")
+   8 - access("JOB_MP"."JOB_ID"="JHS_M"."JOB_ID")
+   9 - access("JHS_M"."EMPLOYEE_ID"="EMP"."EMPLOYEE_ID")
+  10 - access("SUB"."MANAGER_ID"="EMP"."EMPLOYEE_ID")
+  11 - access("JOB_M"."JOB_ID"="EMP_M"."JOB_ID")
+  12 - access("EMP_M"."EMPLOYEE_ID"="EMP"."MANAGER_ID")
+  13 - access("EMP_DM"."EMPLOYEE_ID"="DEP"."MANAGER_ID")
+  14 - access("REG"."REGION_ID"="COU"."REGION_ID")
+  16 - access("LOC"."LOCATION_ID"="DEP"."LOCATION_ID")
+  17 - access("DEP"."DEPARTMENT_ID"="EMP"."DEPARTMENT_ID")
+  18 - access("EMP"."EMPLOYEE_ID"=VALUE(KOKBF$))
+  22 - access("JOB"."JOB_ID"="EMP"."JOB_ID")
+       filter("JOB"."JOB_ID"="EMP"."JOB_ID")
+  27 - access("COU"."COUNTRY_ID"="LOC"."COUNTRY_ID")
+  30 - access(ROWID=ROWID)
+
+SQL_ID  2wt8hq8bdmkr3, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS XCLISQL */ E.LAST_NAME || ', ' ||
+E.FIRST_NAME, M.LAST_NAME || ', ' || M.FIRST_NAME, S.LAST_NAME || ', '
+|| S.FIRST_NAME FROM HR.EMPLOYEES E LEFT JOIN HR.EMPLOYEES M ON
+M.EMPLOYEE_ID = E.MANAGER_ID LEFT JOIN HR.EMPLOYEES S ON S.MANAGER_ID =
+E.EMPLOYEE_ID WHERE E.DEPARTMENT_ID = :B1 ORDER BY 1, 2, 3
+
+Plan hash value: 194309898
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                              | Name              | Starts | E-Rows | A-Rows |   A-Time   | Buffers |  OMem |  1Mem | Used-Mem |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                       |                   |      1 |        |     10 |00:00:00.01 |      14 |       |       |          |
+|   1 |  SORT ORDER BY                         |                   |      1 |     35 |     10 |00:00:00.01 |      14 |  2048 |  2048 | 2048  (0)|
+|   2 |   NESTED LOOPS OUTER                   |                   |      1 |     35 |     10 |00:00:00.01 |      14 |       |       |          |
+|*  3 |    HASH JOIN OUTER                     |                   |      1 |      6 |      6 |00:00:00.01 |      10 |  1281K|  1281K|  544K (0)|
+|   4 |     TABLE ACCESS BY INDEX ROWID BATCHED| EMPLOYEES         |      1 |      6 |      6 |00:00:00.01 |       2 |       |       |          |
+|*  5 |      INDEX RANGE SCAN                  | EMP_DEPARTMENT_IX |      1 |      6 |      6 |00:00:00.01 |       1 |       |       |          |
+|   6 |     VIEW                               | index$_join$_002  |      1 |    107 |    107 |00:00:00.01 |       8 |       |       |          |
+|*  7 |      HASH JOIN                         |                   |      1 |        |    107 |00:00:00.01 |       8 |  1245K|  1245K| 1439K (0)|
+|   8 |       INDEX FAST FULL SCAN             | EMP_NAME_IX       |      1 |    107 |    107 |00:00:00.01 |       4 |       |       |          |
+|   9 |       INDEX FAST FULL SCAN             | EMP_EMP_ID_PK     |      1 |    107 |    107 |00:00:00.01 |       4 |       |       |          |
+|  10 |    TABLE ACCESS BY INDEX ROWID BATCHED | EMPLOYEES         |      6 |      6 |      5 |00:00:00.01 |       4 |       |       |          |
+|* 11 |     INDEX RANGE SCAN                   | EMP_MANAGER_IX    |      6 |      6 |      5 |00:00:00.01 |       3 |       |       |          |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   3 - access("M"."EMPLOYEE_ID"="E"."MANAGER_ID")
+   5 - access("E"."DEPARTMENT_ID"=:B1)
+   7 - access(ROWID=ROWID)
+  11 - access("S"."MANAGER_ID"="E"."EMPLOYEE_ID")
+
+SQL_ID  81kfrda2vghhr, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS XCLIVW */        t.name,
+t.name_mgr,        CASE WHEN e.last_name IS NOT NULL THEN e.last_name
+|| ', ' || e.first_name END name_sub   FROM emp_ks_v t   LEFT JOIN
+hr.employees e     ON e.manager_id = t.employee_id  WHERE
+t.department_id = 30  ORDER BY 1, 2, 3
+
+Plan hash value: 82604602
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                    | Name                      | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  | Writes |  OMem |  1Mem | Used-Mem |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                             |                           |      1 |        |     10 |00:00:00.01 |      42 |      1 |      1 |       |       |          |
+|   1 |  SORT ORDER BY                               |                           |      1 |     35 |     10 |00:00:00.01 |      42 |      1 |      1 |  2048 |  2048 | 2048  (0)|
+|   2 |   NESTED LOOPS OUTER                         |                           |      1 |     35 |     10 |00:00:00.01 |      42 |      1 |      1 |       |       |          |
+|   3 |    VIEW                                      | EMP_KS_V                  |      1 |      6 |      6 |00:00:00.01 |      38 |      1 |      1 |       |       |          |
+|   4 |     TEMP TABLE TRANSFORMATION                |                           |      1 |        |      6 |00:00:00.01 |      38 |      1 |      1 |       |       |          |
+|   5 |      LOAD AS SELECT                          |                           |      1 |        |      0 |00:00:00.01 |       6 |      0 |      1 |  1036K|  1036K|          |
+|   6 |       SORT GROUP BY NOSORT                   |                           |      1 |      7 |      7 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|   7 |        TABLE ACCESS BY INDEX ROWID           | JOB_HISTORY               |      1 |     10 |     10 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|   8 |         INDEX FULL SCAN                      | JHIST_EMP_ID_ST_DATE_PK   |      1 |     10 |     10 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|*  9 |      HASH JOIN OUTER                         |                           |      1 |      6 |      6 |00:00:00.01 |      29 |      1 |      0 |   883K|   883K|  517K (0)|
+|* 10 |       HASH JOIN OUTER                        |                           |      1 |      6 |      6 |00:00:00.01 |      21 |      1 |      0 |   890K|   890K|  857K (0)|
+|* 11 |        HASH JOIN OUTER                       |                           |      1 |      6 |      6 |00:00:00.01 |      14 |      1 |      0 |   895K|   895K|  886K (0)|
+|* 12 |         HASH JOIN OUTER                      |                           |      1 |      6 |      6 |00:00:00.01 |      11 |      1 |      0 |   905K|   905K|  893K (0)|
+|  13 |          NESTED LOOPS                        |                           |      1 |      6 |      6 |00:00:00.01 |       5 |      0 |      0 |       |       |          |
+|  14 |           NESTED LOOPS OUTER                 |                           |      1 |      1 |      1 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+|  15 |            TABLE ACCESS BY INDEX ROWID       | DEPARTMENTS               |      1 |      1 |      1 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|* 16 |             INDEX UNIQUE SCAN                | DEPT_ID_PK                |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|* 17 |            INDEX UNIQUE SCAN                 | LOC_ID_PK                 |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  18 |           TABLE ACCESS BY INDEX ROWID BATCHED| EMPLOYEES                 |      1 |      6 |      6 |00:00:00.01 |       2 |      0 |      0 |       |       |          |
+|* 19 |            INDEX RANGE SCAN                  | EMP_DEPARTMENT_IX         |      1 |      6 |      6 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  20 |          VIEW                                |                           |      1 |      7 |      7 |00:00:00.01 |       6 |      1 |      0 |       |       |          |
+|  21 |           TABLE ACCESS FULL                  | SYS_TEMP_0FD9D6606_5813E5 |      1 |      7 |      7 |00:00:00.01 |       6 |      1 |      0 |       |       |          |
+|  22 |         VIEW                                 |                           |      1 |      7 |      7 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+|  23 |          TABLE ACCESS FULL                   | SYS_TEMP_0FD9D6606_5813E5 |      1 |      7 |      7 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+|  24 |        VIEW                                  |                           |      1 |     18 |     19 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  25 |         HASH GROUP BY                        |                           |      1 |     18 |     19 |00:00:00.01 |       7 |      0 |      0 |  1558K|  1558K| 1211K (0)|
+|  26 |          TABLE ACCESS FULL                   | EMPLOYEES                 |      1 |    107 |    107 |00:00:00.01 |       7 |      0 |      0 |       |       |          |
+|  27 |       VIEW                                   | index$_join$_013          |      1 |    107 |    107 |00:00:00.01 |       8 |      0 |      0 |       |       |          |
+|* 28 |        HASH JOIN                             |                           |      1 |        |    107 |00:00:00.01 |       8 |      0 |      0 |  1245K|  1245K| 1410K (0)|
+|  29 |         INDEX FAST FULL SCAN                 | EMP_NAME_IX               |      1 |    107 |    107 |00:00:00.01 |       4 |      0 |      0 |       |       |          |
+|  30 |         INDEX FAST FULL SCAN                 | EMP_EMP_ID_PK             |      1 |    107 |    107 |00:00:00.01 |       4 |      0 |      0 |       |       |          |
+|  31 |    TABLE ACCESS BY INDEX ROWID BATCHED       | EMPLOYEES                 |      6 |      6 |      5 |00:00:00.01 |       4 |      0 |      0 |       |       |          |
+|* 32 |     INDEX RANGE SCAN                         | EMP_MANAGER_IX            |      6 |      6 |      5 |00:00:00.01 |       3 |      0 |      0 |       |       |          |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   9 - access("EMP_M"."EMPLOYEE_ID"="EMP"."MANAGER_ID")
+  10 - access("SUB"."MANAGER_ID"="EMP"."EMPLOYEE_ID")
+  11 - access("JHS_M"."EMPLOYEE_ID"="EMP"."EMPLOYEE_ID")
+  12 - access("JHS"."EMPLOYEE_ID"="EMP"."EMPLOYEE_ID")
+  16 - access("DEP"."DEPARTMENT_ID"=30)
+  17 - access("LOC"."LOCATION_ID"="DEP"."LOCATION_ID")
+  19 - access("EMP"."DEPARTMENT_ID"=30)
+  28 - access(ROWID=ROWID)
+  32 - access("E"."MANAGER_ID"="T"."EMPLOYEE_ID")
+
+
+249 rows selected.
+
+Elapsed: 00:00:00.04
+
+'END:'||TO_CHAR(SYSDATE,'
+-------------------------
+End: 08-SEP-2013 13:42:44
+
+Elapsed: 00:00:00.00

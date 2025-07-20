@@ -1,0 +1,166 @@
+SQL> CREATE OR REPLACE DIRECTORY brendan_in_dir AS 'C:\Users\Brendan\Documents\Home - X300\SQL\Input';
+
+Directory created.
+
+SQL> DROP TABLE towns_ext
+  2  /
+
+Table dropped.
+
+SQL> CREATE TABLE towns_ext (
+  2          name           VARCHAR2(30)
+  3  )
+  4  ORGANIZATION EXTERNAL (
+  5  	TYPE			oracle_loader
+  6  	DEFAULT DIRECTORY	brendan_in_dir
+  7  	ACCESS PARAMETERS
+  8  	(
+  9                RECORDS DELIMITED BY NEWLINE SKIP 1
+ 10  		FIELDS TERMINATED BY '\t'
+ 11  		MISSING FIELD VALUES ARE NULL
+ 12  	)
+ 13  	LOCATION ('usca312_name_data.txt')
+ 14  )
+ 15  /
+
+Table created.
+
+SQL> DROP TABLE xy_ext
+  2  /
+
+Table dropped.
+
+SQL> CREATE TABLE xy_ext (
+  2          x           NUMBER,
+  3          y           NUMBER
+  4  )
+  5  ORGANIZATION EXTERNAL (
+  6  	TYPE			oracle_loader
+  7  	DEFAULT DIRECTORY	brendan_in_dir
+  8  	ACCESS PARAMETERS
+  9  	(
+ 10                RECORDS DELIMITED BY NEWLINE SKIP 1
+ 11  		FIELDS TERMINATED BY '\t'
+ 12  		MISSING FIELD VALUES ARE NULL
+ 13  	)
+ 14  	LOCATION ('usca312_xy_data.txt')
+ 15  )
+ 16  /
+
+Table created.
+
+SQL> DROP SEQUENCE towns_s
+  2  /
+
+Sequence dropped.
+
+SQL> CREATE SEQUENCE towns_s START WITH 1
+  2  /
+
+Sequence created.
+
+SQL> DROP TABLE distances
+  2  /
+
+Table dropped.
+
+SQL> DROP TABLE towns
+  2  /
+
+Table dropped.
+
+SQL> CREATE TABLE towns (
+  2         id            INTEGER PRIMARY KEY,
+  3         name          VARCHAR2(30),
+  4         x             NUMBER,
+  5         y             NUMBER
+  6  )
+  7  /
+
+Table created.
+
+SQL> DROP TABLE xy
+  2  /
+
+Table dropped.
+
+SQL> CREATE TABLE xy (
+  2         id            INTEGER PRIMARY KEY,
+  3         x             NUMBER,
+  4         y             NUMBER
+  5  )
+  6  /
+
+Table created.
+
+SQL> CREATE TABLE distances (
+  2         id     INTEGER PRIMARY KEY,
+  3         a      INTEGER,
+  4         b      INTEGER,
+  5         dst    NUMBER,
+  6         CONSTRAINT distance_pk UNIQUE (a, b),
+  7         CONSTRAINT dst_twn_a_fk FOREIGN KEY (a) REFERENCES towns (id),
+  8         CONSTRAINT dst_twn_b_fk FOREIGN KEY (b) REFERENCES towns (id)
+  9  )
+ 10  /
+
+Table created.
+
+SQL> DROP VIEW items
+  2  /
+DROP VIEW items
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE VIEW items (
+  2  	id,
+  3  	name,
+  4  	cat_id,
+  5         profit,
+  6         price
+  7  ) AS
+  8  SELECT id,
+  9  	a || '-' || b,
+ 10  	To_Char (a),
+ 11         -dst,
+ 12         0
+ 13    FROM distances
+ 14  /
+
+View created.
+
+SQL> DROP TABLE categories_town
+  2  /
+
+Table dropped.
+
+SQL> CREATE TABLE categories_town (
+  2  	id		VARCHAR2(3) PRIMARY KEY,
+  3  	min_items	INTEGER,
+  4  	max_items	INTEGER
+  5  )
+  6  /
+
+Table created.
+
+SQL> DROP VIEW categories
+  2  /
+
+View dropped.
+
+SQL> CREATE VIEW categories (
+  2  	id,
+  3  	min_items,
+  4  	max_items
+  5  ) AS
+  6  SELECT id,
+  7  	min_items,
+  8  	max_items
+  9    FROM categories_town
+ 10  /
+
+View created.
+
+SQL> SPOOL OFF

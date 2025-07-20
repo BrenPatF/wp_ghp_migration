@@ -1,0 +1,1744 @@
+SQL> SELECT 'Start: ' || To_Char(SYSDATE,'DD-MON-YYYY HH24:MI:SS') FROM DUAL;
+
+'START:'||TO_CHAR(SYSDATE,'DD-MON-YY
+------------------------------------
+Start: 14-JUL-2013 12:47:12
+
+SQL> BEGIN
+  2    Utils.Clear_Log;
+  3  END;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+SQL> BREAK ON tot_dist
+SQL> PROMPT Ordered solution
+Ordered solution
+SQL> WITH legs AS (
+  2  SELECT twn.id town_id,
+  3         Lag (twn.id) OVER (ORDER BY twn.id) town_id_prior
+  4    FROM towns twn
+  5  )
+  6  SELECT Round (Sum (d.dst) OVER ()) tot_dist,
+  7         t.id,
+  8         t.name,
+  9         Round (d.dst) leg_dist
+ 10    FROM towns t
+ 11    JOIN legs l
+ 12      ON l.town_id = t.id
+ 13    LEFT JOIN distances d
+ 14      ON d.a = l.town_id_prior
+ 15     AND d.b = l.town_id
+ 16  ORDER BY t.id
+ 17  /
+
+  TOT_DIST         ID NAME                             LEG_DIST
+---------- ---------- ------------------------------ ----------
+    468479          1 Abilene, TX
+                    2 Akron, OH                            1393
+                    3 Albany, NY                            547
+                    4 Albuquerque, NM                      2332
+                    5 Alert, NT                            4488
+                    6 Allentown, PA                        3036
+                    7 Amarillo, TX                         1858
+                    8 Anchorage, AK                        3776
+                    9 Ann Arbor, MI                        4756
+                   10 Asheville, NC                         468
+                   11 Ashland, KY                           199
+                   12 Atlanta, GA                           348
+                   13 Atlantic City, NJ                     790
+                   14 Augusta, GA                           662
+                   15 Augusta, ME                          1127
+                   16 Austin, TX                           2162
+                   17 Bakersfield, CA                      1512
+                   18 Baltimore, MD                        2942
+                   19 Bangor, ME                            662
+                   20 Baton Rouge, LA                      1837
+                   21 Battle Creek, MI                      918
+                   22 Bay City, MI                          125
+                   23 Beaumont, TX                         1170
+                   24 Belleville, ON                       1515
+                   25 Bellingham, WA                       3137
+                   26 Berkeley, CA                          752
+                   27 Billings, MT                         1097
+                   28 Biloxi, MS                           1723
+                   29 Binghamtom, NY                       1207
+                   30 Birmingham, AL                        958
+                   31 Bismarck, ND                         1333
+                   32 Bloomington, IL                       924
+                   33 Boise, ID                            1892
+                   34 Boston, MA                           3120
+                   35 Bowling Green, KY                    1126
+                   36 Brandon, MB                          1291
+                   37 Brantford, ON                        1434
+                   38 Brattleboro, VT                       538
+                   39 Bridgeport, CT                        125
+                   40 Brockton, MA                          164
+                   41 Buffalo, NY                           546
+                   42 Burlington, ONT                        77
+                   43 Burlington, VT                        464
+                   44 Butte, MT                            2719
+                   45 Calgary, AB                           368
+                   46 Cambridge, MA                        3026
+                   47 Canton, OH                            718
+                   48 Carson City, NV                      2655
+                   49 Cedar Rapids, IA                     1953
+                   50 Central Islip, NY                    1277
+                   51 Champaign, IL                        1040
+                   52 Charleston, SC                        766
+                   53 Charleston, WV                        403
+                   54 Charlotte, NC                         223
+                   55 Charlottetown, PE                    1444
+                   56 Chattanooga, TN                      1719
+                   57 Cheyenne, WY                         1412
+                   58 Chicago, IL                          1187
+                   59 Churchill, MB                        1248
+                   60 Cincinnati, OH                       1506
+                   61 Cleveland, OH                         250
+                   62 Colorado Springs, CO                 1608
+                   63 Columbia, MO                          863
+                   64 Columbia, SC                          852
+                   65 Columbus, GA                          293
+                   66 Columbus, OH                          536
+                   67 Concord, NH                           823
+                   68 Corpus Christi, TX                   2080
+                   69 Dallas, TX                            347
+                   70 Dawson, YT                           3636
+                   71 Dayton, OH                           4150
+                   72 Daytona Beach, FL                     761
+                   73 Decatur, IL                           916
+                   74 Denver, CO                           1108
+                   75 Des Moines, IA                        796
+                   76 Detroit, MI                           732
+                   77 Dodge City, KS                       1215
+                   78 Dubuque, IA                           725
+                   79 Duluth, MN                            312
+                   80 Durham, NC                           1178
+                   81 Eau Claire, WI                       1063
+                   82 Edmonton, AB                         1638
+                   83 Elizabeth, NJ                        2859
+                   84 El Paso, TX                          2313
+                   85 Enid, OK                              676
+                   86 Erie, PA                             1292
+                   87 Eugene, OR                           2974
+                   88 Eureka, CA                            237
+                   89 Evansville, IN                       2537
+                   90 Fairbanks, AK                        4552
+                   91 Fall River, MA                       5526
+                   92 Fargo, ND                            1807
+                   93 Flagstaff, AZ                        1306
+                   94 Flint, MI                            2006
+                   95 Ft Smith, AR                          909
+                   96 Ft Wayne, IN                          754
+                   97 Ft Worth, TX                         1023
+                   98 Fredericton, NB                      2313
+                   99 Fresno, CA                           3732
+                  100 Gadsden, AL                          2341
+                  101 Gainesville, FL                       394
+                  102 Gallup, NM                           1870
+                  103 Galveston, TX                        1055
+                  104 Gary, IN                              993
+                  105 Grand Junction, CO                   1475
+                  106 Grand Rapids, MI                     1604
+                  107 Great Falls, MT                      1799
+                  108 Green Bay, WI                        1622
+                  109 Greensboro, NC                        815
+                  110 Greenville, SC                        199
+                  111 Guelph, ON                            619
+                  112 Gulfport, MS                         1096
+                  113 Halifax, NS                          2032
+                  114 Hamilton, OH                         1503
+                  115 Hamilton, ON                          413
+                  116 Harrisburg, PA                        291
+                  117 Hartford, CT                          308
+                  118 Helena, MT                           2739
+                  119 Hilo, HI                             3552
+                  120 Honolulu, HI                          176
+                  121 Houston, TX                          4357
+                  122 Huntsville, AL                        697
+                  123 Indianapolis, IN                      349
+                  124 Iowa City, IA                         394
+                  125 Jackson, MI                           494
+                  126 Jackson, MS                           795
+                  127 Jacksonville, FL                      605
+                  128 Jersey City, NJ                       889
+                  129 Johnstown, PA                         158
+                  130 Joplin, MO                           1277
+                  131 Juneau, AK                           3123
+                  132 Kalamazoo, MI                        3551
+                  133 Kansas City, KS                       662
+                  134 Kansas City, MO                         4
+                  135 Kenosha, WI                           525
+                  136 Key West, FL                         1314
+                  137 Kingston, ON                         1406
+                  138 Kitchener, ON                         267
+                  139 Knoxville, TN                         573
+                  140 Lafayette, IN                         369
+                  141 Lancaster, PA                         731
+                  142 Lansing, MI                           600
+                  143 Laredo, TX                           1475
+                  144 Las Vegas, NV                        1235
+                  145 Lawrence, MA                         3072
+                  146 Lethbridge, AB                       2916
+                  147 Lexington, KY                        2116
+                  148 Lihue, HI                            5292
+                  149 Lima, OH                             5360
+                  150 Lincoln, NE                           868
+                  151 Little Rock, AR                       516
+                  152 London, ON                            952
+                  153 Los Angeles, CA                      2631
+                  154 Louisville, KY                       2263
+                  155 Lowell, MA                           1043
+                  156 Lubbock, TX                          2201
+                  157 Macon, GA                            1260
+                  158 Madison, WI                           812
+                  159 Manchester, NH                       1240
+                  160 Marshall, TX                         1740
+                  161 Medicine Hat, AB                     1654
+                  162 Memphis, TN                          1759
+                  163 Meriden, CT                          1270
+                  164 Miami, FL                            1203
+                  165 Milwaukee, WI                        1307
+                  166 Minneapolis, MN                       394
+                  167 Minot, ND                             599
+                  168 Mobile, AL                           1519
+                  169 Moncton, NB                          1934
+                  170 Montgomery, AL                       1770
+                  171 Montpelier, VT                       1255
+                  172 Montreal, QC                          136
+                  173 Moose Jaw, SK                        2209
+                  174 Muncie, IN                           1560
+                  175 Nashville, TN                         295
+                  176 Natchez, MS                           451
+                  177 Newark, NJ                           1349
+                  178 New Britain,CT                        116
+                  179 New Haven, CT                          26
+                  180 New Orleans, LA                      1421
+                  181 New York, NY                         1336
+                  182 Niagara Falls, ON                     387
+                  183 Nome, AK                             6146
+                  184 Norfolk, VA                          6448
+                  185 North Bay, ON                         698
+                  186 Oakland, CA                          3017
+                  187 Ogden, UT                             750
+                  188 Oklahoma City, OK                    1075
+                  189 Omaha, NE                             415
+                  190 Orlando, FL                          1336
+                  191 Ottawa, ON                           1217
+                  192 Paducah, KY                          1039
+                  193 Pasadena, CA                         2051
+                  194 Paterson, NJ                         3074
+                  195 Pensacola, FL                        1157
+                  196 Peoria, IL                            728
+                  197 Peterborough, ON                      813
+                  198 Philadelphia, PA                      369
+                  199 Phoenix, AZ                          2590
+                  200 Pierre, SD                           1107
+                  201 Pittsburgh, PA                       1432
+                  202 Pittsfield, MA                        487
+                  203 Pocatello, ID                        2709
+                  204 Port Arthur, TX                      1562
+                  205 Portland, ME                         1892
+                  206 Portland, OR                         3624
+                  207 Portsmouth, NH                       3591
+                  208 Portsmouth, VA                        576
+                  209 Prince Rupert, BC                    3931
+                  210 Providence, RI                       4169
+                  211 Provo, UT                            2783
+                  212 Pueblo, CO                            506
+                  213 Quebec City, QC                      2408
+                  214 Racine, WI                           1208
+                  215 Raleigh, NC                           794
+                  216 Rapid City, SD                       1794
+                  217 Reading, PA                          1904
+                  218 Regina, SK                           2105
+                  219 Reno, NV                             1289
+                  220 Richmond, VA                         2930
+                  221 Roanoke, VA                           173
+                  222 Rochester, MN                         983
+                  223 Rochester, NY                        1028
+                  224 Rockford, IL                          795
+                  225 Sacramento, CA                       2253
+                  226 Saginaw, MI                          2615
+                  227 Saint Catherines, ON                  331
+                  228 Saint Cloud, MN                      1049
+                  229 Saint John, NB                       1954
+                  230 Saint John's, NF                      922
+                  231 Saint Joseph, MO                     2959
+                  232 Saint Louis, MO                       331
+                  233 Saint Paul, MN                        480
+                  234 Saint Petersburg, FL                 1388
+                  235 Salem, OR                            3030
+                  236 Salina, KS                           1807
+                  237 Salt Lake City, UT                    996
+                  238 San Antonio, TX                      1213
+                  239 San Bernardino, CA                   1338
+                  240 San Diego, CA                          97
+                  241 San Francisco, CA                     504
+                  242 San Jose, CA                           47
+                  243 San Juan, PR                         4069
+                  244 Santa Barbara, CA                    3863
+                  245 Santa Cruz, CA                        239
+                  246 Santa Fe, NM                         1115
+                  247 Sarasota, FL                         1717
+                  248 Saskatoon, SK                        2394
+                  249 Sault Ste Marie, ON                  1583
+                  250 Savannah, GA                         1023
+                  251 Schenectady, NY                       891
+                  252 Seattle, WA                          3360
+                  253 Sheboygan, WI                        2407
+                  254 Sherbrooke, QC                       1113
+                  255 Sheridan, WY                         2437
+                  256 Shreveport, LA                       1246
+                  257 Sioux City, IA                        713
+                  258 Sioux Falls, SD                        75
+                  259 South Bend, IN                        733
+                  260 Spartanburg, NC                       553
+                  261 Spokane, WA                          2605
+                  262 Springfield, IL                      1995
+                  263 Springfield, MA                      1189
+                  264 Springfield, MO                      1470
+                  265 Springfield, OH                       682
+                  266 Stamford, CT                          714
+                  267 Steubenville, OH                      492
+                  268 Stockton, CA                         2814
+                  269 Sudbury, ON                          2861
+                  270 Superior, WI                          781
+                  271 Syndey, NS                           2215
+                  272 Syracuse, NY                         1133
+                  273 Tacoma, WA                           3212
+                  274 Tallahassee, FL                      2881
+                  275 Tampa, FL                             213
+                  276 Terre Haute, IN                       866
+                  277 Texarkana, TX                         620
+                  278 Thunder Bay, ON                      1083
+                  279 Timmins, ON                           549
+                  280 Toledo, OH                            500
+                  281 Topeka, KS                            857
+                  282 Toronto, ON                          1169
+                  283 Trenton, NJ                           399
+                  284 Trois-Rivieres, QC                    447
+                  285 Troy, NY                              260
+                  286 Tucson, AZ                           2673
+                  287 Tulsa, OK                            1067
+                  288 Urbana, IL                            603
+                  289 Utica, NY                             920
+                  290 Vancouver, BC                        3340
+                  291 Victoria, BC                           41
+                  292 Waco, TX                             2166
+                  293 Walla Walla, WA                      1775
+                  294 Washington, DC                       2897
+                  295 Waterloo, IA                         1086
+                  296 West Palm Beach, FL                  1382
+                  297 Wheeling, WV                          924
+                  298 Whitehorse, YK                       4017
+                  299 White Plains, NY                     4449
+                  300 Wichita, KS                          1645
+                  301 Wilkes-Barre, PA                     1503
+                  302 Wilmington, DE                        106
+                  303 Wilmington, NC                        416
+                  304 Windsor, ON                           655
+                  305 Winnipeg, MB                         1119
+                  306 Winston-Salem, NC                    1513
+                  307 Worcester, MA                         722
+                  308 Yakima, WA                           3378
+                  309 Yellowknife, NT                      1173
+                  310 Youngstown, OH                       2762
+                  311 Yuma, AZ                             2418
+                  312 Zanesville, OH                       2308
+
+312 rows selected.
+
+SQL> SET TIMING ON
+SQL> @..\sql\Town_Round_SQL 2 2 1
+old   2:   :KEEP_NUM_ROOT := &1;
+new   2:   :KEEP_NUM_ROOT := 2;
+old   3:   :KEEP_NUM := &2;
+new   3:   :KEEP_NUM := 2;
+old   4:   :SIGN := &3;
+new   4:   :SIGN := 1;
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.00
+Running for sign, root, keep root, keep values of...
+
+      SIGN
+----------
+         1
+
+
+KEEP_NUM_ROOT
+-------------
+            2
+
+
+  KEEP_NUM
+----------
+         2
+
+Top n solutions
+
+ROOT_LEG       PATH_RNK   TOT_DIST    TOWN_ID NAME                             LEG_DIST   CUM_DIST
+------------ ---------- ---------- ---------- ------------------------------ ---------- ----------
+184 -> 208            1   55744.86        184 Norfolk, VA
+                                          208 Portsmouth, VA                       1.19       1.19
+                                          294 Washington, DC                     151.18     152.37
+                                           18 Baltimore, MD                       40.06     192.43
+                                          141 Lancaster, PA                       55.83     248.26
+                                          129 Johnstown, PA                       16.64      264.9
+                                          217 Reading, PA                          27.2      292.1
+                                          302 Wilmington, DE                      48.48     340.58
+                                          198 Philadelphia, PA                    30.05     370.63
+                                          283 Trenton, NJ                         34.35     404.99
+                                           83 Elizabeth, NJ                       48.02     453.01
+                                          177 Newark, NJ                           5.61     458.62
+                                          128 Jersey City, NJ                      6.57     465.19
+                                          181 New York, NY                         5.04     470.23
+                                          194 Paterson, NJ                        18.08     488.32
+                                          299 White Plains, NY                    29.39     517.71
+                                          266 Stamford, CT                        15.36     533.07
+                                           39 Bridgeport, CT                      24.55     557.61
+                                          179 New Haven, CT                       21.46     579.08
+                                          163 Meriden, CT                         17.96     597.04
+                                          178 New Britain,CT                       8.71     605.75
+                                          117 Hartford, CT                         9.62     615.37
+                                          263 Springfield, MA                     24.25     639.62
+                                          202 Pittsfield, MA                      51.31     690.93
+                                          285 Troy, NY                            36.34     727.27
+                                            3 Albany, NY                           6.88     734.16
+                                          251 Schenectady, NY                     16.88     751.04
+                                          289 Utica, NY                           91.52     842.56
+                                          272 Syracuse, NY                        63.31     905.86
+                                           29 Binghamtom, NY                      67.49     973.35
+                                          301 Wilkes-Barre, PA                    58.97    1032.33
+                                            6 Allentown, PA                       51.68       1084
+                                          116 Harrisburg, PA                      99.07    1183.07
+                                           13 Atlantic City, NJ                  181.31    1364.38
+                                           50 Central Islip, NY                  129.74    1494.12
+                                          210 Providence, RI                     142.75    1636.87
+                                           91 Fall River, MA                      19.72    1656.59
+                                           40 Brockton, MA                        28.03    1684.61
+                                           34 Boston, MA                          19.21    1703.83
+                                           46 Cambridge, MA                        3.36    1707.19
+                                          155 Lowell, MA                          23.03    1730.22
+                                          145 Lawrence, MA                        11.73    1741.95
+                                          159 Manchester, NH                      28.36     1770.3
+                                           67 Concord, NH                         15.76    1786.06
+                                          307 Worcester, MA                       67.84     1853.9
+                                           38 Brattleboro, VT                     66.17    1920.07
+                                          171 Montpelier, VT                      97.37    2017.43
+                                           43 Burlington, VT                      46.45    2063.89
+                                          172 Montreal, QC                        97.19    2161.08
+                                          284 Trois-Rivieres, QC                  98.03     2259.1
+                                          254 Sherbrooke, QC                      93.08    2352.18
+                                          205 Portland, ME                       157.79    2509.97
+                                          207 Portsmouth, NH                      53.74    2563.71
+                                           15 Augusta, ME                        109.27    2672.99
+                                           19 Bangor, ME                          77.07    2750.06
+                                           98 Fredericton, NB                    171.89    2921.95
+                                          229 Saint John, NB                      58.53    2980.48
+                                          169 Moncton, NB                         99.94    3080.42
+                                          113 Halifax, NS                        117.55    3197.97
+                                           55 Charlottetown, PE                  100.98    3298.95
+                                          271 Syndey, NS                         212.55     3511.5
+                                          230 Saint John's, NF                   514.07    4025.57
+                                          213 Quebec City, QC                   1290.47    5316.03
+                                          191 Ottawa, ON                         400.01    5716.04
+                                          137 Kingston, ON                        85.39    5801.42
+                                           24 Belleville, ON                      49.28    5850.71
+                                          197 Peterborough, ON                    72.87    5923.57
+                                          282 Toronto, ON                         82.62    6006.19
+                                           42 Burlington, ONT                     33.92    6040.11
+                                          115 Hamilton, ON                        19.51    6059.62
+                                           37 Brantford, ON                       28.55    6088.16
+                                          111 Guelph, ON                           29.4    6117.56
+                                          138 Kitchener, ON                       10.29    6127.86
+                                          152 London, ON                          67.63    6195.49
+                                           86 Erie, PA                            97.44    6292.93
+                                          310 Youngstown, OH                      81.12    6374.05
+                                          267 Steubenville, OH                    50.45     6424.5
+                                          297 Wheeling, WV                        21.97    6446.47
+                                          201 Pittsburgh, PA                      56.46    6502.93
+                                           47 Canton, OH                          98.69    6601.61
+                                            2 Akron, OH                            21.8    6623.41
+                                           61 Cleveland, OH                       31.35    6654.76
+                                          304 Windsor, ON                        102.38    6757.14
+                                           76 Detroit, MI                          7.21    6764.35
+                                            9 Ann Arbor, MI                       47.21    6811.56
+                                          125 Jackson, MI                         46.67    6858.23
+                                          142 Lansing, MI                         35.28    6893.51
+                                           21 Battle Creek, MI                    51.65    6945.16
+                                          132 Kalamazoo, MI                       28.23    6973.39
+                                          259 South Bend, IN                      62.16    7035.55
+                                          104 Gary, IN                            76.01    7111.56
+                                           58 Chicago, IL                         27.47    7139.03
+                                          135 Kenosha, WI                         52.13    7191.16
+                                          214 Racine, WI                          10.12    7201.28
+                                          165 Milwaukee, WI                       23.24    7224.52
+                                          224 Rockford, IL                        97.71    7322.22
+                                          158 Madison, WI                         59.34    7381.56
+                                           78 Dubuque, IA                         95.84     7477.4
+                                           49 Cedar Rapids, IA                    75.74    7553.14
+                                          124 Iowa City, IA                       25.25    7578.39
+                                          295 Waterloo, IA                        80.35    7658.74
+                                          222 Rochester, MN                         106    7764.75
+                                          233 Saint Paul, MN                      76.94    7841.69
+                                          166 Minneapolis, MN                     12.03    7853.72
+                                          228 Saint Cloud, MN                     73.94    7927.66
+                                           79 Duluth, MN                         165.27    8092.93
+                                          270 Superior, WI                         4.32    8097.25
+                                           81 Eau Claire, WI                     138.42    8235.67
+                                          108 Green Bay, WI                      241.21    8476.87
+                                          253 Sheboygan, WI                       57.13       8534
+                                          106 Grand Rapids, MI                   151.51     8685.5
+                                          226 Saginaw, MI                        122.77    8808.27
+                                           22 Bay City, MI                        12.83     8821.1
+                                           94 Flint, MI                           42.55    8863.65
+                                          280 Toledo, OH                          93.64    8957.28
+                                          149 Lima, OH                            74.14    9031.42
+                                          265 Springfield, OH                     60.13    9091.56
+                                           71 Dayton, OH                          28.81    9120.37
+                                          114 Hamilton, OH                        35.63       9156
+                                           60 Cincinnati, OH                      17.93    9173.93
+                                          147 Lexington, KY                       81.08    9255.01
+                                          154 Louisville, KY                      90.44    9345.45
+                                           35 Bowling Green, KY                    99.3    9444.76
+                                          175 Nashville, TN                       61.65     9506.4
+                                          122 Huntsville, AL                     100.13    9606.53
+                                          100 Gadsden, AL                         63.64    9670.18
+                                           30 Birmingham, AL                       64.7    9734.88
+                                          170 Montgomery, AL                      86.96    9821.85
+                                           65 Columbus, GA                         90.9    9912.75
+                                           12 Atlanta, GA                         98.17   10010.92
+                                          157 Macon, GA                           81.64   10092.56
+                                           14 Augusta, GA                        122.52   10215.08
+                                          110 Greenville, SC                      99.77   10314.85
+                                          260 Spartanburg, NC                     32.62   10347.46
+                                           54 Charlotte, NC                       77.64   10425.11
+                                          306 Winston-Salem, NC                   73.13   10498.24
+                                          109 Greensboro, NC                       31.3   10529.54
+                                          215 Raleigh, NC                         82.35   10611.89
+                                           80 Durham, NC                          23.61    10635.5
+                                          221 Roanoke, VA                        113.91   10749.41
+                                           53 Charleston, WV                     138.61   10888.02
+                                           11 Ashland, KY                         70.03   10958.04
+                                          312 Zanesville, OH                     109.84   11067.89
+                                           66 Columbus, OH                        68.11   11135.99
+                                          174 Muncie, IN                         165.75   11301.74
+                                          123 Indianapolis, IN                    60.87   11362.61
+                                          276 Terre Haute, IN                     89.24   11451.85
+                                          288 Urbana, IL                           70.6   11522.45
+                                           51 Champaign, IL                        2.52   11524.98
+                                           73 Decatur, IL                         52.73   11577.71
+                                           32 Bloomington, IL                     44.57   11622.28
+                                          196 Peoria, IL                           43.6   11665.88
+                                          262 Springfield, IL                     61.75   11727.63
+                                          232 Saint Louis, MO                     89.73   11817.36
+                                           63 Columbia, MO                       149.28   11966.64
+                                          264 Springfield, MO                    137.23   12103.88
+                                          130 Joplin, MO                          84.44   12188.32
+                                          287 Tulsa, OK                          120.76   12309.07
+                                          188 Oklahoma City, OK                  115.46   12424.54
+                                           85 Enid, OK                            68.83   12493.37
+                                          300 Wichita, KS                         97.07   12590.44
+                                          236 Salina, KS                          81.55   12671.99
+                                          281 Topeka, KS                         134.35   12806.34
+                                          133 Kansas City, KS                     72.73   12879.07
+                                          134 Kansas City, MO                      3.52    12882.6
+                                          231 Saint Joseph, MO                    49.79   12932.39
+                                          150 Lincoln, NE                        144.56   13076.95
+                                          189 Omaha, NE                           59.52   13136.47
+                                          257 Sioux City, IA                      91.54   13228.01
+                                          258 Sioux Falls, SD                     75.45   13303.46
+                                           92 Fargo, ND                          229.97   13533.43
+                                          305 Winnipeg, MB                       211.94   13745.38
+                                           36 Brandon, MB                        187.08   13932.46
+                                          167 Minot, ND                          148.55      14081
+                                           31 Bismarck, ND                       104.59   14185.59
+                                          200 Pierre, SD                         171.22   14356.81
+                                          216 Rapid City, SD                     199.98   14556.79
+                                           57 Cheyenne, WY                       230.96   14787.75
+                                           74 Denver, CO                          97.46   14885.21
+                                           62 Colorado Springs, CO                63.56   14948.77
+                                          212 Pueblo, CO                          42.63    14991.4
+                                          246 Santa Fe, NM                       199.75   15191.16
+                                            4 Albuquerque, NM                     64.52   15255.68
+                                          102 Gallup, NM                         147.72    15403.4
+                                           93 Flagstaff, AZ                      202.26   15605.66
+                                          199 Phoenix, AZ                        124.38   15730.04
+                                          286 Tucson, AZ                         116.06    15846.1
+                                          311 Yuma, AZ                           257.86   16103.95
+                                          240 San Diego, CA                      175.01   16278.97
+                                          239 San Bernardino, CA                  96.69   16375.66
+                                          193 Pasadena, CA                        59.12   16434.78
+                                          153 Los Angeles, CA                      9.51   16444.29
+                                          244 Santa Barbara, CA                  103.68   16547.97
+                                           17 Bakersfield, CA                     80.84   16628.81
+                                           99 Fresno, CA                         108.31   16737.12
+                                          242 San Jose, CA                       152.25   16889.37
+                                          245 Santa Cruz, CA                      26.93    16916.3
+                                          186 Oakland, CA                         59.72   16976.02
+                                          241 San Francisco, CA                   10.47   16986.49
+                                           26 Berkeley, CA                        12.14   16998.63
+                                          268 Stockton, CA                        68.11   17066.74
+                                          225 Sacramento, CA                      45.35   17112.09
+                                           48 Carson City, NV                    125.92      17238
+                                          219 Reno, NV                            25.48   17263.49
+                                           88 Eureka, CA                         313.15   17576.64
+                                           87 Eugene, OR                         236.57    17813.2
+                                          235 Salem, OR                           61.63   17874.84
+                                          206 Portland, OR                        47.17   17922.01
+                                          273 Tacoma, WA                         120.57   18042.58
+                                          252 Seattle, WA                         25.62    18068.2
+                                           25 Bellingham, WA                      80.42   18148.62
+                                          290 Vancouver, BC                       56.66   18205.28
+                                          291 Victoria, BC                        41.45   18246.73
+                                          308 Yakima, WA                         246.37    18493.1
+                                          293 Walla Walla, WA                    153.98   18647.07
+                                          261 Spokane, WA                        127.07   18774.15
+                                           33 Boise, ID                          291.99   19066.14
+                                          203 Pocatello, ID                      264.67   19330.81
+                                          187 Ogden, UT                          118.47   19449.28
+                                          237 Salt Lake City, UT                  32.44   19481.72
+                                          211 Provo, UT                           39.79   19521.51
+                                          105 Grand Junction, CO                 229.45   19750.96
+                                          255 Sheridan, WY                       411.17   20162.14
+                                           27 Billings, MT                       126.61   20288.75
+                                          107 Great Falls, MT                    226.94   20515.69
+                                          118 Helena, MT                           80.7   20596.39
+                                           44 Butte, MT                           53.31    20649.7
+                                          146 Lethbridge, AB                     251.24   20900.94
+                                           45 Calgary, AB                        132.75   21033.69
+                                           82 Edmonton, AB                       173.35   21207.04
+                                          161 Medicine Hat, AB                   312.59   21519.63
+                                          248 Saskatoon, SK                      315.13   21834.76
+                                          173 Moose Jaw, SK                      149.68   21984.44
+                                          218 Regina, SK                          62.04   22046.48
+                                           77 Dodge City, KS                     933.12    22979.6
+                                            7 Amarillo, TX                       215.16   23194.75
+                                          156 Lubbock, TX                        113.61   23308.37
+                                            1 Abilene, TX                        166.25   23474.62
+                                           97 Ft Worth, TX                       167.57   23642.19
+                                           69 Dallas, TX                          36.19   23678.39
+                                          292 Waco, TX                            88.57   23766.96
+                                           16 Austin, TX                          97.72   23864.68
+                                          238 San Antonio, TX                     77.99   23942.67
+                                          143 Laredo, TX                         149.89   24092.56
+                                           68 Corpus Christi, TX                 147.28   24239.84
+                                          121 Houston, TX                        195.26    24435.1
+                                          103 Galveston, TX                       50.45   24485.55
+                                          204 Port Arthur, TX                     72.86   24558.41
+                                           23 Beaumont, TX                        17.62   24576.03
+                                          256 Shreveport, LA                     170.28   24746.32
+                                          160 Marshall, TX                        42.67   24788.99
+                                          277 Texarkana, TX                       64.71    24853.7
+                                           95 Ft Smith, AR                       137.64   24991.34
+                                          151 Little Rock, AR                    152.27   25143.61
+                                          162 Memphis, TN                         157.3   25300.91
+                                          192 Paducah, KY                        166.97   25467.88
+                                           89 Evansville, IN                      94.86   25562.74
+                                          140 Lafayette, IN                      175.16    25737.9
+                                           96 Ft Wayne, IN                       130.36   25868.26
+                                          139 Knoxville, TN                      366.84    26235.1
+                                           10 Asheville, NC                       97.65   26332.75
+                                           64 Columbia, SC                       152.46   26485.21
+                                           52 Charleston, SC                      113.9   26599.11
+                                          250 Savannah, GA                         93.9   26693.01
+                                          127 Jacksonville, FL                   126.96   26819.97
+                                          101 Gainesville, FL                     65.95   26885.92
+                                           72 Daytona Beach, FL                   94.98    26980.9
+                                          190 Orlando, FL                         52.58   27033.48
+                                          275 Tampa, FL                           85.01   27118.49
+                                          234 Saint Petersburg, FL                19.54   27138.03
+                                          247 Sarasota, FL                        31.73   27169.75
+                                          296 West Palm Beach, FL                176.46   27346.21
+                                          164 Miami, FL                           65.75   27411.96
+                                          136 Key West, FL                       138.36   27550.32
+                                          274 Tallahassee, FL                    441.61   27991.93
+                                          195 Pensacola, FL                      202.87    28194.8
+                                          168 Mobile, AL                          60.12   28254.92
+                                           28 Biloxi, MS                          61.74   28316.66
+                                          112 Gulfport, MS                        14.47   28331.13
+                                          180 New Orleans, LA                     73.62   28404.74
+                                           20 Baton Rouge, LA                     82.09   28486.83
+                                          176 Natchez, MS                         78.58   28565.41
+                                          126 Jackson, MS                         98.43   28663.84
+                                           56 Chattanooga, TN                    386.64   29050.48
+                                          303 Wilmington, NC                     512.01   29562.49
+                                          220 Richmond, VA                       232.37   29794.87
+                                           41 Buffalo, NY                        381.27   30176.14
+                                          182 Niagara Falls, ON                   20.54   30196.68
+                                          227 Saint Catherines, ON                 8.92   30205.61
+                                          223 Rochester, NY                      107.53   30313.14
+                                          185 North Bay, ON                      260.14   30573.28
+                                          269 Sudbury, ON                            93   30666.28
+                                          279 Timmins, ON                        140.17   30806.45
+                                          249 Sault Ste Marie, ON                260.02   31066.47
+                                          278 Thunder Bay, ON                    357.29   31423.76
+                                           75 Des Moines, IA                     553.68   31977.44
+                                           84 El Paso, TX                       1119.89   33097.34
+                                          144 Las Vegas, NV                      671.08   33768.41
+                                          209 Prince Rupert, BC                 1638.53   35406.94
+                                          131 Juneau, AK                         390.43   35797.37
+                                          298 Whitehorse, YK                     172.32   35969.69
+                                           70 Dawson, YT                         362.92   36332.61
+                                           90 Fairbanks, AK                         596   36928.62
+                                            8 Anchorage, AK                      292.11   37220.72
+                                          183 Nome, AK                          1095.15   38315.87
+                                          148 Lihue, HI                          2967.4   41283.27
+                                          120 Honolulu, HI                        114.5   41397.77
+                                          119 Hilo, HI                              176   41573.77
+                                          309 Yellowknife, NT                   4111.93    45685.7
+                                           59 Churchill, MB                     1431.71   47117.42
+                                            5 Alert, NT                         2742.38    49859.8
+                                          243 San Juan, PR                      4433.43   54293.23
+                                          184 Norfolk, VA                       1451.64   55744.86
+                      2   55746.24        184 Norfolk, VA
+                                          208 Portsmouth, VA                       1.19       1.19
+                                          294 Washington, DC                     151.18     152.37
+                                           18 Baltimore, MD                       40.06     192.43
+                                          141 Lancaster, PA                       55.83     248.26
+                                          129 Johnstown, PA                       16.64      264.9
+                                          217 Reading, PA                          27.2      292.1
+                                          302 Wilmington, DE                      48.48     340.58
+                                          198 Philadelphia, PA                    30.05     370.63
+                                          283 Trenton, NJ                         34.35     404.99
+                                           83 Elizabeth, NJ                       48.02     453.01
+                                          177 Newark, NJ                           5.61     458.62
+                                          128 Jersey City, NJ                      6.57     465.19
+                                          181 New York, NY                         5.04     470.23
+                                          194 Paterson, NJ                        18.08     488.32
+                                          299 White Plains, NY                    29.39     517.71
+                                          266 Stamford, CT                        15.36     533.07
+                                           39 Bridgeport, CT                      24.55     557.61
+                                          179 New Haven, CT                       21.46     579.08
+                                          163 Meriden, CT                         17.96     597.04
+                                          178 New Britain,CT                       8.71     605.75
+                                          117 Hartford, CT                         9.62     615.37
+                                          263 Springfield, MA                     24.25     639.62
+                                          202 Pittsfield, MA                      51.31     690.93
+                                          285 Troy, NY                            36.34     727.27
+                                            3 Albany, NY                           6.88     734.16
+                                          251 Schenectady, NY                     16.88     751.04
+                                          289 Utica, NY                           91.52     842.56
+                                          272 Syracuse, NY                        63.31     905.86
+                                           29 Binghamtom, NY                      67.49     973.35
+                                          301 Wilkes-Barre, PA                    58.97    1032.33
+                                            6 Allentown, PA                       51.68       1084
+                                          116 Harrisburg, PA                      99.07    1183.07
+                                           13 Atlantic City, NJ                  181.31    1364.38
+                                           50 Central Islip, NY                  129.74    1494.12
+                                          210 Providence, RI                     142.75    1636.87
+                                           91 Fall River, MA                      19.72    1656.59
+                                           40 Brockton, MA                        28.03    1684.61
+                                           34 Boston, MA                          19.21    1703.83
+                                           46 Cambridge, MA                        3.36    1707.19
+                                          155 Lowell, MA                          23.03    1730.22
+                                          145 Lawrence, MA                        11.73    1741.95
+                                          159 Manchester, NH                      28.36     1770.3
+                                           67 Concord, NH                         15.76    1786.06
+                                          307 Worcester, MA                       67.84     1853.9
+                                           38 Brattleboro, VT                     66.17    1920.07
+                                          171 Montpelier, VT                      97.37    2017.43
+                                           43 Burlington, VT                      46.45    2063.89
+                                          172 Montreal, QC                        97.19    2161.08
+                                          284 Trois-Rivieres, QC                  98.03     2259.1
+                                          254 Sherbrooke, QC                      93.08    2352.18
+                                          205 Portland, ME                       157.79    2509.97
+                                          207 Portsmouth, NH                      53.74    2563.71
+                                           15 Augusta, ME                        109.27    2672.99
+                                           19 Bangor, ME                          77.07    2750.06
+                                           98 Fredericton, NB                    171.89    2921.95
+                                          229 Saint John, NB                      58.53    2980.48
+                                          169 Moncton, NB                         99.94    3080.42
+                                          113 Halifax, NS                        117.55    3197.97
+                                           55 Charlottetown, PE                  100.98    3298.95
+                                          271 Syndey, NS                         212.55     3511.5
+                                          230 Saint John's, NF                   514.07    4025.57
+                                          213 Quebec City, QC                   1290.47    5316.03
+                                          191 Ottawa, ON                         400.01    5716.04
+                                          137 Kingston, ON                        85.39    5801.42
+                                           24 Belleville, ON                      49.28    5850.71
+                                          197 Peterborough, ON                    72.87    5923.57
+                                          282 Toronto, ON                         82.62    6006.19
+                                           42 Burlington, ONT                     33.92    6040.11
+                                          115 Hamilton, ON                        19.51    6059.62
+                                           37 Brantford, ON                       28.55    6088.16
+                                          111 Guelph, ON                           29.4    6117.56
+                                          138 Kitchener, ON                       10.29    6127.86
+                                          152 London, ON                          67.63    6195.49
+                                           86 Erie, PA                            97.44    6292.93
+                                          310 Youngstown, OH                      81.12    6374.05
+                                          267 Steubenville, OH                    50.45     6424.5
+                                          297 Wheeling, WV                        21.97    6446.47
+                                          201 Pittsburgh, PA                      56.46    6502.93
+                                           47 Canton, OH                          98.69    6601.61
+                                            2 Akron, OH                            21.8    6623.41
+                                           61 Cleveland, OH                       31.35    6654.76
+                                          304 Windsor, ON                        102.38    6757.14
+                                           76 Detroit, MI                          7.21    6764.35
+                                            9 Ann Arbor, MI                       47.21    6811.56
+                                          125 Jackson, MI                         46.67    6858.23
+                                          142 Lansing, MI                         35.28    6893.51
+                                           21 Battle Creek, MI                    51.65    6945.16
+                                          132 Kalamazoo, MI                       28.23    6973.39
+                                          259 South Bend, IN                      62.16    7035.55
+                                          104 Gary, IN                            76.01    7111.56
+                                           58 Chicago, IL                         27.47    7139.03
+                                          135 Kenosha, WI                         52.13    7191.16
+                                          214 Racine, WI                          10.12    7201.28
+                                          165 Milwaukee, WI                       23.24    7224.52
+                                          224 Rockford, IL                        97.71    7322.22
+                                          158 Madison, WI                         59.34    7381.56
+                                           78 Dubuque, IA                         95.84     7477.4
+                                           49 Cedar Rapids, IA                    75.74    7553.14
+                                          124 Iowa City, IA                       25.25    7578.39
+                                          295 Waterloo, IA                        80.35    7658.74
+                                          222 Rochester, MN                         106    7764.75
+                                          233 Saint Paul, MN                      76.94    7841.69
+                                          166 Minneapolis, MN                     12.03    7853.72
+                                          228 Saint Cloud, MN                     73.94    7927.66
+                                           79 Duluth, MN                         165.27    8092.93
+                                          270 Superior, WI                         4.32    8097.25
+                                           81 Eau Claire, WI                     138.42    8235.67
+                                          108 Green Bay, WI                      241.21    8476.87
+                                          253 Sheboygan, WI                       57.13       8534
+                                          106 Grand Rapids, MI                   151.51     8685.5
+                                          226 Saginaw, MI                        122.77    8808.27
+                                           22 Bay City, MI                        12.83     8821.1
+                                           94 Flint, MI                           42.55    8863.65
+                                          280 Toledo, OH                          93.64    8957.28
+                                          149 Lima, OH                            74.14    9031.42
+                                          265 Springfield, OH                     60.13    9091.56
+                                           71 Dayton, OH                          28.81    9120.37
+                                          114 Hamilton, OH                        35.63       9156
+                                           60 Cincinnati, OH                      17.93    9173.93
+                                          147 Lexington, KY                       81.08    9255.01
+                                          154 Louisville, KY                      90.44    9345.45
+                                           35 Bowling Green, KY                    99.3    9444.76
+                                          175 Nashville, TN                       61.65     9506.4
+                                          122 Huntsville, AL                     100.13    9606.53
+                                          100 Gadsden, AL                         63.64    9670.18
+                                           30 Birmingham, AL                       64.7    9734.88
+                                          170 Montgomery, AL                      86.96    9821.85
+                                           65 Columbus, GA                         90.9    9912.75
+                                           12 Atlanta, GA                         98.17   10010.92
+                                          157 Macon, GA                           81.64   10092.56
+                                           14 Augusta, GA                        122.52   10215.08
+                                          110 Greenville, SC                      99.77   10314.85
+                                          260 Spartanburg, NC                     32.62   10347.46
+                                           54 Charlotte, NC                       77.64   10425.11
+                                          306 Winston-Salem, NC                   73.13   10498.24
+                                          109 Greensboro, NC                       31.3   10529.54
+                                          215 Raleigh, NC                         82.35   10611.89
+                                           80 Durham, NC                          23.61    10635.5
+                                          221 Roanoke, VA                        113.91   10749.41
+                                           53 Charleston, WV                     138.61   10888.02
+                                           11 Ashland, KY                         70.03   10958.04
+                                          312 Zanesville, OH                     109.84   11067.89
+                                           66 Columbus, OH                        68.11   11135.99
+                                          174 Muncie, IN                         165.75   11301.74
+                                          123 Indianapolis, IN                    60.87   11362.61
+                                          276 Terre Haute, IN                     89.24   11451.85
+                                          288 Urbana, IL                           70.6   11522.45
+                                           51 Champaign, IL                        2.52   11524.98
+                                           73 Decatur, IL                         52.73   11577.71
+                                           32 Bloomington, IL                     44.57   11622.28
+                                          196 Peoria, IL                           43.6   11665.88
+                                          262 Springfield, IL                     61.75   11727.63
+                                          232 Saint Louis, MO                     89.73   11817.36
+                                           63 Columbia, MO                       149.28   11966.64
+                                          264 Springfield, MO                    137.23   12103.88
+                                          130 Joplin, MO                          84.44   12188.32
+                                          287 Tulsa, OK                          120.76   12309.07
+                                          188 Oklahoma City, OK                  115.46   12424.54
+                                           85 Enid, OK                            68.83   12493.37
+                                          300 Wichita, KS                         97.07   12590.44
+                                          236 Salina, KS                          81.55   12671.99
+                                          281 Topeka, KS                         134.35   12806.34
+                                          133 Kansas City, KS                     72.73   12879.07
+                                          134 Kansas City, MO                      3.52    12882.6
+                                          231 Saint Joseph, MO                    49.79   12932.39
+                                          150 Lincoln, NE                        144.56   13076.95
+                                          189 Omaha, NE                           59.52   13136.47
+                                          257 Sioux City, IA                      91.54   13228.01
+                                          258 Sioux Falls, SD                     75.45   13303.46
+                                           92 Fargo, ND                          229.97   13533.43
+                                          305 Winnipeg, MB                       211.94   13745.38
+                                           36 Brandon, MB                        187.08   13932.46
+                                          167 Minot, ND                          148.55      14081
+                                           31 Bismarck, ND                       104.59   14185.59
+                                          200 Pierre, SD                         171.22   14356.81
+                                          216 Rapid City, SD                     199.98   14556.79
+                                           57 Cheyenne, WY                       230.96   14787.75
+                                           74 Denver, CO                          97.46   14885.21
+                                           62 Colorado Springs, CO                63.56   14948.77
+                                          212 Pueblo, CO                          42.63    14991.4
+                                          246 Santa Fe, NM                       199.75   15191.16
+                                            4 Albuquerque, NM                     64.52   15255.68
+                                          102 Gallup, NM                         147.72    15403.4
+                                           93 Flagstaff, AZ                      202.26   15605.66
+                                          199 Phoenix, AZ                        124.38   15730.04
+                                          286 Tucson, AZ                         116.06    15846.1
+                                          311 Yuma, AZ                           257.86   16103.95
+                                          240 San Diego, CA                      175.01   16278.97
+                                          239 San Bernardino, CA                  96.69   16375.66
+                                          193 Pasadena, CA                        59.12   16434.78
+                                          153 Los Angeles, CA                      9.51   16444.29
+                                          244 Santa Barbara, CA                  103.68   16547.97
+                                           17 Bakersfield, CA                     80.84   16628.81
+                                           99 Fresno, CA                         108.31   16737.12
+                                          242 San Jose, CA                       152.25   16889.37
+                                          245 Santa Cruz, CA                      26.93    16916.3
+                                          186 Oakland, CA                         59.72   16976.02
+                                          241 San Francisco, CA                   10.47   16986.49
+                                           26 Berkeley, CA                        12.14   16998.63
+                                          268 Stockton, CA                        68.11   17066.74
+                                          225 Sacramento, CA                      45.35   17112.09
+                                           48 Carson City, NV                    125.92      17238
+                                          219 Reno, NV                            25.48   17263.49
+                                           88 Eureka, CA                         313.15   17576.64
+                                           87 Eugene, OR                         236.57    17813.2
+                                          235 Salem, OR                           61.63   17874.84
+                                          206 Portland, OR                        47.17   17922.01
+                                          273 Tacoma, WA                         120.57   18042.58
+                                          252 Seattle, WA                         25.62    18068.2
+                                           25 Bellingham, WA                      80.42   18148.62
+                                          290 Vancouver, BC                       56.66   18205.28
+                                          291 Victoria, BC                        41.45   18246.73
+                                          308 Yakima, WA                         246.37    18493.1
+                                          293 Walla Walla, WA                    153.98   18647.07
+                                          261 Spokane, WA                        127.07   18774.15
+                                           33 Boise, ID                          291.99   19066.14
+                                          203 Pocatello, ID                      264.67   19330.81
+                                          187 Ogden, UT                          118.47   19449.28
+                                          237 Salt Lake City, UT                  32.44   19481.72
+                                          211 Provo, UT                           39.79   19521.51
+                                          105 Grand Junction, CO                 229.45   19750.96
+                                          255 Sheridan, WY                       411.17   20162.14
+                                           27 Billings, MT                       126.61   20288.75
+                                          107 Great Falls, MT                    226.94   20515.69
+                                          118 Helena, MT                           80.7   20596.39
+                                           44 Butte, MT                           53.31    20649.7
+                                          146 Lethbridge, AB                     251.24   20900.94
+                                           45 Calgary, AB                        132.75   21033.69
+                                           82 Edmonton, AB                       173.35   21207.04
+                                          161 Medicine Hat, AB                   312.59   21519.63
+                                          248 Saskatoon, SK                      315.13   21834.76
+                                          173 Moose Jaw, SK                      149.68   21984.44
+                                          218 Regina, SK                          62.04   22046.48
+                                           77 Dodge City, KS                     933.12    22979.6
+                                            7 Amarillo, TX                       215.16   23194.75
+                                          156 Lubbock, TX                        113.61   23308.37
+                                            1 Abilene, TX                        166.25   23474.62
+                                           97 Ft Worth, TX                       167.57   23642.19
+                                           69 Dallas, TX                          36.19   23678.39
+                                          292 Waco, TX                            88.57   23766.96
+                                           16 Austin, TX                          97.72   23864.68
+                                          238 San Antonio, TX                     77.99   23942.67
+                                          143 Laredo, TX                         149.89   24092.56
+                                           68 Corpus Christi, TX                 147.28   24239.84
+                                          121 Houston, TX                        195.26    24435.1
+                                          103 Galveston, TX                       50.45   24485.55
+                                          204 Port Arthur, TX                     72.86   24558.41
+                                           23 Beaumont, TX                        17.62   24576.03
+                                          160 Marshall, TX                       170.89   24746.92
+                                          256 Shreveport, LA                      42.67   24789.59
+                                          277 Texarkana, TX                       65.49   24855.08
+                                           95 Ft Smith, AR                       137.64   24992.72
+                                          151 Little Rock, AR                    152.27      25145
+                                          162 Memphis, TN                         157.3   25302.29
+                                          192 Paducah, KY                        166.97   25469.26
+                                           89 Evansville, IN                      94.86   25564.12
+                                          140 Lafayette, IN                      175.16   25739.28
+                                           96 Ft Wayne, IN                       130.36   25869.64
+                                          139 Knoxville, TN                      366.84   26236.49
+                                           10 Asheville, NC                       97.65   26334.13
+                                           64 Columbia, SC                       152.46    26486.6
+                                           52 Charleston, SC                      113.9   26600.49
+                                          250 Savannah, GA                         93.9   26694.39
+                                          127 Jacksonville, FL                   126.96   26821.35
+                                          101 Gainesville, FL                     65.95    26887.3
+                                           72 Daytona Beach, FL                   94.98   26982.28
+                                          190 Orlando, FL                         52.58   27034.86
+                                          275 Tampa, FL                           85.01   27119.87
+                                          234 Saint Petersburg, FL                19.54   27139.41
+                                          247 Sarasota, FL                        31.73   27171.14
+                                          296 West Palm Beach, FL                176.46    27347.6
+                                          164 Miami, FL                           65.75   27413.34
+                                          136 Key West, FL                       138.36    27551.7
+                                          274 Tallahassee, FL                    441.61   27993.31
+                                          195 Pensacola, FL                      202.87   28196.18
+                                          168 Mobile, AL                          60.12    28256.3
+                                           28 Biloxi, MS                          61.74   28318.04
+                                          112 Gulfport, MS                        14.47   28332.51
+                                          180 New Orleans, LA                     73.62   28406.13
+                                           20 Baton Rouge, LA                     82.09   28488.22
+                                          176 Natchez, MS                         78.58    28566.8
+                                          126 Jackson, MS                         98.43   28665.22
+                                           56 Chattanooga, TN                    386.64   29051.86
+                                          303 Wilmington, NC                     512.01   29563.88
+                                          220 Richmond, VA                       232.37   29796.25
+                                           41 Buffalo, NY                        381.27   30177.52
+                                          182 Niagara Falls, ON                   20.54   30198.06
+                                          227 Saint Catherines, ON                 8.92   30206.99
+                                          223 Rochester, NY                      107.53   30314.52
+                                          185 North Bay, ON                      260.14   30574.66
+                                          269 Sudbury, ON                            93   30667.66
+                                          279 Timmins, ON                        140.17   30807.83
+                                          249 Sault Ste Marie, ON                260.02   31067.85
+                                          278 Thunder Bay, ON                    357.29   31425.14
+                                           75 Des Moines, IA                     553.68   31978.82
+                                           84 El Paso, TX                       1119.89   33098.72
+                                          144 Las Vegas, NV                      671.08    33769.8
+                                          209 Prince Rupert, BC                 1638.53   35408.32
+                                          131 Juneau, AK                         390.43   35798.75
+                                          298 Whitehorse, YK                     172.32   35971.07
+                                           70 Dawson, YT                         362.92   36333.99
+                                           90 Fairbanks, AK                         596      36930
+                                            8 Anchorage, AK                      292.11    37222.1
+                                          183 Nome, AK                          1095.15   38317.26
+                                          148 Lihue, HI                          2967.4   41284.65
+                                          120 Honolulu, HI                        114.5   41399.15
+                                          119 Hilo, HI                              176   41575.15
+                                          309 Yellowknife, NT                   4111.93   45687.09
+                                           59 Churchill, MB                     1431.71    47118.8
+                                            5 Alert, NT                         2742.38   49861.18
+                                          243 San Juan, PR                      4433.43   54294.61
+                                          184 Norfolk, VA                       1451.64   55746.24
+51 -> 288             1   56794.75         51 Champaign, IL
+                                          288 Urbana, IL                           2.52       2.52
+                                           73 Decatur, IL                         54.92      57.45
+                                          262 Springfield, IL                     47.66     105.11
+                                          196 Peoria, IL                          61.75     166.86
+                                           32 Bloomington, IL                      43.6     210.46
+                                          224 Rockford, IL                       123.66     334.12
+                                          135 Kenosha, WI                         90.57     424.69
+                                          165 Milwaukee, WI                       31.93     456.62
+                                          214 Racine, WI                          23.24     479.86
+                                           58 Chicago, IL                         61.23     541.09
+                                          104 Gary, IN                            27.47     568.56
+                                          259 South Bend, IN                      76.01     644.57
+                                          132 Kalamazoo, MI                       62.16     706.73
+                                           21 Battle Creek, MI                    28.23     734.96
+                                          142 Lansing, MI                         51.65     786.61
+                                          125 Jackson, MI                         35.28     821.89
+                                            9 Ann Arbor, MI                       46.67     868.56
+                                          280 Toledo, OH                          43.57     912.13
+                                           76 Detroit, MI                         58.03     970.16
+                                          304 Windsor, ON                          7.21     977.37
+                                           94 Flint, MI                           71.67    1049.04
+                                          226 Saginaw, MI                          33.5    1082.54
+                                           22 Bay City, MI                        12.83    1095.36
+                                          106 Grand Rapids, MI                   130.44     1225.8
+                                           96 Ft Wayne, IN                          132     1357.8
+                                          174 Muncie, IN                          67.15    1424.95
+                                          123 Indianapolis, IN                    60.87    1485.83
+                                          140 Lafayette, IN                       66.81    1552.63
+                                          276 Terre Haute, IN                     75.45    1628.09
+                                           89 Evansville, IN                     103.56    1731.64
+                                          192 Paducah, KY                         94.86    1826.51
+                                          175 Nashville, TN                      140.56    1967.07
+                                           35 Bowling Green, KY                   61.65    2028.71
+                                          154 Louisville, KY                       99.3    2128.02
+                                          147 Lexington, KY                       90.44    2218.46
+                                           60 Cincinnati, OH                      81.08    2299.54
+                                          114 Hamilton, OH                        17.93    2317.47
+                                           71 Dayton, OH                          35.63     2353.1
+                                          265 Springfield, OH                     28.81    2381.91
+                                           66 Columbus, OH                        56.03    2437.94
+                                          312 Zanesville, OH                      68.11    2506.04
+                                           47 Canton, OH                          73.78    2579.83
+                                            2 Akron, OH                            21.8    2601.63
+                                           61 Cleveland, OH                       31.35    2632.98
+                                          310 Youngstown, OH                      77.36    2710.33
+                                          267 Steubenville, OH                    50.45    2760.79
+                                          297 Wheeling, WV                        21.97    2782.75
+                                          201 Pittsburgh, PA                      56.46    2839.21
+                                           86 Erie, PA                           116.83    2956.05
+                                           37 Brantford, ON                       71.49    3027.54
+                                          138 Kitchener, ON                       22.82    3050.35
+                                          111 Guelph, ON                          10.29    3060.65
+                                           42 Burlington, ONT                     29.68    3090.32
+                                          115 Hamilton, ON                        19.51    3109.83
+                                          227 Saint Catherines, ON                52.51    3162.34
+                                           41 Buffalo, NY                         29.25    3191.58
+                                          182 Niagara Falls, ON                   20.54    3212.12
+                                          282 Toronto, ON                         42.01    3254.13
+                                          197 Peterborough, ON                    82.62    3336.75
+                                           24 Belleville, ON                      72.87    3409.61
+                                          137 Kingston, ON                        49.28     3458.9
+                                          191 Ottawa, ON                          85.39    3544.28
+                                          172 Montreal, QC                       146.68    3690.97
+                                           43 Burlington, VT                      97.19    3788.16
+                                          171 Montpelier, VT                      46.45    3834.61
+                                           38 Brattleboro, VT                     97.37    3931.97
+                                          263 Springfield, MA                     51.84    3983.81
+                                          117 Hartford, CT                        24.25    4008.06
+                                          178 New Britain,CT                       9.62    4017.69
+                                          163 Meriden, CT                          8.71     4026.4
+                                          179 New Haven, CT                       17.96    4044.36
+                                           39 Bridgeport, CT                      21.46    4065.82
+                                          266 Stamford, CT                        24.55    4090.37
+                                          299 White Plains, NY                    15.36    4105.73
+                                          181 New York, NY                        27.75    4133.48
+                                          128 Jersey City, NJ                      5.04    4138.52
+                                          177 Newark, NJ                           6.57    4145.09
+                                           83 Elizabeth, NJ                        5.61     4150.7
+                                          194 Paterson, NJ                        17.67    4168.37
+                                          283 Trenton, NJ                          62.4    4230.77
+                                          198 Philadelphia, PA                    34.35    4265.12
+                                          302 Wilmington, DE                      30.05    4295.18
+                                          217 Reading, PA                         48.48    4343.66
+                                          129 Johnstown, PA                        27.2    4370.86
+                                          141 Lancaster, PA                       16.64     4387.5
+                                          116 Harrisburg, PA                      43.19    4430.69
+                                           18 Baltimore, MD                        70.5    4501.18
+                                          294 Washington, DC                      40.06    4541.24
+                                          220 Richmond, VA                        97.21    4638.45
+                                          208 Portsmouth, VA                      94.39    4732.84
+                                          184 Norfolk, VA                          1.19    4734.03
+                                          215 Raleigh, NC                        178.76    4912.79
+                                           80 Durham, NC                          23.61    4936.41
+                                          109 Greensboro, NC                      61.97    4998.37
+                                          306 Winston-Salem, NC                    31.3    5029.67
+                                           54 Charlotte, NC                       73.13     5102.8
+                                          260 Spartanburg, NC                     77.64    5180.45
+                                          110 Greenville, SC                      32.62    5213.06
+                                           10 Asheville, NC                       52.87    5265.93
+                                          139 Knoxville, TN                       97.65    5363.58
+                                           56 Chattanooga, TN                    114.91    5478.49
+                                          100 Gadsden, AL                         86.02    5564.51
+                                          122 Huntsville, AL                      63.64    5628.15
+                                           30 Birmingham, AL                      84.91    5713.06
+                                          170 Montgomery, AL                      86.96    5800.02
+                                           65 Columbus, GA                         90.9    5890.93
+                                          157 Macon, GA                           97.26    5988.18
+                                           12 Atlanta, GA                         81.64    6069.82
+                                           14 Augusta, GA                        167.83    6237.65
+                                           64 Columbia, SC                        74.55    6312.21
+                                           52 Charleston, SC                      113.9     6426.1
+                                          250 Savannah, GA                         93.9       6520
+                                          127 Jacksonville, FL                   126.96    6646.96
+                                          101 Gainesville, FL                     65.95    6712.91
+                                           72 Daytona Beach, FL                   94.98    6807.89
+                                          190 Orlando, FL                         52.58    6860.48
+                                          275 Tampa, FL                           85.01    6945.48
+                                          234 Saint Petersburg, FL                19.54    6965.02
+                                          247 Sarasota, FL                        31.73    6996.75
+                                          296 West Palm Beach, FL                176.46    7173.21
+                                          164 Miami, FL                           65.75    7238.96
+                                          136 Key West, FL                       138.36    7377.32
+                                          274 Tallahassee, FL                    441.61    7818.92
+                                          195 Pensacola, FL                      202.87     8021.8
+                                          168 Mobile, AL                          60.12    8081.91
+                                           28 Biloxi, MS                          61.74    8143.65
+                                          112 Gulfport, MS                        14.47    8158.12
+                                          180 New Orleans, LA                     73.62    8231.74
+                                           20 Baton Rouge, LA                     82.09    8313.83
+                                          176 Natchez, MS                         78.58    8392.41
+                                          126 Jackson, MS                         98.43    8490.84
+                                          162 Memphis, TN                         197.2    8688.04
+                                          151 Little Rock, AR                     157.3    8845.33
+                                          277 Texarkana, TX                      151.96    8997.29
+                                          160 Marshall, TX                        64.71       9062
+                                          256 Shreveport, LA                      42.67    9104.67
+                                           23 Beaumont, TX                       170.28    9274.96
+                                          204 Port Arthur, TX                     17.62    9292.58
+                                          103 Galveston, TX                       72.86    9365.44
+                                          121 Houston, TX                         50.45    9415.89
+                                           16 Austin, TX                         168.07    9583.96
+                                          238 San Antonio, TX                     77.99    9661.95
+                                           68 Corpus Christi, TX                 135.39    9797.35
+                                          143 Laredo, TX                         147.28    9944.63
+                                          292 Waco, TX                            323.5   10268.13
+                                           97 Ft Worth, TX                        82.15   10350.28
+                                           69 Dallas, TX                          36.19   10386.47
+                                          188 Oklahoma City, OK                  191.95   10578.42
+                                           85 Enid, OK                            68.83   10647.25
+                                          300 Wichita, KS                         97.07   10744.32
+                                          236 Salina, KS                          81.55   10825.87
+                                          281 Topeka, KS                         134.35   10960.22
+                                          133 Kansas City, KS                     72.73   11032.95
+                                          134 Kansas City, MO                      3.52   11036.48
+                                          231 Saint Joseph, MO                    49.79   11086.27
+                                          189 Omaha, NE                          127.61   11213.88
+                                          150 Lincoln, NE                         59.52    11273.4
+                                          257 Sioux City, IA                     118.91    11392.3
+                                          258 Sioux Falls, SD                     75.45   11467.76
+                                          228 Saint Cloud, MN                    223.72   11691.48
+                                          166 Minneapolis, MN                     73.94   11765.42
+                                          233 Saint Paul, MN                      12.03   11777.45
+                                          222 Rochester, MN                       76.94   11854.39
+                                           81 Eau Claire, WI                       86.5   11940.89
+                                          270 Superior, WI                       138.42    12079.3
+                                           79 Duluth, MN                           4.32   12083.63
+                                          278 Thunder Bay, ON                    221.38   12305.01
+                                          108 Green Bay, WI                      281.05   12586.06
+                                          253 Sheboygan, WI                       57.13   12643.19
+                                          158 Madison, WI                         125.6   12768.78
+                                           78 Dubuque, IA                         95.84   12864.62
+                                           49 Cedar Rapids, IA                    75.74   12940.36
+                                          124 Iowa City, IA                       25.25   12965.61
+                                          295 Waterloo, IA                        80.35   13045.96
+                                           75 Des Moines, IA                     107.02   13152.99
+                                           63 Columbia, MO                       203.13   13356.12
+                                          264 Springfield, MO                    137.23   13493.35
+                                          130 Joplin, MO                          84.44   13577.79
+                                           95 Ft Smith, AR                       117.62    13695.4
+                                          287 Tulsa, OK                          122.27   13817.67
+                                           77 Dodge City, KS                     299.19   14116.86
+                                            7 Amarillo, TX                       215.16   14332.02
+                                          156 Lubbock, TX                        113.61   14445.63
+                                            1 Abilene, TX                        166.25   14611.88
+                                           84 El Paso, TX                        469.27   15081.15
+                                            4 Albuquerque, NM                    230.08   15311.23
+                                          246 Santa Fe, NM                        64.52   15375.75
+                                          102 Gallup, NM                         194.11   15569.86
+                                           93 Flagstaff, AZ                      202.26   15772.12
+                                          199 Phoenix, AZ                        124.38    15896.5
+                                          286 Tucson, AZ                         116.06   16012.56
+                                          311 Yuma, AZ                           257.86   16270.41
+                                          240 San Diego, CA                      175.01   16445.43
+                                          239 San Bernardino, CA                  96.69   16542.12
+                                          193 Pasadena, CA                        59.12   16601.24
+                                          153 Los Angeles, CA                      9.51   16610.75
+                                          244 Santa Barbara, CA                  103.68   16714.43
+                                           17 Bakersfield, CA                     80.84   16795.27
+                                           99 Fresno, CA                         108.31   16903.58
+                                          268 Stockton, CA                       134.15   17037.73
+                                          225 Sacramento, CA                      45.35   17083.08
+                                           26 Berkeley, CA                         72.8   17155.88
+                                          186 Oakland, CA                          4.65   17160.53
+                                          241 San Francisco, CA                   10.47      17171
+                                          242 San Jose, CA                        47.11   17218.11
+                                          245 Santa Cruz, CA                      26.93   17245.03
+                                           48 Carson City, NV                    217.59   17462.63
+                                          219 Reno, NV                            25.48   17488.11
+                                           88 Eureka, CA                         313.15   17801.26
+                                           87 Eugene, OR                         236.57   18037.82
+                                          235 Salem, OR                           61.63   18099.46
+                                          206 Portland, OR                        47.17   18146.63
+                                          273 Tacoma, WA                         120.57    18267.2
+                                          252 Seattle, WA                         25.62   18292.82
+                                           25 Bellingham, WA                      80.42   18373.24
+                                          290 Vancouver, BC                       56.66    18429.9
+                                          291 Victoria, BC                        41.45   18471.35
+                                          308 Yakima, WA                         246.37   18717.72
+                                          293 Walla Walla, WA                    153.98    18871.7
+                                          261 Spokane, WA                        127.07   18998.77
+                                           33 Boise, ID                          291.99   19290.76
+                                          203 Pocatello, ID                      264.67   19555.43
+                                          187 Ogden, UT                          118.47    19673.9
+                                          237 Salt Lake City, UT                  32.44   19706.34
+                                          211 Provo, UT                           39.79   19746.13
+                                          105 Grand Junction, CO                 229.45   19975.58
+                                           74 Denver, CO                         250.76   20226.34
+                                           62 Colorado Springs, CO                63.56    20289.9
+                                          212 Pueblo, CO                          42.63   20332.53
+                                           57 Cheyenne, WY                       199.91   20532.45
+                                          216 Rapid City, SD                     230.96    20763.4
+                                          200 Pierre, SD                         199.98   20963.38
+                                           31 Bismarck, ND                       171.22    21134.6
+                                          167 Minot, ND                          104.59   21239.19
+                                           36 Brandon, MB                        148.55   21387.74
+                                          305 Winnipeg, MB                       187.08   21574.82
+                                           92 Fargo, ND                          211.94   21786.76
+                                          218 Regina, SK                         597.09   22383.85
+                                          173 Moose Jaw, SK                       62.04   22445.89
+                                          248 Saskatoon, SK                      149.68   22595.57
+                                          161 Medicine Hat, AB                   315.13    22910.7
+                                          146 Lethbridge, AB                     146.13   23056.82
+                                           45 Calgary, AB                        132.75   23189.57
+                                           82 Edmonton, AB                       173.35   23362.92
+                                          107 Great Falls, MT                    446.74   23809.67
+                                          118 Helena, MT                           80.7   23890.36
+                                           44 Butte, MT                           53.31   23943.68
+                                           27 Billings, MT                       279.14   24222.81
+                                          255 Sheridan, WY                       126.61   24349.42
+                                          144 Las Vegas, NV                      821.24   25170.67
+                                          209 Prince Rupert, BC                 1638.53   26809.19
+                                          131 Juneau, AK                         390.43   27199.62
+                                          298 Whitehorse, YK                     172.32   27371.94
+                                           70 Dawson, YT                         362.92   27734.86
+                                           90 Fairbanks, AK                         596   28330.87
+                                            8 Anchorage, AK                      292.11   28622.97
+                                          183 Nome, AK                          1095.15   29718.13
+                                          148 Lihue, HI                          2967.4   32685.52
+                                          120 Honolulu, HI                        114.5   32800.02
+                                          119 Hilo, HI                              176   32976.02
+                                          309 Yellowknife, NT                   4111.93   37087.96
+                                           59 Churchill, MB                     1431.71   38519.67
+                                          249 Sault Ste Marie, ON               1073.27   39592.94
+                                          269 Sudbury, ON                        256.57   39849.51
+                                          185 North Bay, ON                          93   39942.51
+                                          279 Timmins, ON                        198.01   40140.52
+                                          152 London, ON                         387.85   40528.37
+                                          223 Rochester, NY                       249.8   40778.17
+                                          272 Syracuse, NY                       101.71   40879.88
+                                          289 Utica, NY                           63.31   40943.18
+                                           29 Binghamtom, NY                      83.89   41027.07
+                                          301 Wilkes-Barre, PA                    58.97   41086.05
+                                            6 Allentown, PA                       51.68   41137.72
+                                           13 Atlantic City, NJ                  113.26   41250.99
+                                           50 Central Islip, NY                  129.74   41380.73
+                                          202 Pittsfield, MA                      114.7   41495.43
+                                          285 Troy, NY                            36.34   41531.77
+                                            3 Albany, NY                           6.88   41538.65
+                                          251 Schenectady, NY                     16.88   41555.54
+                                          307 Worcester, MA                      152.51   41708.04
+                                          210 Providence, RI                      40.53   41748.58
+                                           91 Fall River, MA                      19.72   41768.29
+                                           40 Brockton, MA                        28.03   41796.32
+                                           34 Boston, MA                          19.21   41815.53
+                                           46 Cambridge, MA                        3.36    41818.9
+                                          155 Lowell, MA                          23.03   41841.93
+                                          145 Lawrence, MA                        11.73   41853.65
+                                          159 Manchester, NH                      28.36   41882.01
+                                           67 Concord, NH                         15.76   41897.76
+                                          207 Portsmouth, NH                      54.37   41952.14
+                                          205 Portland, ME                        53.74   42005.88
+                                           15 Augusta, ME                         55.61   42061.49
+                                           19 Bangor, ME                          77.07   42138.56
+                                           98 Fredericton, NB                    171.89   42310.45
+                                          229 Saint John, NB                      58.53   42368.98
+                                          169 Moncton, NB                         99.94   42468.93
+                                           55 Charlottetown, PE                  108.58    42577.5
+                                          113 Halifax, NS                        100.98   42678.49
+                                          271 Syndey, NS                         254.97   42933.46
+                                          230 Saint John's, NF                   514.07   43447.53
+                                          213 Quebec City, QC                   1290.47   44737.99
+                                          284 Trois-Rivieres, QC                 190.67   44928.66
+                                          254 Sherbrooke, QC                      93.08   45021.74
+                                          221 Roanoke, VA                        802.17   45823.91
+                                           53 Charleston, WV                     138.61   45962.52
+                                           11 Ashland, KY                         70.03   46032.55
+                                          149 Lima, OH                           186.42   46218.96
+                                          232 Saint Louis, MO                    445.62   46664.59
+                                          303 Wilmington, NC                     899.59   47564.17
+                                          243 San Juan, PR                      1361.81   48925.99
+                                            5 Alert, NT                         4433.43   53359.42
+                                           51 Champaign, IL                     3435.34   56794.75
+                      2   56794.89         51 Champaign, IL
+                                          288 Urbana, IL                           2.52       2.52
+                                           73 Decatur, IL                         54.92      57.45
+                                          262 Springfield, IL                     47.66     105.11
+                                          196 Peoria, IL                          61.75     166.86
+                                           32 Bloomington, IL                      43.6     210.46
+                                          224 Rockford, IL                       123.66     334.12
+                                          135 Kenosha, WI                         90.57     424.69
+                                          165 Milwaukee, WI                       31.93     456.62
+                                          214 Racine, WI                          23.24     479.86
+                                           58 Chicago, IL                         61.23     541.09
+                                          104 Gary, IN                            27.47     568.56
+                                          259 South Bend, IN                      76.01     644.57
+                                          132 Kalamazoo, MI                       62.16     706.73
+                                           21 Battle Creek, MI                    28.23     734.96
+                                          142 Lansing, MI                         51.65     786.61
+                                          125 Jackson, MI                         35.28     821.89
+                                            9 Ann Arbor, MI                       46.67     868.56
+                                          280 Toledo, OH                          43.57     912.13
+                                           76 Detroit, MI                         58.03     970.16
+                                          304 Windsor, ON                          7.21     977.37
+                                           94 Flint, MI                           71.67    1049.04
+                                          226 Saginaw, MI                          33.5    1082.54
+                                           22 Bay City, MI                        12.83    1095.36
+                                          106 Grand Rapids, MI                   130.44     1225.8
+                                           96 Ft Wayne, IN                          132     1357.8
+                                          174 Muncie, IN                          67.15    1424.95
+                                          123 Indianapolis, IN                    60.87    1485.83
+                                          140 Lafayette, IN                       66.81    1552.63
+                                          276 Terre Haute, IN                     75.45    1628.09
+                                           89 Evansville, IN                     103.56    1731.64
+                                          192 Paducah, KY                         94.86    1826.51
+                                          175 Nashville, TN                      140.56    1967.07
+                                           35 Bowling Green, KY                   61.65    2028.71
+                                          154 Louisville, KY                       99.3    2128.02
+                                          147 Lexington, KY                       90.44    2218.46
+                                           60 Cincinnati, OH                      81.08    2299.54
+                                          114 Hamilton, OH                        17.93    2317.47
+                                           71 Dayton, OH                          35.63     2353.1
+                                          265 Springfield, OH                     28.81    2381.91
+                                           66 Columbus, OH                        56.03    2437.94
+                                          312 Zanesville, OH                      68.11    2506.04
+                                           47 Canton, OH                          73.78    2579.83
+                                            2 Akron, OH                            21.8    2601.63
+                                           61 Cleveland, OH                       31.35    2632.98
+                                          310 Youngstown, OH                      77.36    2710.33
+                                          267 Steubenville, OH                    50.45    2760.79
+                                          297 Wheeling, WV                        21.97    2782.75
+                                          201 Pittsburgh, PA                      56.46    2839.21
+                                           86 Erie, PA                           116.83    2956.05
+                                           37 Brantford, ON                       71.49    3027.54
+                                          138 Kitchener, ON                       22.82    3050.35
+                                          111 Guelph, ON                          10.29    3060.65
+                                           42 Burlington, ONT                     29.68    3090.32
+                                          115 Hamilton, ON                        19.51    3109.83
+                                          227 Saint Catherines, ON                52.51    3162.34
+                                          182 Niagara Falls, ON                    8.92    3171.26
+                                           41 Buffalo, NY                         20.54     3191.8
+                                          282 Toronto, ON                         62.46    3254.26
+                                          197 Peterborough, ON                    82.62    3336.88
+                                           24 Belleville, ON                      72.87    3409.75
+                                          137 Kingston, ON                        49.28    3459.03
+                                          191 Ottawa, ON                          85.39    3544.41
+                                          172 Montreal, QC                       146.68     3691.1
+                                           43 Burlington, VT                      97.19    3788.29
+                                          171 Montpelier, VT                      46.45    3834.74
+                                           38 Brattleboro, VT                     97.37    3932.11
+                                          263 Springfield, MA                     51.84    3983.94
+                                          117 Hartford, CT                        24.25     4008.2
+                                          178 New Britain,CT                       9.62    4017.82
+                                          163 Meriden, CT                          8.71    4026.53
+                                          179 New Haven, CT                       17.96    4044.49
+                                           39 Bridgeport, CT                      21.46    4065.95
+                                          266 Stamford, CT                        24.55     4090.5
+                                          299 White Plains, NY                    15.36    4105.86
+                                          181 New York, NY                        27.75    4133.61
+                                          128 Jersey City, NJ                      5.04    4138.65
+                                          177 Newark, NJ                           6.57    4145.22
+                                           83 Elizabeth, NJ                        5.61    4150.84
+                                          194 Paterson, NJ                        17.67     4168.5
+                                          283 Trenton, NJ                          62.4     4230.9
+                                          198 Philadelphia, PA                    34.35    4265.26
+                                          302 Wilmington, DE                      30.05    4295.31
+                                          217 Reading, PA                         48.48    4343.79
+                                          129 Johnstown, PA                        27.2    4370.99
+                                          141 Lancaster, PA                       16.64    4387.63
+                                          116 Harrisburg, PA                      43.19    4430.82
+                                           18 Baltimore, MD                        70.5    4501.31
+                                          294 Washington, DC                      40.06    4541.38
+                                          220 Richmond, VA                        97.21    4638.58
+                                          208 Portsmouth, VA                      94.39    4732.97
+                                          184 Norfolk, VA                          1.19    4734.16
+                                          215 Raleigh, NC                        178.76    4912.92
+                                           80 Durham, NC                          23.61    4936.54
+                                          109 Greensboro, NC                      61.97    4998.51
+                                          306 Winston-Salem, NC                    31.3     5029.8
+                                           54 Charlotte, NC                       73.13    5102.94
+                                          260 Spartanburg, NC                     77.64    5180.58
+                                          110 Greenville, SC                      32.62    5213.19
+                                           10 Asheville, NC                       52.87    5266.06
+                                          139 Knoxville, TN                       97.65    5363.71
+                                           56 Chattanooga, TN                    114.91    5478.63
+                                          100 Gadsden, AL                         86.02    5564.64
+                                          122 Huntsville, AL                      63.64    5628.29
+                                           30 Birmingham, AL                      84.91    5713.19
+                                          170 Montgomery, AL                      86.96    5800.16
+                                           65 Columbus, GA                         90.9    5891.06
+                                          157 Macon, GA                           97.26    5988.32
+                                           12 Atlanta, GA                         81.64    6069.95
+                                           14 Augusta, GA                        167.83    6237.79
+                                           64 Columbia, SC                        74.55    6312.34
+                                           52 Charleston, SC                      113.9    6426.24
+                                          250 Savannah, GA                         93.9    6520.14
+                                          127 Jacksonville, FL                   126.96    6647.09
+                                          101 Gainesville, FL                     65.95    6713.05
+                                           72 Daytona Beach, FL                   94.98    6808.02
+                                          190 Orlando, FL                         52.58    6860.61
+                                          275 Tampa, FL                           85.01    6945.62
+                                          234 Saint Petersburg, FL                19.54    6965.15
+                                          247 Sarasota, FL                        31.73    6996.88
+                                          296 West Palm Beach, FL                176.46    7173.34
+                                          164 Miami, FL                           65.75    7239.09
+                                          136 Key West, FL                       138.36    7377.45
+                                          274 Tallahassee, FL                    441.61    7819.06
+                                          195 Pensacola, FL                      202.87    8021.93
+                                          168 Mobile, AL                          60.12    8082.04
+                                           28 Biloxi, MS                          61.74    8143.79
+                                          112 Gulfport, MS                        14.47    8158.25
+                                          180 New Orleans, LA                     73.62    8231.87
+                                           20 Baton Rouge, LA                     82.09    8313.96
+                                          176 Natchez, MS                         78.58    8392.54
+                                          126 Jackson, MS                         98.43    8490.97
+                                          162 Memphis, TN                         197.2    8688.17
+                                          151 Little Rock, AR                     157.3    8845.47
+                                          277 Texarkana, TX                      151.96    8997.42
+                                          160 Marshall, TX                        64.71    9062.13
+                                          256 Shreveport, LA                      42.67    9104.81
+                                           23 Beaumont, TX                       170.28    9275.09
+                                          204 Port Arthur, TX                     17.62    9292.71
+                                          103 Galveston, TX                       72.86    9365.57
+                                          121 Houston, TX                         50.45    9416.02
+                                           16 Austin, TX                         168.07     9584.1
+                                          238 San Antonio, TX                     77.99    9662.09
+                                           68 Corpus Christi, TX                 135.39    9797.48
+                                          143 Laredo, TX                         147.28    9944.76
+                                          292 Waco, TX                            323.5   10268.26
+                                           97 Ft Worth, TX                        82.15   10350.41
+                                           69 Dallas, TX                          36.19    10386.6
+                                          188 Oklahoma City, OK                  191.95   10578.55
+                                           85 Enid, OK                            68.83   10647.38
+                                          300 Wichita, KS                         97.07   10744.46
+                                          236 Salina, KS                          81.55      10826
+                                          281 Topeka, KS                         134.35   10960.35
+                                          133 Kansas City, KS                     72.73   11033.09
+                                          134 Kansas City, MO                      3.52   11036.61
+                                          231 Saint Joseph, MO                    49.79    11086.4
+                                          189 Omaha, NE                          127.61   11214.01
+                                          150 Lincoln, NE                         59.52   11273.53
+                                          257 Sioux City, IA                     118.91   11392.44
+                                          258 Sioux Falls, SD                     75.45   11467.89
+                                          228 Saint Cloud, MN                    223.72   11691.61
+                                          166 Minneapolis, MN                     73.94   11765.55
+                                          233 Saint Paul, MN                      12.03   11777.58
+                                          222 Rochester, MN                       76.94   11854.52
+                                           81 Eau Claire, WI                       86.5   11941.02
+                                          270 Superior, WI                       138.42   12079.44
+                                           79 Duluth, MN                           4.32   12083.76
+                                          278 Thunder Bay, ON                    221.38   12305.14
+                                          108 Green Bay, WI                      281.05   12586.19
+                                          253 Sheboygan, WI                       57.13   12643.32
+                                          158 Madison, WI                         125.6   12768.91
+                                           78 Dubuque, IA                         95.84   12864.75
+                                           49 Cedar Rapids, IA                    75.74    12940.5
+                                          124 Iowa City, IA                       25.25   12965.74
+                                          295 Waterloo, IA                        80.35    13046.1
+                                           75 Des Moines, IA                     107.02   13153.12
+                                           63 Columbia, MO                       203.13   13356.25
+                                          264 Springfield, MO                    137.23   13493.48
+                                          130 Joplin, MO                          84.44   13577.92
+                                           95 Ft Smith, AR                       117.62   13695.54
+                                          287 Tulsa, OK                          122.27    13817.8
+                                           77 Dodge City, KS                     299.19      14117
+                                            7 Amarillo, TX                       215.16   14332.15
+                                          156 Lubbock, TX                        113.61   14445.76
+                                            1 Abilene, TX                        166.25   14612.02
+                                           84 El Paso, TX                        469.27   15081.29
+                                            4 Albuquerque, NM                    230.08   15311.37
+                                          246 Santa Fe, NM                        64.52   15375.88
+                                          102 Gallup, NM                         194.11   15569.99
+                                           93 Flagstaff, AZ                      202.26   15772.25
+                                          199 Phoenix, AZ                        124.38   15896.63
+                                          286 Tucson, AZ                         116.06   16012.69
+                                          311 Yuma, AZ                           257.86   16270.55
+                                          240 San Diego, CA                      175.01   16445.56
+                                          239 San Bernardino, CA                  96.69   16542.25
+                                          193 Pasadena, CA                        59.12   16601.38
+                                          153 Los Angeles, CA                      9.51   16610.89
+                                          244 Santa Barbara, CA                  103.68   16714.56
+                                           17 Bakersfield, CA                     80.84   16795.41
+                                           99 Fresno, CA                         108.31   16903.71
+                                          268 Stockton, CA                       134.15   17037.87
+                                          225 Sacramento, CA                      45.35   17083.21
+                                           26 Berkeley, CA                         72.8   17156.01
+                                          186 Oakland, CA                          4.65   17160.66
+                                          241 San Francisco, CA                   10.47   17171.13
+                                          242 San Jose, CA                        47.11   17218.24
+                                          245 Santa Cruz, CA                      26.93   17245.17
+                                           48 Carson City, NV                    217.59   17462.76
+                                          219 Reno, NV                            25.48   17488.24
+                                           88 Eureka, CA                         313.15   17801.39
+                                           87 Eugene, OR                         236.57   18037.96
+                                          235 Salem, OR                           61.63   18099.59
+                                          206 Portland, OR                        47.17   18146.76
+                                          273 Tacoma, WA                         120.57   18267.33
+                                          252 Seattle, WA                         25.62   18292.95
+                                           25 Bellingham, WA                      80.42   18373.37
+                                          290 Vancouver, BC                       56.66   18430.03
+                                          291 Victoria, BC                        41.45   18471.48
+                                          308 Yakima, WA                         246.37   18717.85
+                                          293 Walla Walla, WA                    153.98   18871.83
+                                          261 Spokane, WA                        127.07    18998.9
+                                           33 Boise, ID                          291.99    19290.9
+                                          203 Pocatello, ID                      264.67   19555.56
+                                          187 Ogden, UT                          118.47   19674.03
+                                          237 Salt Lake City, UT                  32.44   19706.47
+                                          211 Provo, UT                           39.79   19746.26
+                                          105 Grand Junction, CO                 229.45   19975.72
+                                           74 Denver, CO                         250.76   20226.47
+                                           62 Colorado Springs, CO                63.56   20290.03
+                                          212 Pueblo, CO                          42.63   20332.67
+                                           57 Cheyenne, WY                       199.91   20532.58
+                                          216 Rapid City, SD                     230.96   20763.54
+                                          200 Pierre, SD                         199.98   20963.52
+                                           31 Bismarck, ND                       171.22   21134.74
+                                          167 Minot, ND                          104.59   21239.32
+                                           36 Brandon, MB                        148.55   21387.87
+                                          305 Winnipeg, MB                       187.08   21574.95
+                                           92 Fargo, ND                          211.94   21786.89
+                                          218 Regina, SK                         597.09   22383.98
+                                          173 Moose Jaw, SK                       62.04   22446.03
+                                          248 Saskatoon, SK                      149.68    22595.7
+                                          161 Medicine Hat, AB                   315.13   22910.83
+                                          146 Lethbridge, AB                     146.13   23056.96
+                                           45 Calgary, AB                        132.75    23189.7
+                                           82 Edmonton, AB                       173.35   23363.06
+                                          107 Great Falls, MT                    446.74    23809.8
+                                          118 Helena, MT                           80.7    23890.5
+                                           44 Butte, MT                           53.31   23943.81
+                                           27 Billings, MT                       279.14   24222.95
+                                          255 Sheridan, WY                       126.61   24349.56
+                                          144 Las Vegas, NV                      821.24    25170.8
+                                          209 Prince Rupert, BC                 1638.53   26809.33
+                                          131 Juneau, AK                         390.43   27199.75
+                                          298 Whitehorse, YK                     172.32   27372.07
+                                           70 Dawson, YT                         362.92      27735
+                                           90 Fairbanks, AK                         596      28331
+                                            8 Anchorage, AK                      292.11   28623.11
+                                          183 Nome, AK                          1095.15   29718.26
+                                          148 Lihue, HI                          2967.4   32685.65
+                                          120 Honolulu, HI                        114.5   32800.16
+                                          119 Hilo, HI                              176   32976.16
+                                          309 Yellowknife, NT                   4111.93   37088.09
+                                           59 Churchill, MB                     1431.71    38519.8
+                                          249 Sault Ste Marie, ON               1073.27   39593.07
+                                          269 Sudbury, ON                        256.57   39849.65
+                                          185 North Bay, ON                          93   39942.65
+                                          279 Timmins, ON                        198.01   40140.66
+                                          152 London, ON                         387.85   40528.51
+                                          223 Rochester, NY                       249.8    40778.3
+                                          272 Syracuse, NY                       101.71   40880.01
+                                          289 Utica, NY                           63.31   40943.32
+                                           29 Binghamtom, NY                      83.89   41027.21
+                                          301 Wilkes-Barre, PA                    58.97   41086.18
+                                            6 Allentown, PA                       51.68   41137.86
+                                           13 Atlantic City, NJ                  113.26   41251.12
+                                           50 Central Islip, NY                  129.74   41380.86
+                                          202 Pittsfield, MA                      114.7   41495.56
+                                          285 Troy, NY                            36.34    41531.9
+                                            3 Albany, NY                           6.88   41538.78
+                                          251 Schenectady, NY                     16.88   41555.67
+                                          307 Worcester, MA                      152.51   41708.18
+                                          210 Providence, RI                      40.53   41748.71
+                                           91 Fall River, MA                      19.72   41768.43
+                                           40 Brockton, MA                        28.03   41796.45
+                                           34 Boston, MA                          19.21   41815.67
+                                           46 Cambridge, MA                        3.36   41819.03
+                                          155 Lowell, MA                          23.03   41842.06
+                                          145 Lawrence, MA                        11.73   41853.79
+                                          159 Manchester, NH                      28.36   41882.14
+                                           67 Concord, NH                         15.76    41897.9
+                                          207 Portsmouth, NH                      54.37   41952.27
+                                          205 Portland, ME                        53.74   42006.01
+                                           15 Augusta, ME                         55.61   42061.62
+                                           19 Bangor, ME                          77.07    42138.7
+                                           98 Fredericton, NB                    171.89   42310.58
+                                          229 Saint John, NB                      58.53   42369.11
+                                          169 Moncton, NB                         99.94   42469.06
+                                           55 Charlottetown, PE                  108.58   42577.64
+                                          113 Halifax, NS                        100.98   42678.62
+                                          271 Syndey, NS                         254.97   42933.59
+                                          230 Saint John's, NF                   514.07   43447.66
+                                          213 Quebec City, QC                   1290.47   44738.13
+                                          284 Trois-Rivieres, QC                 190.67    44928.8
+                                          254 Sherbrooke, QC                      93.08   45021.87
+                                          221 Roanoke, VA                        802.17   45824.05
+                                           53 Charleston, WV                     138.61   45962.65
+                                           11 Ashland, KY                         70.03   46032.68
+                                          149 Lima, OH                           186.42    46219.1
+                                          232 Saint Louis, MO                    445.62   46664.72
+                                          303 Wilmington, NC                     899.59   47564.31
+                                          243 San Juan, PR                      1361.81   48926.12
+                                            5 Alert, NT                         4433.43   53359.55
+                                           51 Champaign, IL                     3435.34   56794.89
+
+1252 rows selected.
+
+Elapsed: 00:01:25.25
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.05
+SQL> 
+SQL> @..\..\Brendan\sql\L_Log_Default
+
+TEXT
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL_ID  8q4j935k16g1s, child number 0
+-------------------------------------
+WITH count_towns AS ( SELECT Count(*) n_towns FROM towns ),
+dist_from_root AS (/* XTSP  */ SELECT a, b, dst, Row_Number () OVER
+(ORDER BY :SIGN * dst) rnk_by_dst, Count(DISTINCT a) OVER () + 1
+n_towns   FROM distances  WHERE b > a ),  rsf (root, root_leg,
+path_rnk, nxt_id, lev, tot_price, path, n_towns) AS ( SELECT a, a || '
+-> ' || b, 0, d.b, 2, d.dst,        CAST ('|' || LPad (d.a, 3, '0') ||
+'|' || LPad (d.b, 3, '0') AS VARCHAR2(4000)) path,        d.n_towns
+FROM dist_from_root d  WHERE d.rnk_by_dst <= :KEEP_NUM_ROOT  UNION ALL
+SELECT r.root,        r.root_leg,        Row_Number() OVER (PARTITION
+BY r.root_leg ORDER BY :SIGN * (r.tot_price + d.dst)),        d.b,
+  r.lev + 1,        r.tot_price + d.dst,        r.path || '|' || LPad
+(d.b, 3, '0'),        r.n_towns   FROM rsf r   JOIN distances d     ON
+d.a = r.nxt_id    AND r.path NOT LIKE '%' || '|' || LPad (d.b, 3, '0')
+|| '%'  WHERE r.path_rnk <= :KEEP_NUM ), circuits AS ( SELECT
+r.root_leg,        Row_Number() OVER (PARTITI
+
+Plan hash value: 2429809240
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                             | Name        | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  | Writes |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                                      |             |      1 |        |   1252 |00:01:24.88 |      10M|    113K|  10654 |       |       |          |
+|   1 |  WINDOW SORT                                          |             |      1 |     10 |   1252 |00:01:24.88 |      10M|    113K|  10654 |   267K|   267K|  237K (0)|
+|   2 |   NESTED LOOPS OUTER                                  |             |      1 |     10 |   1252 |00:01:24.88 |      10M|    113K|  10654 |       |       |          |
+|   3 |    MERGE JOIN                                         |             |      1 |     10 |   1252 |00:01:24.87 |      10M|    113K|  10654 |       |       |          |
+|   4 |     TABLE ACCESS BY INDEX ROWID                       | TOWNS       |      1 |      5 |    312 |00:00:00.01 |     205 |      0 |      0 |       |       |          |
+|   5 |      INDEX FULL SCAN                                  | SYS_C008004 |      1 |      5 |    312 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|*  6 |     SORT JOIN                                         |             |    312 |     10 |   1252 |00:01:24.87 |      10M|    113K|  10654 |   133K|   133K|  118K (0)|
+|   7 |      VIEW                                             |             |      1 |     10 |   1252 |00:01:24.86 |      10M|    113K|  10654 |       |       |          |
+|   8 |       WINDOW SORT                                     |             |      1 |     10 |   1252 |00:01:24.86 |      10M|    113K|  10654 |  1895K|   658K| 1684K (0)|
+|   9 |        MERGE JOIN CARTESIAN                           |             |      1 |     10 |   1252 |00:01:24.85 |      10M|    113K|  10654 |       |       |          |
+|  10 |         VIEW                                          |             |      1 |      1 |    313 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  11 |          CONNECT BY WITHOUT FILTERING                 |             |      1 |        |    313 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  12 |           VIEW                                        |             |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  13 |            SORT AGGREGATE                             |             |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  14 |             INDEX FULL SCAN                           | SYS_C008004 |      1 |      5 |    312 |00:00:00.01 |       1 |      0 |      0 |       |       |          |
+|  15 |         BUFFER SORT                                   |             |    313 |     10 |   1252 |00:01:24.85 |      10M|    113K|  10654 |  9216 |  9216 | 8192  (0)|
+|* 16 |          VIEW                                         |             |      1 |     10 |      4 |00:01:24.85 |      10M|    113K|  10654 |       |       |          |
+|* 17 |           WINDOW SORT PUSHED RANK                     |             |      1 |     10 |      4 |00:01:24.85 |      10M|    113K|  10654 |  9216 |  9216 | 8192  (0)|
+|  18 |            NESTED LOOPS                               |             |      1 |        |      4 |00:00:34.80 |      10M|    113K|  10654 |       |       |          |
+|  19 |             NESTED LOOPS                              |             |      1 |     10 |      4 |00:00:34.80 |      10M|    113K|  10654 |       |       |          |
+|* 20 |              VIEW                                     |             |      1 |     12 |      4 |00:00:34.80 |      10M|    113K|  10654 |       |       |          |
+|  21 |               UNION ALL (RECURSIVE WITH) BREADTH FIRST|             |      1 |        |    192K|00:00:04.53 |      10M|    113K|  10654 |       |       |          |
+|* 22 |                VIEW                                   |             |      1 |     10 |      2 |00:00:00.10 |     693 |      1 |      0 |       |       |          |
+|* 23 |                 WINDOW SORT PUSHED RANK               |             |      1 |     10 |      3 |00:00:00.10 |     693 |      1 |      0 |  2048 |  2048 | 2048  (0)|
+|  24 |                  WINDOW BUFFER                        |             |      1 |     10 |  48516 |00:00:00.08 |     693 |      1 |      0 |  3100K|   779K| 2755K (0)|
+|  25 |                   TABLE ACCESS BY INDEX ROWID         | DISTANCES   |      1 |     10 |  48516 |00:00:00.04 |     693 |      1 |      0 |       |       |          |
+|* 26 |                    INDEX FULL SCAN                    | DISTANCE_PK |      1 |     10 |  48516 |00:00:00.02 |     212 |      0 |      0 |       |       |          |
+|  27 |                WINDOW SORT                            |             |    311 |      2 |    192K|00:00:04.40 |    5664 |      1 |      0 |   619K|   472K|  550K (0)|
+|  28 |                 NESTED LOOPS                          |             |    311 |        |    192K|00:00:05.39 |    5664 |      1 |      0 |       |       |          |
+|  29 |                  NESTED LOOPS                         |             |    311 |      2 |    192K|00:00:05.08 |    2392 |      0 |      0 |       |       |          |
+|  30 |                   RECURSIVE WITH PUMP                 |             |    311 |        |   1242 |00:00:00.01 |       0 |      0 |      0 |       |       |          |
+|* 31 |                   INDEX RANGE SCAN                    | DISTANCE_PK |   1242 |      1 |    192K|00:00:06.49 |    2392 |      0 |      0 |       |       |          |
+|  32 |                  TABLE ACCESS BY INDEX ROWID          | DISTANCES   |    192K|      1 |    192K|00:00:00.15 |    3272 |      1 |      0 |       |       |          |
+|* 33 |              INDEX UNIQUE SCAN                        | DISTANCE_PK |      4 |      1 |      4 |00:00:00.01 |       6 |      0 |      0 |       |       |          |
+|  34 |             TABLE ACCESS BY INDEX ROWID               | DISTANCES   |      4 |      1 |      4 |00:00:00.01 |       4 |      0 |      0 |       |       |          |
+|  35 |    TABLE ACCESS BY INDEX ROWID                        | DISTANCES   |   1252 |      1 |   1248 |00:00:00.01 |    2498 |      0 |      0 |       |       |          |
+|* 36 |     INDEX UNIQUE SCAN                                 | DISTANCE_PK |   1252 |      1 |   1248 |00:00:00.01 |    1250 |      0 |      0 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   6 - access("TWN"."ID"="TOP"."TOWN_ID")
+       filter("TWN"."ID"="TOP"."TOWN_ID")
+  16 - filter("CIRCUITS"."PATH_RNK"<=:KEEP_NUM)
+  17 - filter(ROW_NUMBER() OVER ( PARTITION BY "R"."ROOT_LEG" ORDER BY :SIGN*("R"."TOT_PRICE"+"D"."DST"))<=:KEEP_NUM)
+  20 - filter(("R"."LEV"="R"."N_TOWNS" AND "R"."PATH_RNK"<=:KEEP_NUM))
+  22 - filter("D"."RNK_BY_DST"<=:KEEP_NUM_ROOT)
+  23 - filter(ROW_NUMBER() OVER ( ORDER BY :SIGN*"DST")<=:KEEP_NUM_ROOT)
+  26 - filter("B">"A")
+  31 - access("D"."A"="R"."NXT_ID")
+       filter("R"."PATH" NOT LIKE '%|'||LPAD(TO_CHAR("D"."B"),3,'0')||'%')
+  33 - access("D"."A"="R"."NXT_ID" AND "D"."B"="R"."ROOT")
+  36 - access("DST"."A"="TOP"."TOWN_ID_PRIOR" AND "DST"."B"="TOP"."TOWN_ID")
+
+
+78 rows selected.
+
+Elapsed: 00:00:00.04
+SQL> COMMIT
+  2  /
+
+Commit complete.
+
+Elapsed: 00:00:00.00
+SQL> SELECT 'End: ' || To_Char(SYSDATE,'DD-MON-YYYY HH24:MI:SS') FROM DUAL;
+
+'END:'||TO_CHAR(SYSDATE,'DD-MON-YY
+----------------------------------
+End: 14-JUL-2013 12:48:37
+
+Elapsed: 00:00:00.00
+SQL> SPOOL OFF

@@ -1,0 +1,80 @@
+CREATE OR REPLACE PACKAGE KSink_Emp AS
+
+FUNCTION Emp_Info_List (p_emp_id_list SYS.ODCINumberList) RETURN emp_info_list_type;
+
+END KSink_Emp;
+/
+SHO ERR
+
+CREATE OR REPLACE PACKAGE BODY KSink_Emp AS
+
+FUNCTION Emp_Info_List (p_emp_id_list SYS.ODCINumberList) RETURN emp_info_list_type IS
+  l_emp_info_list emp_info_list_type;
+BEGIN
+
+  WITH jhs_f AS (
+  SELECT employee_id,
+       Max (job_id) KEEP (DENSE_RANK LAST ORDER BY end_date) job_id
+    FROM hr.job_history
+   GROUP BY employee_id
+  ), sub AS (
+  SELECT manager_id,
+         Count(*)                    n_sub
+    FROM hr.employees
+   GROUP BY manager_id
+  )
+  SELECT  /*+ GATHER_PLAN_STATISTICS XKSINK */
+         emp_info_type (
+              emp.employee_id,
+              emp.last_name || ', ' || emp.first_name,
+              job.job_title,
+              job_p.job_title,
+              emp_m.last_name || ', ' || emp_m.first_name,
+              job_m.job_title,
+              job_mp.job_title,
+              sub.n_sub,
+              dep.department_name,
+              emp_dm.last_name || ', ' || emp_dm.first_name,
+              loc.street_address,
+              cou.country_name,
+              reg.region_name
+         )
+    BULK COLLECT INTO l_emp_info_list
+    FROM TABLE (p_emp_id_list)     lis_e
+    JOIN hr.employees		emp
+      ON emp.employee_id	       = lis_e.COLUMN_VALUE
+    JOIN hr.jobs			job
+      ON job.job_id		       = emp.job_id
+    LEFT JOIN jhs_f                jhs
+      ON jhs.employee_id	       = emp.employee_id
+    LEFT JOIN hr.jobs		job_p
+      ON job_p.job_id		= jhs.job_id
+    LEFT JOIN hr.employees		emp_m
+      ON emp_m.employee_id	       = emp.manager_id
+    LEFT JOIN hr.jobs              job_m
+      ON job_m.job_id              = emp_m.job_id
+    LEFT JOIN jhs_f                jhs_m
+      ON jhs_m.employee_id         = emp.employee_id
+    LEFT JOIN hr.jobs              job_mp
+      ON job_mp.job_id             = jhs_m.job_id
+    LEFT JOIN sub
+      ON sub.manager_id		= emp.employee_id
+    LEFT JOIN hr.departments	dep
+      ON dep.department_id	       = emp.department_id
+    LEFT JOIN hr.employees		emp_dm
+      ON emp_dm.employee_id	       = dep.manager_id
+    LEFT JOIN hr.locations		loc
+      ON loc.location_id		= dep.location_id
+    LEFT JOIN hr.countries		cou
+      ON cou.country_id		= loc.country_id
+    LEFT JOIN hr.regions		reg
+      ON reg.region_id             = cou.region_id;
+  Utils.Write_Plan (p_sql_marker => 'XKSINK');
+
+  RETURN l_emp_info_list;
+
+END Emp_Info_List;
+
+END KSink_Emp;
+/
+SHO ERR

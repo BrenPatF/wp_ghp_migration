@@ -1,0 +1,55 @@
+CREATE OR REPLACE PACKAGE Emp_Client AS
+
+PROCEDURE Get_Mgr_Subs_KS (p_dept_id PLS_INTEGER, x_mgr_sub_cur OUT SYS_REFCURSOR);
+PROCEDURE Get_Mgr_Subs_SQL (p_dept_id PLS_INTEGER, x_mgr_sub_cur OUT SYS_REFCURSOR);
+
+END Emp_Client;
+/
+SHO ERR
+
+CREATE OR REPLACE PACKAGE BODY Emp_Client AS
+
+PROCEDURE Get_Mgr_Subs_KS (p_dept_id PLS_INTEGER, x_mgr_sub_cur OUT SYS_REFCURSOR) IS
+  l_emp_id_list SYS.ODCINumberList;
+BEGIN
+
+  SELECT employee_id
+    BULK COLLECT INTO l_emp_id_list
+    FROM hr.employees
+   WHERE department_id = p_dept_id;
+
+  OPEN x_mgr_sub_cur FOR
+  SELECT /*+ GATHER_PLAN_STATISTICS XCLIKS */
+         t.name,
+         t.name_mgr,
+         e.last_name || ', ' || e.first_name
+    FROM TABLE (KSink_Emp.Emp_Info_List (l_emp_id_list)) t
+    LEFT JOIN hr.employees e
+      ON e.manager_id = t.employee_id
+   ORDER BY 1, 2, 3;
+  Utils.Write_Plan (p_sql_marker => 'XCLIKS');
+
+END Get_Mgr_Subs_KS;
+
+PROCEDURE Get_Mgr_Subs_SQL (p_dept_id PLS_INTEGER, x_mgr_sub_cur OUT SYS_REFCURSOR) IS
+BEGIN
+
+  OPEN x_mgr_sub_cur FOR
+  SELECT /*+ GATHER_PLAN_STATISTICS XCLISQL */
+         e.last_name || ', ' || e.first_name,
+         m.last_name || ', ' || m.first_name,
+         s.last_name || ', ' || s.first_name
+    FROM hr.employees e
+    LEFT JOIN hr.employees m
+      ON m.employee_id = e.manager_id
+    LEFT JOIN hr.employees s
+      ON s.manager_id = e.employee_id
+   WHERE e.department_id = p_dept_id
+   ORDER BY 1, 2, 3;
+  Utils.Write_Plan (p_sql_marker => 'XCLISQL');
+
+END Get_Mgr_Subs_SQL;
+
+END Emp_Client;
+/
+SHO ERR

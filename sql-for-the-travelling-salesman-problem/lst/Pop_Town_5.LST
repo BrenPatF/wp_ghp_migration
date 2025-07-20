@@ -1,0 +1,188 @@
+SQL> DELETE distances
+  2  /
+
+20 rows deleted.
+
+SQL> DELETE xy
+  2  /
+
+0 rows deleted.
+
+SQL> DELETE towns
+  2  /
+
+5 rows deleted.
+
+SQL> DELETE categories_town
+  2  /
+
+6 rows deleted.
+
+SQL> DECLARE
+  2    g_i INTEGER := 0;
+  3    PROCEDURE Ins_Town (p_name VARCHAR2, p_x NUMBER, p_y NUMBER) IS
+  4    BEGIN
+  5  
+  6      g_i := g_i + 1;
+  7      INSERT INTO towns VALUES (g_i, p_name, p_x, p_y);
+  8  
+  9    END Ins_Town;
+ 10  BEGIN
+ 11  
+ 12    Ins_Town ('Left Floor', 0, 0);
+ 13    Ins_Town ('Left Peak', 1, 2);
+ 14    Ins_Town ('Midfield', 2, 1);
+ 15    Ins_Town ('Right Peak', 3, 2);
+ 16    Ins_Town ('Right Floor', 4, 0);
+ 17  
+ 18  END;
+ 19  /
+
+PL/SQL procedure successfully completed.
+
+SQL> INSERT INTO distances
+  2  WITH dist AS (
+  3  SELECT a.id a, b.id b,
+  4         SQRT ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) dst
+  5    FROM towns a
+  6    JOIN towns b
+  7      ON b.id > a.id
+  8  ), uni AS (
+  9  SELECT a, b, dst
+ 10    FROM dist
+ 11   UNION ALL
+ 12  SELECT b, a, dst
+ 13    FROM dist
+ 14  ), pks AS (
+ 15  SELECT a, b, dst, Row_Number() OVER (ORDER BY a, b) id
+ 16    FROM uni
+ 17  )
+ 18  SELECT id, a, b, dst
+ 19    FROM pks
+ 20  /
+
+20 rows created.
+
+SQL> INSERT INTO categories_town
+  2  SELECT To_Char (id), 1, 1
+  3    FROM towns
+  4   UNION
+  5  SELECT 'ALL', COUNT(*), COUNT(*)
+  6    FROM towns
+  7  /
+
+6 rows created.
+
+SQL> COLUMN name FORMAT A10
+SQL> COLUMN cat_id FORMAT A10
+SQL> COLUMN a FORMAT 990
+SQL> COLUMN b FORMAT 990
+SQL> PROMPT Towns
+Towns
+SQL> SELECT id, name, x, y
+  2    FROM towns
+  3     ORDER BY 1
+  4  /
+
+        ID NAME                X          Y
+---------- ---------- ---------- ----------
+         1 Left Floor          0          0
+         2 Left Peak           1          2
+         3 Midfield            2          1
+         4 Right Peak          3          2
+         5 Right Floo          4          0
+           r
+
+
+SQL> PROMPT Distances
+Distances
+SQL> BREAK ON a ON name_a
+SQL> SELECT d.a, t_a.name name_a, d.b, t_b.name name_b, d.dst
+  2    FROM distances d
+  3    JOIN towns t_a
+  4      ON t_a.id = d.a
+  5    JOIN towns t_b
+  6      ON t_b.id = d.b
+  7   ORDER BY 1, 3
+  8  /
+
+   A NAME_A                            B NAME_B                                DST
+---- ------------------------------ ---- ------------------------------ ----------
+   1 Left Floor                        2 Left Peak                      2.23606798
+                                       3 Midfield                       2.23606798
+                                       4 Right Peak                     3.60555128
+                                       5 Right Floor                             4
+   2 Left Peak                         1 Left Floor                     2.23606798
+                                       3 Midfield                       1.41421356
+                                       4 Right Peak                              2
+                                       5 Right Floor                    3.60555128
+   3 Midfield                          1 Left Floor                     2.23606798
+                                       2 Left Peak                      1.41421356
+                                       4 Right Peak                     1.41421356
+                                       5 Right Floor                    2.23606798
+   4 Right Peak                        1 Left Floor                     3.60555128
+                                       2 Left Peak                               2
+                                       3 Midfield                       1.41421356
+                                       5 Right Floor                    2.23606798
+   5 Right Floor                       1 Left Floor                              4
+                                       2 Left Peak                      3.60555128
+                                       3 Midfield                       2.23606798
+                                       4 Right Peak                     2.23606798
+
+20 rows selected.
+
+SQL> PROMPT Items
+Items
+SQL> SELECT id,
+  2  	name,
+  3  	cat_id
+  4    FROM items
+  5   ORDER BY 1
+  6  /
+
+        ID NAME       CAT_ID
+---------- ---------- ----------
+         1 1-2        1
+         2 1-3        1
+         3 1-4        1
+         4 1-5        1
+         5 2-1        2
+         6 2-3        2
+         7 2-4        2
+         8 2-5        2
+         9 3-1        3
+        10 3-2        3
+        11 3-4        3
+        12 3-5        3
+        13 4-1        4
+        14 4-2        4
+        15 4-3        4
+        16 4-5        4
+        17 5-1        5
+        18 5-2        5
+        19 5-3        5
+        20 5-4        5
+
+20 rows selected.
+
+SQL> PROMPT Categories
+Categories
+SQL> SELECT id,
+  2  	min_items,
+  3  	max_items
+  4    FROM categories
+  5   ORDER BY 1
+  6  /
+
+ID   MIN_ITEMS  MAX_ITEMS
+--- ---------- ----------
+1            1          1
+2            1          1
+3            1          1
+4            1          1
+5            1          1
+ALL          5          5
+
+6 rows selected.
+
+SQL> SPOOL OFF
