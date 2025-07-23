@@ -1,0 +1,298 @@
+
+PL/SQL procedure successfully completed.
+
+Exists and ORs
+
+LOCATION_ID CITY
+----------- ------------------------------
+       1700 Seattle
+
+
+PL/SQL procedure successfully completed.
+
+NCOUG Original Exists
+
+LOCATION_ID CITY
+----------- ------------------------------
+       1700 Seattle
+
+
+PL/SQL procedure successfully completed.
+
+Union subquery factor
+
+LOCATION_ID CITY
+----------- ------------------------------
+       1700 Seattle
+
+
+PL/SQL procedure successfully completed.
+
+Outer Joins
+
+LOCATION_ID CITY
+----------- ------------------------------
+       1700 Seattle
+
+
+PL/SQL procedure successfully completed.
+
+
+TEXT
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SQL_ID  390sw0bjxgdwc, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS NCO_LIT */        l.location_id,
+  l.city   FROM locations l  WHERE EXISTS   (SELECT *      FROM
+departments d      JOIN employees e        ON e.department_id =
+d.department_id     WHERE d.location_id = l.location_id       AND
+e.first_name = 'Steven' AND e.last_name = 'King'   ) OR EXISTS
+(SELECT *      FROM departments d      JOIN employees e        ON
+e.department_id = d.department_id      JOIN jobs j        ON j.job_id =
+e.job_id     WHERE d.location_id = l.location_id       AND j.job_title
+= 'President'   ) OR EXISTS   (SELECT *      FROM departments d
+JOIN employees e        ON e.department_id = d.department_id      JOIN
+job_history h        ON h.employee_id = e.employee_id      JOIN jobs j2
+       ON j2.job_id = h.job_id     WHERE d.location_id = l.location_id
+     AND j2.job_title   = 'President'   )
+
+Plan hash value: 2057332801
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                    | Name               | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  |  OMem |  1Mem | Used-Mem |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                             |                    |      1 |        |      1 |00:00:00.05 |      31 |      1 |       |       |          |
+|*  1 |  HASH JOIN SEMI                              |                    |      1 |      7 |      1 |00:00:00.05 |      31 |      1 |  1645K|  1645K| 1432K (0)|
+|   2 |   VIEW                                       | index$_join$_001   |      1 |     23 |     23 |00:00:00.01 |       8 |      0 |       |       |          |
+|*  3 |    HASH JOIN                                 |                    |      1 |        |     23 |00:00:00.01 |       8 |      0 |  1368K|  1368K| 1566K (0)|
+|   4 |     INDEX FAST FULL SCAN                     | LOC_CITY_IX        |      1 |     23 |     23 |00:00:00.01 |       4 |      0 |       |       |          |
+|   5 |     INDEX FAST FULL SCAN                     | LOC_ID_PK          |      1 |     23 |     23 |00:00:00.01 |       4 |      0 |       |       |          |
+|   6 |   VIEW                                       | VW_SQ_1            |      1 |      8 |      1 |00:00:00.05 |      23 |      1 |       |       |          |
+|   7 |    MERGE JOIN SEMI                           |                    |      1 |      8 |      1 |00:00:00.05 |      23 |      1 |       |       |          |
+|   8 |     TABLE ACCESS BY INDEX ROWID              | DEPARTMENTS        |      1 |     27 |     10 |00:00:00.01 |       4 |      0 |       |       |          |
+|   9 |      INDEX FULL SCAN                         | DEPT_ID_PK         |      1 |     27 |     10 |00:00:00.01 |       2 |      0 |       |       |          |
+|* 10 |     SORT UNIQUE                              |                    |     10 |      8 |      1 |00:00:00.05 |      19 |      1 |  2048 |  2048 | 2048  (0)|
+|  11 |      VIEW                                    | VW_JF_SET$1236063A |      1 |      8 |      2 |00:00:00.05 |      19 |      1 |       |       |          |
+|  12 |       UNION-ALL                              |                    |      1 |        |      2 |00:00:00.05 |      19 |      1 |       |       |          |
+|  13 |        NESTED LOOPS                          |                    |      1 |        |      1 |00:00:00.05 |       9 |      1 |       |       |          |
+|  14 |         NESTED LOOPS                         |                    |      1 |      6 |      1 |00:00:00.05 |       8 |      1 |       |       |          |
+|* 15 |          TABLE ACCESS FULL                   | JOBS               |      1 |      1 |      1 |00:00:00.01 |       7 |      0 |       |       |          |
+|* 16 |          INDEX RANGE SCAN                    | EMP_JOB_IX         |      1 |      6 |      1 |00:00:00.05 |       1 |      1 |       |       |          |
+|  17 |         TABLE ACCESS BY INDEX ROWID          | EMPLOYEES          |      1 |      6 |      1 |00:00:00.01 |       1 |      0 |       |       |          |
+|  18 |        TABLE ACCESS BY INDEX ROWID BATCHED   | EMPLOYEES          |      1 |      1 |      1 |00:00:00.01 |       2 |      0 |       |       |          |
+|* 19 |         INDEX RANGE SCAN                     | EMP_NAME_IX        |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |       |       |          |
+|  20 |        NESTED LOOPS                          |                    |      1 |        |      0 |00:00:00.01 |       8 |      0 |       |       |          |
+|  21 |         NESTED LOOPS                         |                    |      1 |      1 |      0 |00:00:00.01 |       8 |      0 |       |       |          |
+|  22 |          NESTED LOOPS                        |                    |      1 |      1 |      0 |00:00:00.01 |       8 |      0 |       |       |          |
+|* 23 |           TABLE ACCESS FULL                  | JOBS               |      1 |      1 |      1 |00:00:00.01 |       7 |      0 |       |       |          |
+|  24 |           TABLE ACCESS BY INDEX ROWID BATCHED| JOB_HISTORY        |      1 |      1 |      0 |00:00:00.01 |       1 |      0 |       |       |          |
+|* 25 |            INDEX RANGE SCAN                  | JHIST_JOB_IX       |      1 |      1 |      0 |00:00:00.01 |       1 |      0 |       |       |          |
+|* 26 |          INDEX UNIQUE SCAN                   | EMP_EMP_ID_PK      |      0 |      1 |      0 |00:00:00.01 |       0 |      0 |       |       |          |
+|  27 |         TABLE ACCESS BY INDEX ROWID          | EMPLOYEES          |      0 |      1 |      0 |00:00:00.01 |       0 |      0 |       |       |          |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   1 - access("VW_COL_1"="L"."LOCATION_ID")
+   3 - access(ROWID=ROWID)
+  10 - access("ITEM_1"="D"."DEPARTMENT_ID")
+       filter("ITEM_1"="D"."DEPARTMENT_ID")
+  15 - filter("J"."JOB_TITLE"='President')
+  16 - access("J"."JOB_ID"="E"."JOB_ID")
+  19 - access("E"."LAST_NAME"='King' AND "E"."FIRST_NAME"='Steven')
+  23 - filter("J2"."JOB_TITLE"='President')
+  25 - access("J2"."JOB_ID"="H"."JOB_ID")
+  26 - access("H"."EMPLOYEE_ID"="E"."EMPLOYEE_ID")
+
+Note
+-----
+   - this is an adaptive plan
+
+SQL_ID  6bk3nvpv0ntdh, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS NCO_ORG */        l.location_id,
+  l.city   FROM locations l  WHERE EXISTS   (SELECT *      FROM
+departments d      JOIN employees e        ON e.department_id =
+d.department_id      JOIN jobs j        ON j.job_id = e.job_id
+WHERE d.location_id = l.location_id       AND (
+(e.first_name = 'Steven' AND e.last_name = 'King')          OR
+j.job_title = 'President'          OR EXISTS             (SELECT *
+          FROM job_history h                JOIN jobs j2
+  ON j2.job_id = h.job_id               WHERE h.employee_id =
+e.employee_id                 AND j2.job_title   = 'President'
+   )           )   )
+
+Plan hash value: 2765691527
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                               | Name              | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  |  OMem |  1Mem | Used-Mem |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                        |                   |      1 |        |      1 |00:00:00.36 |     156 |      5 |       |       |          |
+|*  1 |  HASH JOIN SEMI                         |                   |      1 |      7 |      1 |00:00:00.36 |     156 |      5 |  1645K|  1645K| 1377K (0)|
+|   2 |   VIEW                                  | index$_join$_001  |      1 |     23 |     23 |00:00:00.01 |       8 |      0 |       |       |          |
+|*  3 |    HASH JOIN                            |                   |      1 |        |     23 |00:00:00.01 |       8 |      0 |  1368K|  1368K| 1571K (0)|
+|   4 |     INDEX FAST FULL SCAN                | LOC_CITY_IX       |      1 |     23 |     23 |00:00:00.01 |       4 |      0 |       |       |          |
+|   5 |     INDEX FAST FULL SCAN                | LOC_ID_PK         |      1 |     23 |     23 |00:00:00.01 |       4 |      0 |       |       |          |
+|   6 |   VIEW                                  | VW_SQ_1           |      1 |     11 |      1 |00:00:00.36 |     148 |      5 |       |       |          |
+|*  7 |    FILTER                               |                   |      1 |        |      1 |00:00:00.36 |     148 |      5 |       |       |          |
+|*  8 |     HASH JOIN                           |                   |      1 |    106 |    106 |00:00:00.28 |      17 |      3 |  1055K|  1055K|  900K (0)|
+|   9 |      MERGE JOIN                         |                   |      1 |    107 |    107 |00:00:00.17 |       9 |      2 |       |       |          |
+|  10 |       TABLE ACCESS BY INDEX ROWID       | JOBS              |      1 |     19 |     19 |00:00:00.12 |       2 |      1 |       |       |          |
+|  11 |        INDEX FULL SCAN                  | JOB_ID_PK         |      1 |     19 |     19 |00:00:00.12 |       1 |      1 |       |       |          |
+|* 12 |       SORT JOIN                         |                   |     19 |    107 |    107 |00:00:00.04 |       7 |      1 | 15360 | 15360 |14336  (0)|
+|  13 |        TABLE ACCESS FULL                | EMPLOYEES         |      1 |    107 |    107 |00:00:00.04 |       7 |      1 |       |       |          |
+|  14 |      TABLE ACCESS FULL                  | DEPARTMENTS       |      1 |     27 |     27 |00:00:00.11 |       8 |      1 |       |       |          |
+|  15 |     NESTED LOOPS SEMI                   |                   |    105 |      1 |      0 |00:00:00.08 |     131 |      2 |       |       |          |
+|  16 |      TABLE ACCESS BY INDEX ROWID BATCHED| JOB_HISTORY       |    105 |      1 |     10 |00:00:00.08 |     112 |      2 |       |       |          |
+|* 17 |       INDEX RANGE SCAN                  | JHIST_EMPLOYEE_IX |    105 |      1 |     10 |00:00:00.04 |     105 |      1 |       |       |          |
+|* 18 |      TABLE ACCESS BY INDEX ROWID        | JOBS              |     10 |      1 |      0 |00:00:00.01 |      19 |      0 |       |       |          |
+|* 19 |       INDEX UNIQUE SCAN                 | JOB_ID_PK         |     10 |      1 |     10 |00:00:00.01 |       9 |      0 |       |       |          |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   1 - access("ITEM_1"="L"."LOCATION_ID")
+   3 - access(ROWID=ROWID)
+   7 - filter((("E"."FIRST_NAME"='Steven' AND "E"."LAST_NAME"='King') OR "J"."JOB_TITLE"='President' OR  IS NOT NULL))
+   8 - access("E"."DEPARTMENT_ID"="D"."DEPARTMENT_ID")
+  12 - access("J"."JOB_ID"="E"."JOB_ID")
+       filter("J"."JOB_ID"="E"."JOB_ID")
+  17 - access("H"."EMPLOYEE_ID"=:B1)
+  18 - filter("J2"."JOB_TITLE"='President')
+  19 - access("J2"."JOB_ID"="H"."JOB_ID")
+
+Note
+-----
+   - this is an adaptive plan
+
+SQL_ID  9nw269zcutfjr, child number 0
+-------------------------------------
+WITH driving_union AS ( SELECT e.department_id   FROM employees e
+WHERE (e.first_name = 'Steven' AND e.last_name = 'King')  UNION SELECT
+e.department_id   FROM jobs j   JOIN employees e     ON e.job_id
+= j.job_id  WHERE j.job_title     = 'President'  UNION SELECT
+e.department_id   FROM jobs j   JOIN job_history h     ON j.job_id
+  = h.job_id   JOIN employees e     ON e.employee_id    = h.employee_id
+ WHERE j.job_title     = 'President' ) SELECT /*+
+GATHER_PLAN_STATISTICS NCO_USF */        DISTINCT l.location_id, l.city
+  FROM driving_union u   JOIN departments d     ON d.department_id  =
+u.department_id   JOIN locations l     ON l.location_id  = d.location_id
+
+Plan hash value: 769064630
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                                     | Name             | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  |  OMem |  1Mem | Used-Mem |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                              |                  |      1 |        |      1 |00:00:00.08 |      29 |      7 |       |       |          |
+|   1 |  HASH UNIQUE                                  |                  |      1 |      1 |      1 |00:00:00.08 |      29 |      7 |  1646K|  1646K|  460K (0)|
+|   2 |   NESTED LOOPS                                |                  |      1 |        |      1 |00:00:00.08 |      29 |      7 |       |       |          |
+|   3 |    NESTED LOOPS                               |                  |      1 |      1 |      1 |00:00:00.04 |      28 |      2 |       |       |          |
+|*  4 |     HASH JOIN SEMI                            |                  |      1 |      1 |      1 |00:00:00.04 |      27 |      2 |  1969K|  1969K| 1504K (0)|
+|   5 |      VIEW                                     | index$_join$_011 |      1 |     27 |     27 |00:00:00.04 |       8 |      2 |       |       |          |
+|*  6 |       HASH JOIN                               |                  |      1 |        |     27 |00:00:00.04 |       8 |      2 |  1519K|  1519K| 1453K (0)|
+|   7 |        INDEX FAST FULL SCAN                   | DEPT_ID_PK       |      1 |     27 |     27 |00:00:00.01 |       4 |      1 |       |       |          |
+|   8 |        INDEX FAST FULL SCAN                   | DEPT_LOCATION_IX |      1 |     27 |     27 |00:00:00.03 |       4 |      1 |       |       |          |
+|   9 |      VIEW                                     |                  |      1 |      8 |      1 |00:00:00.01 |      19 |      0 |       |       |          |
+|  10 |       SORT UNIQUE                             |                  |      1 |      8 |      1 |00:00:00.01 |      19 |      0 |  2048 |  2048 | 2048  (0)|
+|  11 |        UNION-ALL                              |                  |      1 |        |      2 |00:00:00.01 |      19 |      0 |       |       |          |
+|  12 |         TABLE ACCESS BY INDEX ROWID BATCHED   | EMPLOYEES        |      1 |      1 |      1 |00:00:00.01 |       2 |      0 |       |       |          |
+|* 13 |          INDEX RANGE SCAN                     | EMP_NAME_IX      |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |       |       |          |
+|  14 |         NESTED LOOPS                          |                  |      1 |        |      1 |00:00:00.01 |       9 |      0 |       |       |          |
+|  15 |          NESTED LOOPS                         |                  |      1 |      6 |      1 |00:00:00.01 |       8 |      0 |       |       |          |
+|* 16 |           TABLE ACCESS FULL                   | JOBS             |      1 |      1 |      1 |00:00:00.01 |       7 |      0 |       |       |          |
+|* 17 |           INDEX RANGE SCAN                    | EMP_JOB_IX       |      1 |      6 |      1 |00:00:00.01 |       1 |      0 |       |       |          |
+|  18 |          TABLE ACCESS BY INDEX ROWID          | EMPLOYEES        |      1 |      6 |      1 |00:00:00.01 |       1 |      0 |       |       |          |
+|  19 |         NESTED LOOPS                          |                  |      1 |        |      0 |00:00:00.01 |       8 |      0 |       |       |          |
+|  20 |          NESTED LOOPS                         |                  |      1 |      1 |      0 |00:00:00.01 |       8 |      0 |       |       |          |
+|  21 |           NESTED LOOPS                        |                  |      1 |      1 |      0 |00:00:00.01 |       8 |      0 |       |       |          |
+|* 22 |            TABLE ACCESS FULL                  | JOBS             |      1 |      1 |      1 |00:00:00.01 |       7 |      0 |       |       |          |
+|  23 |            TABLE ACCESS BY INDEX ROWID BATCHED| JOB_HISTORY      |      1 |      1 |      0 |00:00:00.01 |       1 |      0 |       |       |          |
+|* 24 |             INDEX RANGE SCAN                  | JHIST_JOB_IX     |      1 |      1 |      0 |00:00:00.01 |       1 |      0 |       |       |          |
+|* 25 |           INDEX UNIQUE SCAN                   | EMP_EMP_ID_PK    |      0 |      1 |      0 |00:00:00.01 |       0 |      0 |       |       |          |
+|  26 |          TABLE ACCESS BY INDEX ROWID          | EMPLOYEES        |      0 |      1 |      0 |00:00:00.01 |       0 |      0 |       |       |          |
+|* 27 |     INDEX UNIQUE SCAN                         | LOC_ID_PK        |      1 |      1 |      1 |00:00:00.01 |       1 |      0 |       |       |          |
+|  28 |    TABLE ACCESS BY INDEX ROWID                | LOCATIONS        |      1 |      1 |      1 |00:00:00.03 |       1 |      5 |       |       |          |
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   4 - access("D"."DEPARTMENT_ID"="U"."DEPARTMENT_ID")
+   6 - access(ROWID=ROWID)
+  13 - access("E"."LAST_NAME"='King' AND "E"."FIRST_NAME"='Steven')
+  16 - filter("J"."JOB_TITLE"='President')
+  17 - access("E"."JOB_ID"="J"."JOB_ID")
+  22 - filter("J"."JOB_TITLE"='President')
+  24 - access("J"."JOB_ID"="H"."JOB_ID")
+  25 - access("E"."EMPLOYEE_ID"="H"."EMPLOYEE_ID")
+  27 - access("L"."LOCATION_ID"="D"."LOCATION_ID")
+
+Note
+-----
+   - this is an adaptive plan
+
+SQL_ID  4cnc6kwdp755b, child number 0
+-------------------------------------
+SELECT /*+ GATHER_PLAN_STATISTICS NCO_OJS */        DISTINCT
+l.location_id, l.city   FROM employees e   LEFT JOIN jobs j     ON
+j.job_id         = e.job_id    AND j.job_title      = 'President'
+LEFT JOIN job_history h     ON h.employee_id    = e.employee_id   LEFT
+JOIN jobs j2     ON j2.job_id        = h.job_id    AND j2.job_title
+= 'President'   JOIN departments d     ON d.department_id  =
+e.department_id   JOIN locations l     ON l.location_id  =
+d.location_id  WHERE (e.first_name = 'Steven' AND e.last_name = 'King')
+    OR j.job_id IS NOT NULL     OR j2.job_id IS NOT NULL
+
+Plan hash value: 1977144630
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                     | Name              | Starts | E-Rows | A-Rows |   A-Time   | Buffers | Reads  |  OMem |  1Mem | Used-Mem |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT              |                   |      1 |        |      1 |00:00:00.05 |      45 |      2 |       |       |          |
+|   1 |  HASH UNIQUE                  |                   |      1 |    109 |      1 |00:00:00.05 |      45 |      2 |  1646K|  1646K|  460K (0)|
+|*  2 |   FILTER                      |                   |      1 |        |      1 |00:00:00.05 |      45 |      2 |       |       |          |
+|*  3 |    HASH JOIN RIGHT OUTER      |                   |      1 |    109 |    109 |00:00:00.05 |      45 |      2 |  1888K|  1888K|  373K (0)|
+|*  4 |     TABLE ACCESS FULL         | JOBS              |      1 |      1 |      1 |00:00:00.01 |       7 |      0 |       |       |          |
+|*  5 |     HASH JOIN RIGHT OUTER     |                   |      1 |    109 |    109 |00:00:00.05 |      38 |      2 |  1557K|  1557K| 1066K (0)|
+|   6 |      VIEW                     | index$_join$_004  |      1 |     10 |     10 |00:00:00.04 |       8 |      2 |       |       |          |
+|*  7 |       HASH JOIN               |                   |      1 |        |     10 |00:00:00.04 |       8 |      2 |  1519K|  1519K| 1332K (0)|
+|   8 |        INDEX FAST FULL SCAN   | JHIST_EMPLOYEE_IX |      1 |     10 |     10 |00:00:00.03 |       4 |      1 |       |       |          |
+|   9 |        INDEX FAST FULL SCAN   | JHIST_JOB_IX      |      1 |     10 |     10 |00:00:00.01 |       4 |      1 |       |       |          |
+|* 10 |      HASH JOIN OUTER          |                   |      1 |    106 |    106 |00:00:00.01 |      30 |      0 |   987K|   987K| 1257K (0)|
+|* 11 |       HASH JOIN               |                   |      1 |    106 |    106 |00:00:00.01 |      23 |      0 |  1263K|  1263K| 1257K (0)|
+|* 12 |        HASH JOIN              |                   |      1 |     27 |     27 |00:00:00.01 |      16 |      0 |  1645K|  1645K| 1462K (0)|
+|  13 |         VIEW                  | index$_join$_010  |      1 |     23 |     23 |00:00:00.01 |       8 |      0 |       |       |          |
+|* 14 |          HASH JOIN            |                   |      1 |        |     23 |00:00:00.01 |       8 |      0 |  1368K|  1368K| 1576K (0)|
+|  15 |           INDEX FAST FULL SCAN| LOC_CITY_IX       |      1 |     23 |     23 |00:00:00.01 |       4 |      0 |       |       |          |
+|  16 |           INDEX FAST FULL SCAN| LOC_ID_PK         |      1 |     23 |     23 |00:00:00.01 |       4 |      0 |       |       |          |
+|  17 |         VIEW                  | index$_join$_008  |      1 |     27 |     27 |00:00:00.01 |       8 |      0 |       |       |          |
+|* 18 |          HASH JOIN            |                   |      1 |        |     27 |00:00:00.01 |       8 |      0 |  1519K|  1519K| 1428K (0)|
+|  19 |           INDEX FAST FULL SCAN| DEPT_ID_PK        |      1 |     27 |     27 |00:00:00.01 |       4 |      0 |       |       |          |
+|  20 |           INDEX FAST FULL SCAN| DEPT_LOCATION_IX  |      1 |     27 |     27 |00:00:00.01 |       4 |      0 |       |       |          |
+|  21 |        TABLE ACCESS FULL      | EMPLOYEES         |      1 |    107 |    107 |00:00:00.01 |       7 |      0 |       |       |          |
+|* 22 |       TABLE ACCESS FULL       | JOBS              |      1 |      1 |      1 |00:00:00.01 |       7 |      0 |       |       |          |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - filter((("E"."FIRST_NAME"='Steven' AND "E"."LAST_NAME"='King') OR "J"."JOB_ID" IS NOT NULL OR "J2"."JOB_ID" IS NOT NULL))
+   3 - access("J2"."JOB_ID"="H"."JOB_ID")
+   4 - filter("J2"."JOB_TITLE"='President')
+   5 - access("H"."EMPLOYEE_ID"="E"."EMPLOYEE_ID")
+   7 - access(ROWID=ROWID)
+  10 - access("J"."JOB_ID"="E"."JOB_ID")
+  11 - access("D"."DEPARTMENT_ID"="E"."DEPARTMENT_ID")
+  12 - access("L"."LOCATION_ID"="D"."LOCATION_ID")
+  14 - access(ROWID=ROWID)
+  18 - access(ROWID=ROWID)
+  22 - filter("J"."JOB_TITLE"='President')
+
+Note
+-----
+   - this is an adaptive plan
+
+
+254 rows selected.
