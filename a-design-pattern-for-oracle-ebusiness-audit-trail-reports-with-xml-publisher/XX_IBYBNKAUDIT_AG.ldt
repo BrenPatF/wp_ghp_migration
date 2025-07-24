@@ -1,0 +1,177 @@
+# $Header$
+
+# dbdrv: exec fnd bin FNDLOAD bin &phase=daa+53 checkfile:~PROD:~PATH:~FILE &ui_apps 0 Y UPLOAD @FND:patch/115/import/affaudit.lct @~PROD:~PATH/~FILE
+LANGUAGE = "US"
+LDRCONFIG = "affaudit.lct 120.5.12010000.1"
+
+#Source Database VISR1213
+
+#RELEASE_NAME 12.1.3
+
+# -- Begin Entity Definitions -- 
+
+DEFINE FND_AUDIT_GROUPS
+  KEY   APPLICATION_SHORT_NAME          VARCHAR2(50)
+  KEY   GROUP_NAME                      VARCHAR2(240)
+  CTX   OWNER                           VARCHAR2(4000)
+  BASE  STATE                           VARCHAR2(1)
+  BASE  LAST_UPDATE_DATE                VARCHAR2(75)
+  BASE  DESCRIPTION                     VARCHAR2(240)
+
+  DEFINE FND_AUDIT_TABLES
+    KEY   APPLICATION_SHORT_NAME          VARCHAR2(50)
+    KEY   GROUP_NAME                      VARCHAR2(240)
+    KEY   TABLE_NAME                      VARCHAR2(240)
+    CTX   OWNER                           VARCHAR2(4000)
+    BASE  STATE                           VARCHAR2(1)
+    BASE  LAST_UPDATE_DATE                VARCHAR2(75)
+
+    DEFINE FND_AUDIT_COLUMNS
+      KEY   APPLICATION_SHORT_NAME          VARCHAR2(50)
+      KEY   TABLE_NAME                      VARCHAR2(240)
+      KEY   COLUMN_NAME                     VARCHAR2(240)
+      CTX   OWNER                           VARCHAR2(4000)
+      BASE  STATE                           VARCHAR2(1)
+      BASE  SCHEMA_ID                       VARCHAR2(10)
+      BASE  SEQUENCE_ID                     VARCHAR2(10)
+      BASE  LAST_UPDATE_DATE                VARCHAR2(75)
+    END FND_AUDIT_COLUMNS
+  END FND_AUDIT_TABLES
+END FND_AUDIT_GROUPS
+
+# -- End Entity Definitions -- 
+
+
+BEGIN FND_AUDIT_GROUPS "CUSTOM" "XX_IBYBNKAUDIT"
+  OWNER = "SYSADMIN"
+  STATE = "R"
+  LAST_UPDATE_DATE = "ph_sysdate"
+  DESCRIPTION = "Audit Group For IBY Payables Bank Accounts"
+
+  BEGIN FND_AUDIT_TABLES "IBY" "XX_IBYBNKAUDIT" "IBY_EXT_BANK_ACCOUNTS"
+    OWNER = "SYSADMIN"
+    STATE = "P"
+    LAST_UPDATE_DATE = "ph_sysdate"
+  
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "EXT_BANK_ACCOUNT_ID"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "BANK_ACCOUNT_NAME"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "BANK_ACCOUNT_NUM"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "IBAN"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "COUNTRY_CODE"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "CURRENCY_CODE"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "BRANCH_ID"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_EXT_BANK_ACCOUNTS" "BANK_ID"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+  END FND_AUDIT_TABLES
+
+  BEGIN FND_AUDIT_TABLES "IBY" "XX_IBYBNKAUDIT" "IBY_PMT_INSTR_USES_ALL"
+    OWNER = "SYSADMIN"
+    STATE = "P"
+    LAST_UPDATE_DATE = "ph_sysdate"
+  
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_PMT_INSTR_USES_ALL" "INSTRUMENT_PAYMENT_USE_ID"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_PMT_INSTR_USES_ALL" "INSTRUMENT_ID"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_PMT_INSTR_USES_ALL" "EXT_PMT_PARTY_ID"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_PMT_INSTR_USES_ALL" "START_DATE"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_PMT_INSTR_USES_ALL" "END_DATE"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+    BEGIN FND_AUDIT_COLUMNS "IBY" "IBY_PMT_INSTR_USES_ALL" "ORDER_OF_PREFERENCE"
+      OWNER = "SYSADMIN"
+      STATE = "P"
+      SCHEMA_ID = "-1"
+      SEQUENCE_ID = "-1"
+      LAST_UPDATE_DATE = "ph_sysdate"
+    END FND_AUDIT_COLUMNS
+
+  END FND_AUDIT_TABLES
+
+END FND_AUDIT_GROUPS
