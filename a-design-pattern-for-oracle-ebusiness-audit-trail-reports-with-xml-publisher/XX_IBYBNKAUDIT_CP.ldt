@@ -1,3 +1,4 @@
+# Migrated from Wordpress July 2025
 # $Header$
 
 # dbdrv: exec fnd bin FNDLOAD bin &phase=daa+56 checkfile:~PROD:~PATH:~FILE &ui_apps 0 Y UPLOAD @FND:patch/115/import/afffload.lct @~PROD:~PATH/~FILE

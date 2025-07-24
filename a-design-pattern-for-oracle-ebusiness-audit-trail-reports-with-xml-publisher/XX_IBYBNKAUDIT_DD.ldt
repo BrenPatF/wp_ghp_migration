@@ -1,3 +1,4 @@
+# Migrated from Wordpress July 2025
 # $Header$
 
 # dbdrv: exec fnd bin FNDLOAD bin &phase=dat checkfile:~PROD:~PATH:~FILE &ui_apps 0 Y UPLOAD @XDO:patch/115/import/xdotmpl.lct @~PROD:~PATH/~FILE

@@ -1,3 +1,4 @@
+REM Migrated from Wordpress July 2025
 SET TRIMSPOOL ON
 SET LINES 300
 SET PAGES 1000

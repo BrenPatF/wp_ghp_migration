@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Author:			Brendan Furey, 1 September 2014
+Author:			Brendan Furey, 1 September 2014 (Migrated from Wordpress July 2025
+)
 Description:	XML Data Template for XML Publisher Bank Account Auditing report,
                 XX_IBYBNKAUDIT, as described in:
                         'A Design Pattern for Oracle eBusiness Audit Trail Reports with XML Publisher'

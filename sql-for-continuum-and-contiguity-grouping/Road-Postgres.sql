@@ -1,3 +1,4 @@
+REM Migrated from Wordpress July 2025
 DROP TABLE road_events;
 DROP TABLE roads;
 CREATE TABLE roads (
