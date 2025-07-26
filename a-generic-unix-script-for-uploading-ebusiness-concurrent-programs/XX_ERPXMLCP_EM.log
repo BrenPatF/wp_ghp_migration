@@ -1,0 +1,409 @@
+./XX_Install_XMLCP.ksh 2014/09/19
+XX_ERPXMLCP_EM/
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM.xml
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_DD.ldt
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_MS.ldt
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM.pkb
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM.rtf
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_BUR.xml
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_XML.rtf
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_VS.ldt
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_CP.ldt
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM.pks
+XX_ERPXMLCP_EM/XX_ERPXMLCP_EM_RG.lis
+No Audit Groups to upload
+Uploading the Messages from file XX_ERPXMLCP_EM_TP.ldt...
+Messages...
+
+Name		     Text
+-------------------- ------------------------------------------------------------------------------------------------------------------------------------------------------
+XX_ERPXMLCP_EM_NONXM Non-XML Concurrent Program &PROGAPP
+L
+
+XX_ERPXMLCP_EM_XML   XML Concurrent Program &PROGAPP
+
+Uploading Value Set from file XX_ERPXMLCP_EM_TP.ldt...
+
+Value Set				 Values
+---------------------------------------- ------
+XX_PROGS				      0
+XX_APPNAME_ID				      0
+
+Processing Load file XX_ERPXMLCP_EM_TP.ldt...
+FNDLOAD apps/pw 0 Y UPLOAD /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpprog.lct XX_ERPXMLCP_EM_TP.ldt -
+
+Program 									 Parameter
+-------------------------------------------------------------------------------- ------------------------------
+XX Example XML CP (Email): XX_ERPXMLCP_EM					 100: Cc Email
+										 10: Application
+										 20: From Program
+										 30: To Program
+										 40: From Date
+										 50: To Date
+										 60: From Parameter Count
+										 70: To Parameter Count
+										 80: Override Email
+										 90: From Email
+
+10 rows selected.
+
+reading XX_ERPXMLCP_EM_RG.lis
+Request group 'System Administrator Reports' in app FND
+FNDLOAD apps/pw 0 Y DOWNLOAD rg_down.ldt REQUEST_GROUP REQUEST_GROUP_NAME=System Administrator Reports APPLICATION_SHORT_NAME=FND
+Processing Request Group assignments for group System Administrator Reports
+FNDLOAD apps/pw 0 Y UPLOAD /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpreqg.lct rg_up.ldt
+../../import/XX_ERPXMLCP_EM_BUR.xml exists, so add bursting program to request group
+FNDLOAD apps/pw 0 Y DOWNLOAD rg_down.ldt REQUEST_GROUP REQUEST_GROUP_NAME=System Administrator Reports APPLICATION_SHORT_NAME=FND
+Processing Request Group assignments for group System Administrator Reports
+FNDLOAD apps/pw 0 Y UPLOAD /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpreqg.lct rg_up.ldt
+
+Request Group		       App
+------------------------------ ----------
+System Administrator Reports   FND
+
+Uploading the Data Definition  from file XX_ERPXMLCP_EM_TP.ldt...
+Data Definitions...
+
+Code		     Lang Terr
+-------------------- ---- ----
+XX_ERPXMLCP_EM	     en   US
+
+
+XDOLoader started: Wed Sep 19 16:43:16 GMT 2014
+
+
+Parameters passed to XDOLoader...
+[TERRITORY] [US]
+[FILE_NAME] [../../import/XX_ERPXMLCP_EM.xml]
+[DB_USERNAME] [apps]
+[XDO_FILE_TYPE] [XML]
+[LOB_CODE] [XX_ERPXMLCP_EM]
+[NLS_LANG] [American_America.WE8ISO8859P1]
+[JDBC_CONNECTION] [ebsoravm.brendan.com:1521:VISR121]
+[LANGUAGE] [en]
+[DB_PASSWORD] [******]
+[LOB_TYPE] [DATA_TEMPLATE]
+[CUSTOM_MODE] [FORCE]
+[UPLOAD] [UPLOAD]
+[APPS_SHORT_NAME] [CUSTOM]
+ 
+Start uploading...
+Target file: XX_ERPXMLCP_EM.xml
+Updating the record in XDO_LOBS: XX_ERPXMLCP_EM.xml
+Done updating the file in XDO_LOBS: XX_ERPXMLCP_EM.xml
+
+
+XDOLoader done successfully: Wed Sep 19 16:43:17 GMT 2014
+Uploading layout XX_ERPXMLCP_EM.rtf
+XDOLoader started: Wed Sep 19 16:43:18 GMT 2014
+
+
+Parameters passed to XDOLoader...
+[TERRITORY] [US]
+[FILE_NAME] [XX_ERPXMLCP_EM.rtf]
+[DB_USERNAME] [apps]
+[XDO_FILE_TYPE] [RTF]
+[LOB_CODE] [XX_ERPXMLCP_EM]
+[NLS_LANG] [American_America.WE8ISO8859P1]
+[JDBC_CONNECTION] [ebsoravm.brendan.com:1521:VISR121]
+[LANGUAGE] [en]
+[DB_PASSWORD] [******]
+[LOB_TYPE] [TEMPLATE]
+[CUSTOM_MODE] [FORCE]
+[UPLOAD] [UPLOAD]
+[APPS_SHORT_NAME] [CUSTOM]
+ 
+Start uploading...
+Target file: XX_ERPXMLCP_EM.rtf
+Updating the record in XDO_LOBS: XX_ERPXMLCP_EM.rtf
+Done updating the file in XDO_LOBS: XX_ERPXMLCP_EM.rtf
+
+
+XDOLoader done successfully: Wed Sep 19 16:43:20 GMT 2014
+Uploading layout XX_ERPXMLCP_EM_XML.rtf
+XDOLoader started: Wed Sep 19 16:43:21 GMT 2014
+
+
+Parameters passed to XDOLoader...
+[TERRITORY] [US]
+[FILE_NAME] [XX_ERPXMLCP_EM_XML.rtf]
+[DB_USERNAME] [apps]
+[XDO_FILE_TYPE] [RTF]
+[LOB_CODE] [XX_ERPXMLCP_EM_XML]
+[NLS_LANG] [American_America.WE8ISO8859P1]
+[JDBC_CONNECTION] [ebsoravm.brendan.com:1521:VISR121]
+[LANGUAGE] [en]
+[DB_PASSWORD] [******]
+[LOB_TYPE] [TEMPLATE]
+[CUSTOM_MODE] [FORCE]
+[UPLOAD] [UPLOAD]
+[APPS_SHORT_NAME] [CUSTOM]
+ 
+Start uploading...
+Target file: XX_ERPXMLCP_EM_XML.rtf
+Updating the record in XDO_LOBS: XX_ERPXMLCP_EM_XML.rtf
+Done updating the file in XDO_LOBS: XX_ERPXMLCP_EM_XML.rtf
+
+
+XDOLoader done successfully: Wed Sep 19 16:43:23 GMT 2014
+Bursting file name is ../../import/XX_ERPXMLCP_EM_BUR.xml
+XDOLoader started: Wed Sep 19 16:43:23 GMT 2014
+
+
+Parameters passed to XDOLoader...
+[TERRITORY] [US]
+[FILE_NAME] [../../import/XX_ERPXMLCP_EM_BUR.xml]
+[DB_USERNAME] [apps]
+[XDO_FILE_TYPE] [XML]
+[LOB_CODE] [XX_ERPXMLCP_EM]
+[NLS_LANG] [American_America.WE8ISO8859P1]
+[JDBC_CONNECTION] [ebsoravm.brendan.com:1521:VISR121]
+[LANGUAGE] [en]
+[DB_PASSWORD] [******]
+[LOB_TYPE] [BURSTING_FILE]
+[CUSTOM_MODE] [FORCE]
+[UPLOAD] [UPLOAD]
+[APPS_SHORT_NAME] [CUSTOM]
+ 
+Start uploading...
+Target file: XX_ERPXMLCP_EM_BUR.xml
+Updating the record in XDO_LOBS: XX_ERPXMLCP_EM_BUR.xml
+Done updating the file in XDO_LOBS: XX_ERPXMLCP_EM_BUR.xml
+
+
+XDOLoader done successfully: Wed Sep 19 16:43:25 GMT 2014
+Templates and Files...
+
+Code		     Data Template	  Bursting File 	    Template		 Lang Terr File
+-------------------- -------------------- ------------------------- -------------------- ---- ---- -------------------------
+XX_ERPXMLCP_EM	     XX_ERPXMLCP_EM.xml   XX_ERPXMLCP_EM_BUR.xml    XX_ERPXMLCP_EM	 en   US   XX_ERPXMLCP_EM.xsl*
+												   XX_ERPXMLCP_EM.rtf*
+								    XX_ERPXMLCP_EM_XML	 en   US   XX_ERPXMLCP_EM_XML.xsl*
+												   XX_ERPXMLCP_EM_XML.rtf*
+
+No ../../install/sql/XX_ERPXMLCP_EM.sql to install
+SQL install file is ../../install/sql/XX_ERPXMLCP_EM.pks
+
+Package created.
+
+No errors.
+SQL install file is ../../install/sql/XX_ERPXMLCP_EM.pkb
+
+Package body created.
+
+No errors.
+The Oracle Loader logs (in directory XX_ERPXMLCP_EM) contain...
+***
+L5898947.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:12
+
++---------------------------------------------------------------------------+
+
+Uploading from the data file XX_ERPXMLCP_EM_TP.ldt
+Altering database NLS_LANGUAGE environment to AMERICAN
+Dump from LCT/LDT files (/u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afmdmsg.lct(120.1.12010000.1), XX_ERPXMLCP_EM_TP.ldt) to stage tables
+Dump LCT file /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afmdmsg.lct(120.1.12010000.1) into FND_SEED_STAGE_CONFIG
+Dump LDT file XX_ERPXMLCP_EM_TP.ldt into FND_SEED_STAGE_ENTITY
+Dumped the batch (FND_NEW_MESSAGES CUSTOM XX_ERPXMLCP_EM_XML , FND_NEW_MESSAGES CUSTOM XX_ERPXMLCP_EM_NONXML ) into FND_SEED_STAGE_ENTITY
+Upload from stage tables
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:12
+
++---------------------------------------------------------------------------+
+***
+L5898948.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:13
+
++---------------------------------------------------------------------------+
+
+Uploading from the data file XX_ERPXMLCP_EM_TP.ldt
+Altering database NLS_LANGUAGE environment to AMERICAN
+Dump from LCT/LDT files (/u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afffload.lct(120.13.12010000.4), XX_ERPXMLCP_EM_TP.ldt) to stage tables
+Dump LCT file /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afffload.lct(120.13.12010000.4) into FND_SEED_STAGE_CONFIG
+Dump LDT file XX_ERPXMLCP_EM_TP.ldt into FND_SEED_STAGE_ENTITY
+Dumped the batch (VALUE_SET XX_APPNAME_ID , VALUE_SET XX_PROGS ) into FND_SEED_STAGE_ENTITY
+Upload from stage tables
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:14
+
++---------------------------------------------------------------------------+
+***
+L5898949.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:14
+
++---------------------------------------------------------------------------+
+
+Uploading from the data file XX_ERPXMLCP_EM_TP.ldt
+Altering database NLS_LANGUAGE environment to AMERICAN
+Dump from LCT/LDT files (/u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpprog.lct(120.2.12010000.2), XX_ERPXMLCP_EM_TP.ldt) to stage tables
+Dump LCT file /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpprog.lct(120.2.12010000.2) into FND_SEED_STAGE_CONFIG
+Dump LDT file XX_ERPXMLCP_EM_TP.ldt into FND_SEED_STAGE_ENTITY
+Dumped the batch (EXECUTABLE XDODTEXE XDO , PROGRAM XX_ERPXMLCP_EM CUSTOM ) into FND_SEED_STAGE_ENTITY
+Upload from stage tables
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:14
+
++---------------------------------------------------------------------------+
+***
+L5898951.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:14
+
++---------------------------------------------------------------------------+
+
+Downloading REQUEST_GROUP to the data file rg_down.ldt
+Downloaded REQUEST_GROUP System Administrator Reports FND 
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:14
+
++---------------------------------------------------------------------------+
+***
+L5898952.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:14
+
++---------------------------------------------------------------------------+
+
+Uploading from the data file rg_up.ldt
+Altering database NLS_LANGUAGE environment to AMERICAN
+Dump from LCT/LDT files (/u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpreqg.lct(120.0.12010000.1), rg_up.ldt) to stage tables
+Dump LCT file /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpreqg.lct(120.0.12010000.1) into FND_SEED_STAGE_CONFIG
+Dump LDT file rg_up.ldt into FND_SEED_STAGE_ENTITY
+Dumped the batch (REQUEST_GROUP System Administrator Reports FND , REQUEST_GROUP_UNIT P CUSTOM XX_ERPXMLCP_EM ) into FND_SEED_STAGE_ENTITY
+Upload from stage tables
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:15
+
++---------------------------------------------------------------------------+
+***
+L5898953.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:15
+
++---------------------------------------------------------------------------+
+
+Downloading REQUEST_GROUP to the data file rg_down.ldt
+Downloaded REQUEST_GROUP System Administrator Reports FND 
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:15
+
++---------------------------------------------------------------------------+
+***
+L5898954.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:15
+
++---------------------------------------------------------------------------+
+
+Uploading from the data file rg_up.ldt
+Altering database NLS_LANGUAGE environment to AMERICAN
+Dump from LCT/LDT files (/u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpreqg.lct(120.0.12010000.1), rg_up.ldt) to stage tables
+Dump LCT file /u01/oracle/VISR121/apps/apps_st/appl/fnd/12.0.0/patch/115/import/afcpreqg.lct(120.0.12010000.1) into FND_SEED_STAGE_CONFIG
+Dump LDT file rg_up.ldt into FND_SEED_STAGE_ENTITY
+Dumped the batch (REQUEST_GROUP System Administrator Reports FND , REQUEST_GROUP_UNIT P XDO XDOBURSTREP ) into FND_SEED_STAGE_ENTITY
+Upload from stage tables
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:15
+
++---------------------------------------------------------------------------+
+***
+L5898955.log
+***
++---------------------------------------------------------------------------+
+Application Object Library: Version : 12.0.0
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+ module: 
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 16:43:15
+
++---------------------------------------------------------------------------+
+
+Uploading from the data file XX_ERPXMLCP_EM_TP.ldt
+Altering database NLS_LANGUAGE environment to AMERICAN
+Dump from LCT/LDT files (/u01/oracle/VISR121/apps/apps_st/appl/xdo/12.0.0/patch/115/import/xdotmpl.lct(120.5.12010000.3), XX_ERPXMLCP_EM_TP.ldt) to stage tables
+Dump LCT file /u01/oracle/VISR121/apps/apps_st/appl/xdo/12.0.0/patch/115/import/xdotmpl.lct(120.5.12010000.3) into FND_SEED_STAGE_CONFIG
+Dump LDT file XX_ERPXMLCP_EM_TP.ldt into FND_SEED_STAGE_ENTITY
+Dumped the batch (XDO_DS_DEFINITIONS CUSTOM XX_ERPXMLCP_EM , X_TEMPLATES CUSTOM XX_ERPXMLCP_EM_XML ) into FND_SEED_STAGE_ENTITY
+Upload from stage tables
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 16:43:16
+
++---------------------------------------------------------------------------+
