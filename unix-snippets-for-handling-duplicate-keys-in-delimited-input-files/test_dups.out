@@ -1,0 +1,44 @@
+test_dups_in_1_2.dat with the 2 leading fields key ....
+k91|k92|a1|k41|k42|a
+k11|k12|a1|k41|k42|b
+k41|k42|a4x|k41|k42|c
+k21|k22|a2|k41|k42|d
+k41|k42|a4|k41|k42|c
+k41|k42|a4|k41|k42|c
+k11|k12|a1|k41|k42|b
+
+List the distinct keys that have duplicates
+k11|k12
+k41|k42
+
+List all lines for duplicate keys
+k11|k12|a1|k41|k42|b
+k11|k12|a1|k41|k42|b
+k41|k42|a4|k41|k42|c
+k41|k42|a4|k41|k42|c
+k41|k42|a4x|k41|k42|c
+
+Strip all lines with duplicate keys from the file, returning unsorted lines
+k91|k92|a1|k41|k42|a
+k21|k22|a2|k41|k42|d
+
+Strip the inconsistent duplicates from the file, returning unique sorted lines
+k11|k12|a1|k41|k42|b
+k21|k22|a2|k41|k42|d
+k91|k92|a1|k41|k42|a
+
+Swap fields 2 and 3 so that the key fields are not leading
+test_dups_in_1_3.dat with fields 1 and 3 key ....
+k91|a1|k92|k41|k42|a
+k11|a1|k12|k41|k42|b
+k41|a4x|k42|k41|k42|c
+k21|a2|k22|k41|k42|d
+k41|a4|k42|k41|k42|c
+k41|a4|k42|k41|k42|c
+k11|a1|k12|k41|k42|b
+
+Strip the inconsistent duplicates from the file, returning unique sorted lines - key fields not leading
+test_dups_in_1_3.dat.cln ....
+k11|a1|k12|k41|k42|b
+k21|a2|k22|k41|k42|d
+k91|a1|k92|k41|k42|a
