@@ -1,0 +1,141 @@
++---------------------------------------------------------------------------+
+Custom Development: Version : UNKNOWN
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+XX_ERPXMLCP module: XX Example XML CP
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 17:15:52
+
++---------------------------------------------------------------------------+
+
+XDO Data Engine Version No: 5.6.3
+Resp: 20420
+Org ID : 204
+Request ID: 5906062
+All Parameters: P_APP_ID=661:P_BEG_CHR=:P_END_CHR=:P_BEG_DAT=:P_END_DAT=:P_BEG_NUM=:P_END_NUM=
+Data Template Code: XX_ERPXMLCP
+Data Template Application Short Name: CUSTOM
+Debug Flag: N
+{P_BEG_CHR=, P_END_CHR=, P_BEG_NUM=, P_END_NUM=, P_APP_ID=661, P_BEG_DAT=, P_END_DAT=}
+Calling XDO Data Engine...
++---------------------------------------------------------------------------+
+Start of log messages from FND_FILE
++---------------------------------------------------------------------------+
+19-SEP-2014 17:15:55 bpf debug, p_beg_chr = 661
+19-SEP-2014 17:15:55 bpf debug, p_beg_chr = 
+19-SEP-2014 17:15:55 bpf debug, p_end_chr = 
+19-SEP-2014 17:15:55 bpf debug, p_beg_dat = 
+19-SEP-2014 17:15:55 bpf debug, p_end_dat = 
+19-SEP-2014 17:15:55 bpf debug, p_beg_num = 
+19-SEP-2014 17:15:55 bpf debug, p_end_num = 
+19-SEP-2014 17:15:55 bpf debug, lp_app_id =  AND prg.pk1_num = 661
+19-SEP-2014 17:15:55 bpf debug, lp_beg_chr =  AND 1=1
+19-SEP-2014 17:15:55 bpf debug, lp_end_chr =  AND 1=1
+19-SEP-2014 17:15:55 bpf debug, lp_beg_dat =  AND 1=1
+19-SEP-2014 17:15:55 bpf debug, lp_end_dat =  AND 1=1
+19-SEP-2014 17:15:55 bpf debug, lp_beg_num =  AND 1=1
+19-SEP-2014 17:15:55 bpf debug, lp_end_num =  AND 1=1
+19-SEP-2014 17:15:55 After Report for request id 5906062
+ 
+App                  Program                # params   # groups
+==================== ==================== ========== ==========
+Advanced Pricing     ADDITEMS                      0          0
+Advanced Pricing     QPXPACRL                      8          1
+Advanced Pricing     QPXPACRL_XML                  9          0
+Advanced Pricing     OEPAII                        0          0
+Advanced Pricing     QPXVAPLB                      0          0
+Advanced Pricing     OEXOEASR                      0          0
+Advanced Pricing     OEXOEAHR                      0          0
+Advanced Pricing     QPXARCVB                      0          0
+Advanced Pricing     QPXPSRCB2                     1          2
+Advanced Pricing     QPXPSRCB                      0          2
+Advanced Pricing     QPXPFORB                      0          2
+Advanced Pricing     QPXVCPMB                      0          0
+Advanced Pricing     QPXVCPLB                      0          0
+Advanced Pricing     OEPCPL                        0          0
+Advanced Pricing     OECMWC                        0          0
+Advanced Pricing     QPXCOVLB                      2          1
+Advanced Pricing     QPXCRORD                      0          1
+Advanced Pricing     QPXDEBUG                      1          1
+Advanced Pricing     QPXPERFO                      0          1
+Advanced Pricing     QPXPRDIS                     17          1
+Advanced Pricing     QPXICNUP                      2          1
+Advanced Pricing     OEPMLP                        0          0
+Advanced Pricing     QPXPRMLS                     21          2
+Advanced Pricing     QPXPRMLS_XML                 22          0
+Advanced Pricing     OEXPRPRD                      0          0
+Advanced Pricing     OEXPRPRS                      0          0
+Advanced Pricing     QPXPRFCB                      3          1
+Advanced Pricing     OEXPEMCE                      0          0
+Advanced Pricing     QPXPRLST                     10          1
+Advanced Pricing     QPXPRCST                     18          2
+Advanced Pricing     QPXPRCST_XML                 19          0
+Advanced Pricing     OEXPRDPC                      0          0
+Advanced Pricing     QPXJPECB                      1          1
+Advanced Pricing     OEXPRPFC                      0          0
+Advanced Pricing     QPXPRFOR                      7          2
+Advanced Pricing     QPXPRFOR_XML                  8          0
+Advanced Pricing     OEXPRITG                      0          0
+Advanced Pricing     QPXPRRUL                      3          1
+Advanced Pricing     QPXDLDBB                      2          2
+Advanced Pricing     QPXPURGB                      0          0
+Advanced Pricing     QPXVBLK                      10          2
+Advanced Pricing     QPXJCCVB-M                    5          1
+Advanced Pricing     QPXJCCDS                      5          1
+Advanced Pricing     QPXJCCWU                      0          1
+Advanced Pricing     QPXDENOB                      4          2
+Advanced Pricing     QPXVATG                       6          1
+Advanced Pricing     QPXPRBKB                      0          0
+Advanced Pricing     QP_BLK_LOAD_UPG_LINE          2          0
+Advanced Pricing     QP_BLK_LOAD_UPG_LINE          0          0
+Advanced Pricing     QP_BLK_LOAD_UPG_QUAL          2          0
+Advanced Pricing     QP_BLK_LOAD_UPG_QUAL          0          0
+Advanced Pricing     QP_BLK_LOAD_UPG_PA_M          2          0
+Advanced Pricing     QP_BLK_LOAD_UPG_PA_W          0          0
+Advanced Pricing     QP_BLK_LOAD_UPG_HDR_          0          0
+Advanced Pricing     QP_BLK_LOAD_UPG_HDR_          2          1
+Advanced Pricing     OEXPRDIS                      0          0
+Advanced Pricing     OEXPRLST                      0          0
+Advanced Pricing     OEXPRRUL                      0          0
+Advanced Pricing     QPXPRQFS                      6          2
+Advanced Pricing     QPXPRQFS_XML                  7          0
+Advanced Pricing     QPXSECCB                      1          1
+Advanced Pricing     QPXVUFPB                      0          0
+Advanced Pricing     QPXMCUPD                      1          2
+Advanced Pricing     QPXTRANB                      4          1
+Advanced Pricing     QPXVURPB                      0          0
++---------------------------------------------------------------------------+
+End of log messages from FND_FILE
++---------------------------------------------------------------------------+
+
+
++---------------------------------------------------------------------------+
+Executing request completion options...
+
+Output file size: 
+67854
+
++--------- 1) POST-PROCESSING  ---------+
+Beginning post-processing of request 5906062 on node EBSORAVM02 at 19-SEP-2014 17:15:56.
+-- Publishing output
+
+ 
+Post-processing of request 5906062 completed at 19-SEP-2014 17:15:58.
+ 
+CONC-POST-PROCESSING RESULTS
+
+-- PUBLISH: 
+CONC-OPP-XMLPUB SUCCESS
++---------------------------------------+
+
+
+Finished executing request completion options.
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 17:15:58
+
++---------------------------------------------------------------------------+
+

@@ -1,0 +1,23 @@
+<!-- Author:	Brendan Furey, 20 September 2014
+Description:	XML bursting file for XML Publisher report: XX Example XML CP (Email),
+                XX_ERPXMLCP_EM, as described in:
+                        'Design Patterns for Database Reports with XML Publisher and Email Bursting'
+                        http://aprogrammerwrites.eu/?p=1181 -->
+<xapi:requestset xmlns:xapi="http://xmlns.oracle.com/oxp/xapi" type="bursting">
+<xapi:request select="/XX_ERPXMLCP_EM/LIST_G_HDR/G_HDR">
+<xapi:delivery>
+<xapi:email server="127.0.0.1" port="25" from="${FROM_EMAIL}" reply-to ="">
+<xapi:message id="123" to="${EMAIL_ADDRESS}" cc="${CC_EMAIL}" 
+attachment="true" subject="${SUB}">Dear Sir/Madam
+
+Pleae find attached your concurrent program details. 
+
+[Alternatively, leave blank and use output_type=html in document to have attachment go to body instead]</xapi:message>
+</xapi:email>
+</xapi:delivery>
+<xapi:document output="CP_${PROG_NAME}.pdf" output-type="pdf" delivery="123">
+<xapi:template type="rtf" location="XDO://CUSTOM.XX_ERPXMLCP_EM.en.US/?getSource=true" filter="//G_HDR[OUTPUT_TYPE!='XML']"></xapi:template>
+<xapi:template type="rtf" location="XDO://CUSTOM.XX_ERPXMLCP_EM_XML.en.US/?getSource=true" filter="//G_HDR[OUTPUT_TYPE='XML']"></xapi:template>
+</xapi:document>
+</xapi:request>
+</xapi:requestset>

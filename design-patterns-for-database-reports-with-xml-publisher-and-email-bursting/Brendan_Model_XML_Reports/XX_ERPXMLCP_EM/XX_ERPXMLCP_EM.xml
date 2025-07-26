@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Author:	Brendan Furey, 20 September 2014
+Description:	XML data template for XML Publisher report: XX Example XML CP (Email),
+                XX_ERPXMLCP_EM, as described in:
+                        'Design Patterns for Database Reports with XML Publisher and Email Bursting'
+                        http://aprogrammerwrites.eu/?p=1181 -->
+<dataTemplate name="XX_ERPXMLCP_EM" defaultPackage="XX_ERPXMLCP_EM" version="1.0">
+<properties>
+<property name="xml_tag_case" value="upper" />
+</properties>
+<parameters>
+<parameter name="P_APP_ID" dataType = "number"></parameter>
+<parameter name="P_BEG_CHR" dataType = "character"></parameter>
+<parameter name="P_END_CHR" dataType = "character"></parameter>
+<parameter name="P_BEG_DAT" dataType = "character"></parameter>
+<parameter name="P_END_DAT" dataType = "character"></parameter>
+<parameter name="P_BEG_NUM" dataType = "number"></parameter>
+<parameter name="P_END_NUM" dataType = "number"></parameter>
+<parameter name="P_OVER_EMAIL" dataType = "character"></parameter>
+<parameter name="P_FROM_EMAIL" dataType = "character"></parameter>
+<parameter name="P_CC_EMAIL" dataType = "character"></parameter>
+<parameter name="P_CONC_REQUEST_ID" dataType = "number" defaultValue="0"></parameter>
+</parameters>
+<lexicals>
+</lexicals>
+<dataQuery>
+<sqlStatement name="Q_HDR">
+<![CDATA[
+WITH lin_v AS (
+SELECT lin.fk1_num,
+       lin.fk2_chr,
+       lin.col1_num,
+       lin.col2_chr,
+       lin.col3_chr,
+       lin.col4_chr,
+       Count(*) OVER (PARTITION BY lin.fk1_num, lin.fk2_chr) n_lin
+  FROM example_lines_one_v                     lin
+), lin_2_counts_v AS (
+SELECT fk1_num,
+       fk2_num,
+       Count(*) n_lin_2
+  FROM example_lines_two_v
+ GROUP BY fk1_num, fk2_num
+)
+SELECT prg.pk1_num                             prog_app_id,
+       prg.pk2_num                             prog_id,
+       prg.col1_chr                            prog_app_name,
+       prg.uk2_chr                             prog_name,
+       prg.uk3_chr                             app_short_name,
+       prg.col2_chr                            user_prog_name,
+       prg.col3_chr                            exec,
+       prg.col4_chr                            prog_type,
+       prg.col5_chr                            output_type,
+       To_Char (prg.col4_dat, 'DD-MON-YYYY')   creation_date,
+       prg.col6_chr                            data_template,
+       prg.col7_chr                            bursting_file,
+	   Replace (Nvl (mes_n.message_text, mes_x.message_text), '&PROGAPP', prg.col2_chr || '(' || prg.col1_chr || ')')          sub,
+       prm.col1_num                            seq_no,
+       prm.col2_chr                            col_name,
+       prm.col3_chr                            def_value,
+       prm.col4_chr                            value_set,
+       Nvl(prm.n_lin,0)                        n_prms,
+       Nvl(l2c.n_lin_2,0)                      n_rgps,
+       Nvl (:P_OVER_EMAIL, 'dummyemail@brendan.com')  email_address,
+       'dummyemail@brendan.com' email_address_orig,
+       :P_FROM_EMAIL                           from_email,
+       :P_CC_EMAIL                             cc_email
+  FROM example_headers_v                       prg
+  LEFT JOIN fnd_new_messages                   mes_n
+    ON mes_n.application_id                   = 20061
+   AND mes_n.message_name                     = 'XX_ERPXMLCP_EM_NONXML'
+   AND Nvl (prg.col5_chr, 'NOT')              != 'XML'
+  LEFT JOIN fnd_new_messages                   mes_x
+    ON mes_x.application_id                   = 20061
+   AND mes_x.message_name                     = 'XX_ERPXMLCP_EM_XML'
+   AND prg.col5_chr                            = 'XML'
+  LEFT JOIN lin_v                              prm
+    ON prm.fk1_num                             = prg.pk1_num
+   AND prm.fk2_chr                             = '$SRS$.' || prg.uk2_chr
+  LEFT JOIN lin_2_counts_v                     l2c
+    ON l2c.fk1_num                             = prg.pk1_num
+   AND l2c.fk2_num                             = prg.pk2_num
+ WHERE 1=1
+ &lp_app_id
+ &lp_beg_chr
+ &lp_end_chr
+ &lp_beg_dat
+ &lp_end_dat
+ &lp_beg_num
+ &lp_end_num
+ ORDER BY prg.col1_chr, prg.col2_chr, prm.col1_num
+]]>
+</sqlStatement>
+<sqlStatement name="Q_LIN_2">
+<![CDATA[
+SELECT grp.col1_chr                            grp_app_name,
+       grp.col2_chr                            grp_name
+  FROM example_lines_two_v                     grp
+ WHERE grp.fk1_num                             = :PROG_APP_ID
+   AND grp.fk2_num                             = :PROG_ID
+ ORDER BY grp.col1_chr, grp.col2_chr
+]]>
+</sqlStatement>
+<sqlStatement name="Q_LIN_3">
+<![CDATA[
+SELECT col1_chr                                template_code,
+	   col2_chr                                lang,
+	   col3_chr                                terr,
+	   col4_chr                                file_name
+  FROM example_lines_three_v                   tmp
+ WHERE tmp.fk1_chr                             = :APP_SHORT_NAME
+   AND tmp.fk2_chr                             = :PROG_NAME
+ ORDER BY tmp.col1_chr, tmp.col2_chr, tmp.col3_chr
+]]>
+</sqlStatement>
+</dataQuery>
+<dataTrigger name="beforeReportTrigger" source="XX_ERPXMLCP_EM.beforereport"/>
+<dataTrigger name="afterReportTrigger" source="XX_ERPXMLCP_EM.afterreport"/>
+<dataStructure>
+<group name="G_HDR" dataType="varchar2" source="Q_HDR" groupFilter="XX_ERPXMLCP_EM.HdrFilter(:email_address_orig,:prog_app_name,:prog_name,:n_prms,:n_rgps)">
+<element name="prog_app_name" dataType="varchar2" value="prog_app_name"/>
+<element name="prog_name" dataType="varchar2" value="prog_name"/>
+<element name="user_prog_name" dataType="varchar2" value="user_prog_name"/>
+<element name="exec" dataType="varchar2" value="exec"/>
+<element name="prog_type" dataType="varchar2" value="prog_type"/>
+<element name="output_type" dataType="varchar2" value="output_type"/>
+<element name="creation_date" dataType="varchar2" value="creation_date"/>
+<element name="data_template" dataType="varchar2" value="data_template"/>
+<element name="bursting_file" dataType="varchar2" value="bursting_file"/>
+<element name="sub" dataType="varchar2" value="sub"/>
+<element name="n_prms" dataType="number" value="n_prms"/>
+<element name="n_rgps" dataType="number" value="n_rgps"/>
+<element name="email_address" dataType="varchar2" value="email_address"/>
+<element name="cc_email" dataType="varchar2" value="cc_email"/>
+<element name="from_email" dataType="varchar2" value="from_email"/>
+<group name="G_LIN_1" dataType="varchar2" source="Q_HDR">
+<element name="seq_no" dataType="number" value="seq_no"/>
+<element name="col_name" dataType="varchar2" value="col_name"/>
+<element name="def_value" dataType="varchar2" value="def_value"/>
+<element name="value_set" dataType="varchar2" value="value_set"/>
+</group>
+<group name="G_LIN_2" dataType="varchar2" source="Q_LIN_2">
+<element name="grp_app_name" dataType="varchar2" value="grp_app_name"/>
+<element name="grp_name" dataType="varchar2" value="grp_name"/>
+</group>
+<group name="G_LIN_3" dataType="varchar2" source="Q_LIN_3">
+<element name="template_code" dataType="varchar2" value="template_code"/>
+<element name="lang" dataType="varchar2" value="lang"/>
+<element name="terr" dataType="varchar2" value="terr"/>
+<element name="file_name" dataType="varchar2" value="file_name"/>
+</group>
+</group>
+</dataStructure>
+</dataTemplate>

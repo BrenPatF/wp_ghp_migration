@@ -1,0 +1,95 @@
++---------------------------------------------------------------------------+
+Custom Development: Version : UNKNOWN
+
+Copyright (c) 1979, 1999, Oracle Corporation. All rights reserved.
+
+XX_ERPXMLCP module: XX Example XML CP
++---------------------------------------------------------------------------+
+
+Current system time is 19-SEP-2014 17:21:17
+
++---------------------------------------------------------------------------+
+
+XDO Data Engine Version No: 5.6.3
+Resp: 20420
+Org ID : 204
+Request ID: 5906065
+All Parameters: P_APP_ID=20061:P_BEG_CHR=:P_END_CHR=:P_BEG_DAT=:P_END_DAT=:P_BEG_NUM=:P_END_NUM=
+Data Template Code: XX_ERPXMLCP
+Data Template Application Short Name: CUSTOM
+Debug Flag: N
+{P_BEG_CHR=, P_END_CHR=, P_BEG_NUM=, P_END_NUM=, P_APP_ID=20061, P_BEG_DAT=, P_END_DAT=}
+Calling XDO Data Engine...
++---------------------------------------------------------------------------+
+Start of log messages from FND_FILE
++---------------------------------------------------------------------------+
+19-SEP-2014 17:21:22 bpf debug, p_beg_chr = 20061
+19-SEP-2014 17:21:22 bpf debug, p_beg_chr = 
+19-SEP-2014 17:21:22 bpf debug, p_end_chr = 
+19-SEP-2014 17:21:22 bpf debug, p_beg_dat = 
+19-SEP-2014 17:21:22 bpf debug, p_end_dat = 
+19-SEP-2014 17:21:22 bpf debug, p_beg_num = 
+19-SEP-2014 17:21:22 bpf debug, p_end_num = 
+19-SEP-2014 17:21:22 bpf debug, lp_app_id =  AND prg.pk1_num = 20061
+19-SEP-2014 17:21:22 bpf debug, lp_beg_chr =  AND 1=1
+19-SEP-2014 17:21:22 bpf debug, lp_end_chr =  AND 1=1
+19-SEP-2014 17:21:22 bpf debug, lp_beg_dat =  AND 1=1
+19-SEP-2014 17:21:22 bpf debug, lp_end_dat =  AND 1=1
+19-SEP-2014 17:21:22 bpf debug, lp_beg_num =  AND 1=1
+19-SEP-2014 17:21:22 bpf debug, lp_end_num =  AND 1=1
+19-SEP-2014 17:21:22 After Report for request id 5906065
+ 
+App                  Program                # params   # groups
+==================== ==================== ========== ==========
+Custom Development   ADS_RAXCUSLR                  6          1
+Custom Development   ADSOPENPERIOD                 3          1
+Custom Development   IDC_BA_SIGN                   2          3
+Custom Development   IDC_AUTH_SIGN_LETTER          2          3
+Custom Development   IDCVARRENTV0                  2          1
+Custom Development   IDCVARRENT                    2          1
+Custom Development   PRCIDCRPPD                    1          1
+Custom Development   XX_ERPXMLCP                   7          2
+Custom Development   XX_ERPXMLCP_EM               10          1
+Custom Development   XX_APXPBSRA_PR                6          1
+Custom Development   XX_ERPXMLBURCP                6          1
+Custom Development   XXIIB_APBNKAUDIT              2          1
+Custom Development   XXDCC_SR_LIST                 4          1
+Custom Development   XX_IBYBNKAUDIT                2          1
+Custom Development   XXIIB_FAS600                  5          3
+Custom Development   XXIIB_APXPBSRA_EM             5          1
+Custom Development   XXCUSTOM_APXPBSRA_EM          5          0
+Custom Development   XX_APXPBSRA_EM                5          0
+Custom Development   XXXECE                        0          0
++---------------------------------------------------------------------------+
+End of log messages from FND_FILE
++---------------------------------------------------------------------------+
+
+
++---------------------------------------------------------------------------+
+Executing request completion options...
+
+Output file size: 
+23606
+
++--------- 1) POST-PROCESSING  ---------+
+Beginning post-processing of request 5906065 on node EBSORAVM02 at 19-SEP-2014 17:21:22.
+-- Publishing output
+
+ 
+Post-processing of request 5906065 completed at 19-SEP-2014 17:21:23.
+ 
+CONC-POST-PROCESSING RESULTS
+
+-- PUBLISH: 
+CONC-OPP-XMLPUB SUCCESS
++---------------------------------------+
+
+
+Finished executing request completion options.
+
++---------------------------------------------------------------------------+
+Concurrent request completed successfully
+Current system time is 19-SEP-2014 17:21:23
+
++---------------------------------------------------------------------------+
+
