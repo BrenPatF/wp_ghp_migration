@@ -1,0 +1,474 @@
+links_v based on fk_link
+
+View dropped.
+
+Elapsed: 00:00:00.02
+
+View created.
+
+Elapsed: 00:00:00.01
+
+  COUNT(*)
+----------
+        21
+
+Elapsed: 00:00:00.04
+
+View dropped.
+
+Elapsed: 00:00:00.02
+
+View created.
+
+Elapsed: 00:00:00.01
+
+  COUNT(*)
+----------
+        16
+
+Elapsed: 00:00:00.04
+Network detail
+
+Network               #Links  #Nodes Node                                          Link                                 Lev
+-------------------- ------- ------- --------------------------------------------- ----------------------------------- ----
+COUNTRIES|HR              21      16 COUNTRIES|HR                                  ROOT                                   0
+                                     < LOCATIONS|HR                                loc_c_id_fk|HR                         1
+                                       < DEPARTMENTS|HR                            dept_loc_fk|HR                         2
+                                         > EMPLOYEES|HR                            dept_mgr_fk|HR                         3
+                                           < CUSTOMERS|OE                          customers_account_manager_fk|OE        4
+                                             < ORDERS|OE                           orders_customer_id_fk|OE               5
+                                               > EMPLOYEES|HR*                     orders_sales_rep_fk|OE                 6
+                                               < ORDER_ITEMS|OE                    order_items_order_id_fk|OE             6
+                                                 > PRODUCT_INFORMATION|OE          order_items_product_id_fk|OE           7
+                                                   < INVENTORIES|OE                inventories_product_id_fk|OE           8
+                                                     > WAREHOUSES|OE               inventories_warehouses_fk|OE           9
+                                                       > LOCATIONS|HR*             warehouses_location_fk|OE             10
+                                                   < ONLINE_MEDIA|PM               loc_c_id_fk|PM                         8
+                                                   < PRINT_MEDIA|PM                printmedia_fk|PM                       8
+                                                   < PRODUCT_DESCRIPTIONS|OE       pd_product_id_fk|OE                    8
+                                           > DEPARTMENTS|HR*                       emp_dept_fk|HR                         4
+                                           = EMPLOYEES|HR*                         emp_manager_fk|HR                      4
+                                           > JOBS|HR                               emp_job_fk|HR                          4
+                                             < JOB_HISTORY|HR                      jhist_job_fk|HR                        5
+                                               > DEPARTMENTS|HR*                   jhist_dept_fk|HR                       6
+                                               > EMPLOYEES|HR*                     jhist_emp_fk|HR                        6
+                                     > REGIONS|HR                                  countr_reg_fk|HR                       1
+
+22 rows selected.
+
+Elapsed: 00:00:00.15
+Network summary
+
+Network               #Links  #Nodes  Max Lev
+-------------------- ------- ------- --------
+COUNTRIES|HR              22      16       10
+
+Elapsed: 00:00:00.01
+One tree by RSF
+
+Node                                          Link
+--------------------------------------------- -----------------------------------
+COUNTRIES|HR
+< LOCATIONS|HR                                loc_c_id_fk|HR
+  < DEPARTMENTS|HR                            dept_loc_fk|HR
+    < EMPLOYEES|HR                            emp_dept_fk|HR
+      < CUSTOMERS|OE                          customers_account_manager_fk|OE
+        < ORDERS|OE                           orders_customer_id_fk|OE
+          > EMPLOYEES|HR*                     orders_sales_rep_fk|OE
+          < ORDER_ITEMS|OE                    order_items_order_id_fk|OE
+            > PRODUCT_INFORMATION|OE          order_items_product_id_fk|OE
+              < INVENTORIES|OE                inventories_product_id_fk|OE
+                > WAREHOUSES|OE               inventories_warehouses_fk|OE
+                  > LOCATIONS|HR*             warehouses_location_fk|OE
+              < ONLINE_MEDIA|PM               loc_c_id_fk|PM
+              < PRINT_MEDIA|PM                printmedia_fk|PM
+              < PRODUCT_DESCRIPTIONS|OE       pd_product_id_fk|OE
+      < DEPARTMENTS|HR*                       dept_mgr_fk|HR
+      = EMPLOYEES|HR*                         emp_manager_fk|HR
+      > JOBS|HR                               emp_job_fk|HR
+        < JOB_HISTORY|HR                      jhist_job_fk|HR
+          > DEPARTMENTS|HR*                   jhist_dept_fk|HR
+          > EMPLOYEES|HR*                     jhist_emp_fk|HR
+      < JOB_HISTORY|HR                        jhist_emp_fk|HR
+        > DEPARTMENTS|HR*                     jhist_dept_fk|HR
+        > JOBS|HR                             jhist_job_fk|HR
+          < EMPLOYEES|HR*                     emp_job_fk|HR
+      < ORDERS|OE                             orders_sales_rep_fk|OE
+        > CUSTOMERS|OE                        orders_customer_id_fk|OE
+          > EMPLOYEES|HR*                     customers_account_manager_fk|OE
+        < ORDER_ITEMS|OE                      order_items_order_id_fk|OE
+          > PRODUCT_INFORMATION|OE            order_items_product_id_fk|OE
+            < INVENTORIES|OE                  inventories_product_id_fk|OE
+              > WAREHOUSES|OE                 inventories_warehouses_fk|OE
+                > LOCATIONS|HR*               warehouses_location_fk|OE
+            < ONLINE_MEDIA|PM                 loc_c_id_fk|PM
+            < PRINT_MEDIA|PM                  printmedia_fk|PM
+            < PRODUCT_DESCRIPTIONS|OE         pd_product_id_fk|OE
+    > EMPLOYEES|HR                            dept_mgr_fk|HR
+      < CUSTOMERS|OE                          customers_account_manager_fk|OE
+        < ORDERS|OE                           orders_customer_id_fk|OE
+          > EMPLOYEES|HR*                     orders_sales_rep_fk|OE
+          < ORDER_ITEMS|OE                    order_items_order_id_fk|OE
+            > PRODUCT_INFORMATION|OE          order_items_product_id_fk|OE
+              < INVENTORIES|OE                inventories_product_id_fk|OE
+                > WAREHOUSES|OE               inventories_warehouses_fk|OE
+                  > LOCATIONS|HR*             warehouses_location_fk|OE
+              < ONLINE_MEDIA|PM               loc_c_id_fk|PM
+              < PRINT_MEDIA|PM                printmedia_fk|PM
+              < PRODUCT_DESCRIPTIONS|OE       pd_product_id_fk|OE
+      > DEPARTMENTS|HR*                       emp_dept_fk|HR
+      = EMPLOYEES|HR*                         emp_manager_fk|HR
+      > JOBS|HR                               emp_job_fk|HR
+        < JOB_HISTORY|HR                      jhist_job_fk|HR
+          > DEPARTMENTS|HR*                   jhist_dept_fk|HR
+          > EMPLOYEES|HR*                     jhist_emp_fk|HR
+      < JOB_HISTORY|HR                        jhist_emp_fk|HR
+        > DEPARTMENTS|HR*                     jhist_dept_fk|HR
+        > JOBS|HR                             jhist_job_fk|HR
+          < EMPLOYEES|HR*                     emp_job_fk|HR
+      < ORDERS|OE                             orders_sales_rep_fk|OE
+        > CUSTOMERS|OE                        orders_customer_id_fk|OE
+          > EMPLOYEES|HR*                     customers_account_manager_fk|OE
+        < ORDER_ITEMS|OE                      order_items_order_id_fk|OE
+          > PRODUCT_INFORMATION|OE            order_items_product_id_fk|OE
+            < INVENTORIES|OE                  inventories_product_id_fk|OE
+              > WAREHOUSES|OE                 inventories_warehouses_fk|OE
+                > LOCATIONS|HR*               warehouses_location_fk|OE
+            < ONLINE_MEDIA|PM                 loc_c_id_fk|PM
+            < PRINT_MEDIA|PM                  printmedia_fk|PM
+            < PRODUCT_DESCRIPTIONS|OE         pd_product_id_fk|OE
+    < JOB_HISTORY|HR                          jhist_dept_fk|HR
+      > EMPLOYEES|HR                          jhist_emp_fk|HR
+        < CUSTOMERS|OE                        customers_account_manager_fk|OE
+          < ORDERS|OE                         orders_customer_id_fk|OE
+            > EMPLOYEES|HR*                   orders_sales_rep_fk|OE
+            < ORDER_ITEMS|OE                  order_items_order_id_fk|OE
+              > PRODUCT_INFORMATION|OE        order_items_product_id_fk|OE
+                < INVENTORIES|OE              inventories_product_id_fk|OE
+                  > WAREHOUSES|OE             inventories_warehouses_fk|OE
+                    > LOCATIONS|HR*           warehouses_location_fk|OE
+                < ONLINE_MEDIA|PM             loc_c_id_fk|PM
+                < PRINT_MEDIA|PM              printmedia_fk|PM
+                < PRODUCT_DESCRIPTIONS|OE     pd_product_id_fk|OE
+        < DEPARTMENTS|HR*                     dept_mgr_fk|HR
+        > DEPARTMENTS|HR*                     emp_dept_fk|HR
+        = EMPLOYEES|HR*                       emp_manager_fk|HR
+        > JOBS|HR                             emp_job_fk|HR
+          < JOB_HISTORY|HR*                   jhist_job_fk|HR
+        < ORDERS|OE                           orders_sales_rep_fk|OE
+          > CUSTOMERS|OE                      orders_customer_id_fk|OE
+            > EMPLOYEES|HR*                   customers_account_manager_fk|OE
+          < ORDER_ITEMS|OE                    order_items_order_id_fk|OE
+            > PRODUCT_INFORMATION|OE          order_items_product_id_fk|OE
+              < INVENTORIES|OE                inventories_product_id_fk|OE
+                > WAREHOUSES|OE               inventories_warehouses_fk|OE
+                  > LOCATIONS|HR*             warehouses_location_fk|OE
+              < ONLINE_MEDIA|PM               loc_c_id_fk|PM
+              < PRINT_MEDIA|PM                printmedia_fk|PM
+              < PRODUCT_DESCRIPTIONS|OE       pd_product_id_fk|OE
+      > JOBS|HR                               jhist_job_fk|HR
+        < EMPLOYEES|HR                        emp_job_fk|HR
+          < CUSTOMERS|OE                      customers_account_manager_fk|OE
+            < ORDERS|OE                       orders_customer_id_fk|OE
+              > EMPLOYEES|HR*                 orders_sales_rep_fk|OE
+              < ORDER_ITEMS|OE                order_items_order_id_fk|OE
+                > PRODUCT_INFORMATION|OE      order_items_product_id_fk|OE
+                  < INVENTORIES|OE            inventories_product_id_fk|OE
+                    > WAREHOUSES|OE           inventories_warehouses_fk|OE
+                      > LOCATIONS|HR*         warehouses_location_fk|OE
+                  < ONLINE_MEDIA|PM           loc_c_id_fk|PM
+                  < PRINT_MEDIA|PM            printmedia_fk|PM
+                  < PRODUCT_DESCRIPTIONS|OE   pd_product_id_fk|OE
+          < DEPARTMENTS|HR*                   dept_mgr_fk|HR
+          > DEPARTMENTS|HR*                   emp_dept_fk|HR
+          = EMPLOYEES|HR*                     emp_manager_fk|HR
+          < JOB_HISTORY|HR*                   jhist_emp_fk|HR
+          < ORDERS|OE                         orders_sales_rep_fk|OE
+            > CUSTOMERS|OE                    orders_customer_id_fk|OE
+              > EMPLOYEES|HR*                 customers_account_manager_fk|OE
+            < ORDER_ITEMS|OE                  order_items_order_id_fk|OE
+              > PRODUCT_INFORMATION|OE        order_items_product_id_fk|OE
+                < INVENTORIES|OE              inventories_product_id_fk|OE
+                  > WAREHOUSES|OE             inventories_warehouses_fk|OE
+                    > LOCATIONS|HR*           warehouses_location_fk|OE
+                < ONLINE_MEDIA|PM             loc_c_id_fk|PM
+                < PRINT_MEDIA|PM              printmedia_fk|PM
+                < PRODUCT_DESCRIPTIONS|OE     pd_product_id_fk|OE
+  < WAREHOUSES|OE                             warehouses_location_fk|OE
+    < INVENTORIES|OE                          inventories_warehouses_fk|OE
+      > PRODUCT_INFORMATION|OE                inventories_product_id_fk|OE
+        < ONLINE_MEDIA|PM                     loc_c_id_fk|PM
+        < ORDER_ITEMS|OE                      order_items_product_id_fk|OE
+          > ORDERS|OE                         order_items_order_id_fk|OE
+            > CUSTOMERS|OE                    orders_customer_id_fk|OE
+              > EMPLOYEES|HR                  customers_account_manager_fk|OE
+                < DEPARTMENTS|HR              dept_mgr_fk|HR
+                  < EMPLOYEES|HR*             emp_dept_fk|HR
+                  < JOB_HISTORY|HR            jhist_dept_fk|HR
+                    > EMPLOYEES|HR*           jhist_emp_fk|HR
+                    > JOBS|HR                 jhist_job_fk|HR
+                      < EMPLOYEES|HR*         emp_job_fk|HR
+                  > LOCATIONS|HR*             dept_loc_fk|HR
+                > DEPARTMENTS|HR              emp_dept_fk|HR
+                  > EMPLOYEES|HR*             dept_mgr_fk|HR
+                  < JOB_HISTORY|HR            jhist_dept_fk|HR
+                    > EMPLOYEES|HR*           jhist_emp_fk|HR
+                    > JOBS|HR                 jhist_job_fk|HR
+                      < EMPLOYEES|HR*         emp_job_fk|HR
+                  > LOCATIONS|HR*             dept_loc_fk|HR
+                = EMPLOYEES|HR*               emp_manager_fk|HR
+                > JOBS|HR                     emp_job_fk|HR
+                  < JOB_HISTORY|HR            jhist_job_fk|HR
+                    > DEPARTMENTS|HR          jhist_dept_fk|HR
+                      < EMPLOYEES|HR*         emp_dept_fk|HR
+                      > EMPLOYEES|HR*         dept_mgr_fk|HR
+                      > LOCATIONS|HR*         dept_loc_fk|HR
+                    > EMPLOYEES|HR*           jhist_emp_fk|HR
+                < JOB_HISTORY|HR              jhist_emp_fk|HR
+                  > DEPARTMENTS|HR            jhist_dept_fk|HR
+                    < EMPLOYEES|HR*           emp_dept_fk|HR
+                    > EMPLOYEES|HR*           dept_mgr_fk|HR
+                    > LOCATIONS|HR*           dept_loc_fk|HR
+                  > JOBS|HR                   jhist_job_fk|HR
+                    < EMPLOYEES|HR*           emp_job_fk|HR
+                < ORDERS|OE*                  orders_sales_rep_fk|OE
+            > EMPLOYEES|HR                    orders_sales_rep_fk|OE
+              < CUSTOMERS|OE                  customers_account_manager_fk|OE
+                < ORDERS|OE*                  orders_customer_id_fk|OE
+              < DEPARTMENTS|HR                dept_mgr_fk|HR
+                < EMPLOYEES|HR*               emp_dept_fk|HR
+                < JOB_HISTORY|HR              jhist_dept_fk|HR
+                  > EMPLOYEES|HR*             jhist_emp_fk|HR
+                  > JOBS|HR                   jhist_job_fk|HR
+                    < EMPLOYEES|HR*           emp_job_fk|HR
+                > LOCATIONS|HR*               dept_loc_fk|HR
+              > DEPARTMENTS|HR                emp_dept_fk|HR
+                > EMPLOYEES|HR*               dept_mgr_fk|HR
+                < JOB_HISTORY|HR              jhist_dept_fk|HR
+                  > EMPLOYEES|HR*             jhist_emp_fk|HR
+                  > JOBS|HR                   jhist_job_fk|HR
+                    < EMPLOYEES|HR*           emp_job_fk|HR
+                > LOCATIONS|HR*               dept_loc_fk|HR
+              = EMPLOYEES|HR*                 emp_manager_fk|HR
+              > JOBS|HR                       emp_job_fk|HR
+                < JOB_HISTORY|HR              jhist_job_fk|HR
+                  > DEPARTMENTS|HR            jhist_dept_fk|HR
+                    < EMPLOYEES|HR*           emp_dept_fk|HR
+                    > EMPLOYEES|HR*           dept_mgr_fk|HR
+                    > LOCATIONS|HR*           dept_loc_fk|HR
+                  > EMPLOYEES|HR*             jhist_emp_fk|HR
+              < JOB_HISTORY|HR                jhist_emp_fk|HR
+                > DEPARTMENTS|HR              jhist_dept_fk|HR
+                  < EMPLOYEES|HR*             emp_dept_fk|HR
+                  > EMPLOYEES|HR*             dept_mgr_fk|HR
+                  > LOCATIONS|HR*             dept_loc_fk|HR
+                > JOBS|HR                     jhist_job_fk|HR
+                  < EMPLOYEES|HR*             emp_job_fk|HR
+        < PRINT_MEDIA|PM                      printmedia_fk|PM
+        < PRODUCT_DESCRIPTIONS|OE             pd_product_id_fk|OE
+> REGIONS|HR                                  countr_reg_fk|HR
+
+199 rows selected.
+
+Elapsed: 00:00:00.30
+One tree by RSF filtered
+
+Node                                          Link                                LINK_COUNT
+--------------------------------------------- ----------------------------------- ----------
+COUNTRIES|HR                                                                               1
+< LOCATIONS|HR                                loc_c_id_fk|HR                               1
+  < DEPARTMENTS|HR                            dept_loc_fk|HR                               9
+    < EMPLOYEES|HR                            emp_dept_fk|HR                              12
+      < CUSTOMERS|OE                          customers_account_manager_fk|OE             10
+        < ORDERS|OE                           orders_customer_id_fk|OE                    10
+          > EMPLOYEES|HR*                     orders_sales_rep_fk|OE                      10
+          < ORDER_ITEMS|OE                    order_items_order_id_fk|OE                   9
+            > PRODUCT_INFORMATION|OE          order_items_product_id_fk|OE                 9
+              < INVENTORIES|OE                inventories_product_id_fk|OE                 9
+                > WAREHOUSES|OE               inventories_warehouses_fk|OE                 9
+                  > LOCATIONS|HR*             warehouses_location_fk|OE                    9
+              < ONLINE_MEDIA|PM               loc_c_id_fk|PM                               9
+              < PRINT_MEDIA|PM                printmedia_fk|PM                             9
+              < PRODUCT_DESCRIPTIONS|OE       pd_product_id_fk|OE                          9
+      < DEPARTMENTS|HR*                       dept_mgr_fk|HR                              12
+      = EMPLOYEES|HR*                         emp_manager_fk|HR                            6
+      > JOBS|HR                               emp_job_fk|HR                               14
+        < JOB_HISTORY|HR                      jhist_job_fk|HR                             14
+          > DEPARTMENTS|HR*                   jhist_dept_fk|HR                            13
+          > EMPLOYEES|HR*                     jhist_emp_fk|HR                             14
+> REGIONS|HR                                  countr_reg_fk|HR                             1
+
+22 rows selected.
+
+Elapsed: 00:00:00.03
+One tree by Connect By
+
+Nodes                                              Link Path
+-------------------------------------------------- ----------------------------------------------------------------------
+COUNTRIES|HR > REGIONS|HR                          countr_reg_fk|HR*
+LOCATIONS|HR > COUNTRIES|HR                          loc_c_id_fk|HR*
+DEPARTMENTS|HR > LOCATIONS|HR                          dept_loc_fk|HR*
+EMPLOYEES|HR > DEPARTMENTS|HR                            emp_dept_fk|HR*
+JOB_HISTORY|HR > DEPARTMENTS|HR                            jhist_dept_fk|HR*
+DEPARTMENTS|HR > EMPLOYEES|HR                                dept_mgr_fk|HR*
+EMPLOYEES|HR > EMPLOYEES|HR                                    emp_manager_fk|HR*
+CUSTOMERS|OE > EMPLOYEES|HR                                      customers_account_manager_fk|OE*
+ORDERS|OE > CUSTOMERS|OE                                           orders_customer_id_fk|OE*
+ORDERS|OE > EMPLOYEES|HR                                             orders_sales_rep_fk|OE*
+JOB_HISTORY|HR > EMPLOYEES|HR                                          jhist_emp_fk|HR*
+EMPLOYEES|HR > JOBS|HR                                                   emp_job_fk|HR*
+JOB_HISTORY|HR > JOBS|HR                                                   jhist_job_fk|HR*
+JOB_HISTORY|HR > JOBS|HR                                                 jhist_job_fk|HR*
+EMPLOYEES|HR > JOBS|HR                                                     emp_job_fk|HR*
+EMPLOYEES|HR > JOBS|HR                                                 emp_job_fk|HR*
+JOB_HISTORY|HR > EMPLOYEES|HR                                            jhist_emp_fk|HR*
+JOB_HISTORY|HR > JOBS|HR                                                   jhist_job_fk|HR*
+JOB_HISTORY|HR > JOBS|HR                                                 jhist_job_fk|HR*
+JOB_HISTORY|HR > EMPLOYEES|HR                                              jhist_emp_fk|HR*
+ORDER_ITEMS|OE > ORDERS|OE                                             order_items_order_id_fk|OE*
+ORDER_ITEMS|OE > PRODUCT_INFORMATION|OE                                  order_items_product_id_fk|OE*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                    inventories_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                      printmedia_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                               pd_product_id_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                         loc_c_id_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                     loc_c_id_fk|PM*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                        printmedia_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                               pd_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                          printmedia_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                             pd_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                        printmedia_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                         loc_c_id_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                          printmedia_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                               inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                   warehouses_location_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                    printmedia_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                      inventories_product_id_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                               pd_product_id_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                         loc_c_id_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                 inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                     warehouses_location_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                     loc_c_id_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                        inventories_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                   inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                       warehouses_location_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                               pd_product_id_fk|OE*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                          inventories_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                     inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                         warehouses_location_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                             pd_product_id_fk|OE*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                        inventories_product_id_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                         loc_c_id_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                   inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                       warehouses_location_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                          inventories_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                     inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                         warehouses_location_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                   loc_c_id_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                      inventories_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                        printmedia_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                               pd_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                          printmedia_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                 inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                     warehouses_location_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                      printmedia_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                        inventories_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                   inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                       warehouses_location_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                               pd_product_id_fk|OE*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                          inventories_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                     inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                         warehouses_location_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                             pd_product_id_fk|OE*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                        inventories_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                          printmedia_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                   inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                       warehouses_location_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                        printmedia_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                          inventories_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                     inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                         warehouses_location_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                           pd_product_id_fk|OE*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                      inventories_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                        printmedia_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                         loc_c_id_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                          printmedia_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                 inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                     warehouses_location_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                      printmedia_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                        inventories_product_id_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                         loc_c_id_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                   inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                       warehouses_location_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                          inventories_product_id_fk|OE*
+INVENTORIES|OE > WAREHOUSES|OE                                                     inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                         warehouses_location_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                     loc_c_id_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                        inventories_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                          printmedia_fk|PM*
+INVENTORIES|OE > WAREHOUSES|OE                                                   inventories_warehouses_fk|OE*
+WAREHOUSES|OE > LOCATIONS|HR                                                       warehouses_location_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                        printmedia_fk|PM*
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                          inventories_product_id_fk|OE*
+...
+[lines removed to reduce file size for upload to GitHub]
+...
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                        printmedia_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                         loc_c_id_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                   pd_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                 pd_product_id_fk|OE*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                           loc_c_id_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                       loc_c_id_fk|PM*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                          printmedia_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                   pd_product_id_fk|OE*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                 pd_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                            printmedia_fk|PM*
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE               pd_product_id_fk|OE*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                          printmedia_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                           loc_c_id_fk|PM*
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                         loc_c_id_fk|PM*
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                            printmedia_fk|PM*
+
+4414420 rows selected.
+
+Elapsed: 00:29:33.41
+One tree by Connect By filtered
+
+Nodes                                              Link Path                                                              LINK_COUNT
+-------------------------------------------------- ---------------------------------------------------------------------- ----------
+COUNTRIES|HR > REGIONS|HR                          countr_reg_fk|HR*                                                               1
+LOCATIONS|HR > COUNTRIES|HR                          loc_c_id_fk|HR*                                                               1
+DEPARTMENTS|HR > LOCATIONS|HR                          dept_loc_fk|HR*                                                        214178
+EMPLOYEES|HR > DEPARTMENTS|HR                            emp_dept_fk|HR*                                                      169932
+JOB_HISTORY|HR > DEPARTMENTS|HR                            jhist_dept_fk|HR*                                                  272162
+DEPARTMENTS|HR > EMPLOYEES|HR                                dept_mgr_fk|HR*                                                  169932
+EMPLOYEES|HR > EMPLOYEES|HR                                    emp_manager_fk|HR*                                             207910
+CUSTOMERS|OE > EMPLOYEES|HR                                      customers_account_manager_fk|OE*                             132490
+ORDERS|OE > CUSTOMERS|OE                                           orders_customer_id_fk|OE*                                   85298
+ORDERS|OE > EMPLOYEES|HR                                             orders_sales_rep_fk|OE*                                   72234
+JOB_HISTORY|HR > EMPLOYEES|HR                                          jhist_emp_fk|HR*                                       164660
+EMPLOYEES|HR > JOBS|HR                                                   emp_job_fk|HR*                                       182784
+JOB_HISTORY|HR > JOBS|HR                                                   jhist_job_fk|HR*                                   333192
+ORDER_ITEMS|OE > ORDERS|OE                                             order_items_order_id_fk|OE*                             26804
+ORDER_ITEMS|OE > PRODUCT_INFORMATION|OE                                  order_items_product_id_fk|OE*                         26804
+INVENTORIES|OE > PRODUCT_INFORMATION|OE                                    inventories_product_id_fk|OE*                      428354
+PRINT_MEDIA|PM > PRODUCT_INFORMATION|OE                                      printmedia_fk|PM*                                428384
+ONLINE_MEDIA|PM > PRODUCT_INFORMATION|OE                                       loc_c_id_fk|PM*                                428384
+PRODUCT_DESCRIPTIONS|OE > PRODUCT_INFORMATION|OE                                 pd_product_id_fk|OE*                         428384
+INVENTORIES|OE > WAREHOUSES|OE                                               inventories_warehouses_fk|OE*                    428354
+WAREHOUSES|OE > LOCATIONS|HR                                                   warehouses_location_fk|OE*                     214178
+
+21 rows selected.
+
+Elapsed: 00:03:03.16

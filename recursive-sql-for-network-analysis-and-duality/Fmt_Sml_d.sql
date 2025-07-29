@@ -1,0 +1,21 @@
+COLUMN link_id FORMAT A16
+COLUMN node_id_fr FORMAT A10
+COLUMN node_id_to FORMAT A10
+
+COLUMN "Node"           FORMAT A25
+
+COLUMN "Network"        FORMAT A10
+COLUMN "#Links"         FORMAT 999990
+COLUMN "#Nodes"         FORMAT 999990
+COLUMN "Link"           FORMAT A25
+COLUMN "Link Path"      FORMAT A40
+COLUMN "Lev"            FORMAT 990
+COLUMN "Max Lev"        FORMAT 9999990
+
+COLUMN "Nodes" FORMAT A15
+
+BREAK ON "Network" ON "#Links" ON "#Nodes"
+
+SET LINES 100
+SET PAGES 1000
+SET TIMING ON

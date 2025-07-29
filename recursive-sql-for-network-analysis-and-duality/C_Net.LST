@@ -1,0 +1,60 @@
+
+Table dropped.
+
+
+Table created.
+
+
+PL/SQL procedure successfully completed.
+
+
+  COUNT(*)                                                                      
+----------                                                                      
+        22                                                                      
+
+
+Table dropped.
+
+
+Table created.
+
+
+  COUNT(*)                                                                      
+----------                                                                      
+        25                                                                      
+
+
+Table dropped.
+
+
+Table created.
+
+INSERT INTO fk_link
+
+21 rows created.
+
+
+  COUNT(*)                                                                      
+----------                                                                      
+        21                                                                      
+
+
+Table dropped.
+
+
+Table created.
+
+
+  COUNT(*)                                                                      
+----------                                                                      
+        52                                                                      
+
+
+PL/SQL procedure successfully completed.
+
+
+PL/SQL procedure successfully completed.
+
+
+PL/SQL procedure successfully completed.
+

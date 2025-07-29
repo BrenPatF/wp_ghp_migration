@@ -1,0 +1,17 @@
+COLUMN "Node"           FORMAT A45
+
+COLUMN "Network"        FORMAT A20
+COLUMN "#Links"         FORMAT 999990
+COLUMN "#Nodes"         FORMAT 999990
+COLUMN "Link"           FORMAT A35
+COLUMN "Link Path"      FORMAT A70
+COLUMN "Lev"            FORMAT 990
+COLUMN "Max Lev"        FORMAT 9999990
+
+COLUMN "Nodes" FORMAT A50
+
+BREAK ON "Network" ON "#Links" ON "#Nodes"
+
+SET LINES 200
+SET PAGES 1000
+SET TIMING ON

@@ -1,0 +1,98 @@
+links_v based on fk_link
+
+View dropped.
+
+Elapsed: 00:00:00.05
+
+View created.
+
+Elapsed: 00:00:00.01
+
+  COUNT(*)
+----------
+        52
+
+Elapsed: 00:00:00.00
+
+View dropped.
+
+Elapsed: 00:00:00.02
+
+View created.
+
+Elapsed: 00:00:00.01
+
+  COUNT(*)
+----------
+        21
+
+Elapsed: 00:00:00.01
+Network detail
+
+Network               #Links  #Nodes Node                                                           Link                                                                    Lev
+-------------------- ------- ------- -------------------------------------------------------------- ---------------------------------------------------------------------- ----
+countr_reg_fk|HR          52      21 countr_reg_fk|HR                                               ROOT                                                                      0
+                                     > loc_c_id_fk|HR                                               COUNTRIES|HR-1                                                            1
+                                       < dept_loc_fk|HR                                             LOCATIONS|HR-1                                                            2
+                                         > dept_mgr_fk|HR                                           DEPARTMENTS|HR-1                                                          3
+                                           < customers_account_manager_fk|OE                        EMPLOYEES|HR-1                                                            4
+                                             > emp_dept_fk|HR                                       EMPLOYEES|HR-2                                                            5
+                                               < dept_loc_fk|HR*                                    DEPARTMENTS|HR-2                                                          6
+                                               < dept_mgr_fk|HR*                                    EMPLOYEES|HR-7                                                            6
+                                               > emp_job_fk|HR                                      EMPLOYEES|HR-12                                                           6
+                                                 < customers_account_manager_fk|OE*                 EMPLOYEES|HR-3                                                            7
+                                                 < dept_mgr_fk|HR*                                  EMPLOYEES|HR-8                                                            7
+                                                 > emp_manager_fk|HR                                EMPLOYEES|HR-16                                                           7
+                                                   < customers_account_manager_fk|OE*               EMPLOYEES|HR-4                                                            8
+                                                   < dept_mgr_fk|HR*                                EMPLOYEES|HR-9                                                            8
+                                                   < emp_dept_fk|HR*                                EMPLOYEES|HR-13                                                           8
+                                                   = emp_manager_fk|HR*                             EMPLOYEES|HR-19                                                           8
+                                                   > jhist_emp_fk|HR                                EMPLOYEES|HR-20                                                           8
+                                                     < customers_account_manager_fk|OE*             EMPLOYEES|HR-5                                                            9
+                                                     < dept_mgr_fk|HR*                              EMPLOYEES|HR-10                                                           9
+                                                     < emp_dept_fk|HR*                              EMPLOYEES|HR-14                                                           9
+                                                     < emp_job_fk|HR*                               EMPLOYEES|HR-17                                                           9
+                                                     < jhist_dept_fk|HR                             JOB_HISTORY|HR-1                                                          9
+                                                       < dept_loc_fk|HR*                            DEPARTMENTS|HR-3                                                         10
+                                                       < dept_mgr_fk|HR*                            DEPARTMENTS|HR-4                                                         10
+                                                       < emp_dept_fk|HR*                            DEPARTMENTS|HR-5                                                         10
+                                                       > jhist_job_fk|HR                            JOB_HISTORY|HR-2                                                         10
+                                                         < emp_job_fk|HR*                           JOBS|HR-1                                                                11
+                                                         < jhist_emp_fk|HR*                         JOB_HISTORY|HR-3                                                         11
+                                                     > orders_sales_rep_fk|OE                       EMPLOYEES|HR-22                                                           9
+                                                       < customers_account_manager_fk|OE*           EMPLOYEES|HR-6                                                           10
+                                                       < dept_mgr_fk|HR*                            EMPLOYEES|HR-11                                                          10
+                                                       < emp_dept_fk|HR*                            EMPLOYEES|HR-15                                                          10
+                                                       < emp_job_fk|HR*                             EMPLOYEES|HR-18                                                          10
+                                                       < emp_manager_fk|HR*                         EMPLOYEES|HR-21                                                          10
+                                                       < order_items_order_id_fk|OE                 ORDERS|OE-2                                                              10
+                                                         > order_items_product_id_fk|OE             ORDER_ITEMS|OE-1                                                         11
+                                                           < inventories_product_id_fk|OE           PRODUCT_INFORMATION|OE-2                                                 12
+                                                             > inventories_warehouses_fk|OE         INVENTORIES|OE-1                                                         13
+                                                               > warehouses_location_fk|OE          WAREHOUSES|OE-1                                                          14
+                                                                 < dept_loc_fk|HR*                  LOCATIONS|HR-2                                                           15
+                                                                 < loc_c_id_fk|HR*                  LOCATIONS|HR-3                                                           15
+                                                             > loc_c_id_fk|PM                       PRODUCT_INFORMATION|OE-1                                                 13
+                                                               > order_items_product_id_fk|OE*      PRODUCT_INFORMATION|OE-5                                                 14
+                                                               > pd_product_id_fk|OE                PRODUCT_INFORMATION|OE-6                                                 14
+                                                                 < inventories_product_id_fk|OE*    PRODUCT_INFORMATION|OE-3                                                 15
+                                                                 < order_items_product_id_fk|OE*    PRODUCT_INFORMATION|OE-8                                                 15
+                                                                 > printmedia_fk|PM                 PRODUCT_INFORMATION|OE-10                                                15
+                                                                   < inventories_product_id_fk|OE*  PRODUCT_INFORMATION|OE-4                                                 16
+                                                                   < loc_c_id_fk|PM*                PRODUCT_INFORMATION|OE-7                                                 16
+                                                                   < order_items_product_id_fk|OE*  PRODUCT_INFORMATION|OE-9                                                 16
+                                                         > orders_customer_id_fk|OE                 ORDERS|OE-1                                                              11
+                                                           < customers_account_manager_fk|OE*       CUSTOMERS|OE-1                                                           12
+                                                           > orders_sales_rep_fk|OE*                ORDERS|OE-3                                                              12
+
+53 rows selected.
+
+Elapsed: 00:00:00.27
+Network summary
+
+Network               #Links  #Nodes  Max Lev
+-------------------- ------- ------- --------
+countr_reg_fk|HR          53      21       16
+
+Elapsed: 00:00:00.01
+One tree by RSF excluded as does not terminate
